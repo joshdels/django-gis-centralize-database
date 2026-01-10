@@ -31,7 +31,7 @@ The backend runs on Django’s native server (for development) and can be expose
 ### Getting Stated
 Set up environment
 ```
-python -m venv . venv
+python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 django-admin startproject centralize_gis_db .
@@ -40,6 +40,14 @@ django-admin startproject centralize_gis_db .
 run the backend
 ```
 python manage.py runserver
+```
+
+----
+
+For django commands
+```
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 

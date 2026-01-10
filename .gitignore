@@ -1,0 +1,46 @@
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Environment
+.env
+*.env
+venv/
+.venv/
+
+# Django / local files
+*.sqlite3
+db.sqlite3
+*.log
+media/
+staticfiles/
+static/
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pytest / coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Backup files
+*.bak
+*.swp
+
+# Node (if using JS frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Mac/Linux swap files
+*~
