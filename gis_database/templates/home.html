@@ -1,24 +1,31 @@
-<h1>My Uploaded Files</h1>
-<a href="{% url 'file:upload' %}">Upload New File</a>
+{% extends "base.html" %}
 
-<hr>
+{% block content %}
+    <h1
+        class="text-red-500"
+    >My Uploaded Files</h1>
+    <a href="{% url 'file:upload' %}">Upload New File</a>
 
-<ul>
-    {% for layer in layers %}
-        <li>
-            <strong>{{ layer.name }}</strong><br>
-            
-            <a href="{% url 'file:detail' layer.pk %}">View Details</a> |
-            
-            <a href="{{ layer.file.url }}" target="_blank">Download/Open File</a>
-            
+    <hr>
+
+    <ul>
+        {% for layer in layers %}
+            <li>
+                <strong>{{ layer.name }}</strong><br>
+                
+                <a href="{% url 'file:detail' layer.pk %}">View Details</a> |
+                
+                <a href="{{ layer.file.url }}" target="_blank">Download/Open File</a>
+                
+                <br>
+                {% if layer.data_file.name|lower|slice:"-4:" == ".jpg" or layer.data_file.name|lower|slice:"-4:" == ".png" %}
+                    <img src="{{ layer.file.url }}" style="width: 100px; height: auto; margin-top: 10px;">
+                {% endif %}
+            </li>
             <br>
-            {% if layer.data_file.name|lower|slice:"-4:" == ".jpg" or layer.data_file.name|lower|slice:"-4:" == ".png" %}
-                <img src="{{ layer.file.url }}" style="width: 100px; height: auto; margin-top: 10px;">
-            {% endif %}
-        </li>
-        <br>
-    {% empty %}
-        <p>No files uploaded yet.</p>
-    {% endfor %}
-</ul>
+        {% empty %}
+            <p>No files uploaded yet.</p>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

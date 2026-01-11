@@ -3,7 +3,7 @@ from .models import MyFile
 from .forms import MyFileForm
 
 
-def home(request):
+def base(request):
     layers = MyFile.objects.all()
     return render(request, "home.html", {"layers": layers})
 

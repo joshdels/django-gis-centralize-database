@@ -1,45 +1,98 @@
-# Python compiled files
-*.pyc
-*.pyo
+# ----------------------------
+# Python
+# ----------------------------
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# Environment
-.env
-*.env
-venv/
+# Virtual environment
 .venv/
+venv/
+env/
+ENV/
+.env.dev
+.env.prod
 
-# Django / local files
-*.sqlite3
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ----------------------------
+# Django
+# ----------------------------
+# Database
 db.sqlite3
-*.log
+*.sqlite3
+
+# Media / uploads
 media/
+*.log
+
+# Static files collected
 staticfiles/
 static/
+# Tailwind CSS output folder (if inside theme/static/css/dist)
+theme/static/css/dist/
 
-# IDEs / editors
+# Django local settings
+*.env
+.env.*
+.settings_local.py
+
+# ----------------------------
+# IDEs / Editors
+# ----------------------------
+# VSCode
 .vscode/
+*.code-workspace
+
+# PyCharm
 .idea/
-*.sublime-project
-*.sublime-workspace
+*.iml
 
-# OS files
+# ----------------------------
+# OS-specific
+# ----------------------------
+# macOS
 .DS_Store
-Thumbs.db
+.AppleDouble
+.LSOverride
 
-# Pytest / coverage
-.coverage
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ----------------------------
+# Node / Tailwind
+# ----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ----------------------------
+# Testing / coverage
+# ----------------------------
+coverage/
+*.cover
+*.py,cover
 htmlcov/
 .tox/
-.pytest_cache/
+nosetests.xml
+coverage.xml
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# Backup files
+# ----------------------------
+# Misc
+# ----------------------------
 *.bak
 *.swp
-
-# Node (if using JS frontend)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-uploads/
+*.swo
+*.tmp

@@ -1,0 +1,20 @@
+
+
+<h2>Login</h2>
+
+<form method="post" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"
+      class="text-red-500"
+    >Login</button>
+</form>
+
+<p>
+    <a h
+      ref="{% url 'account_signup' %}"
+      class="bg-amber-300"  
+    >
+      Sign up
+    </a>
+</p>

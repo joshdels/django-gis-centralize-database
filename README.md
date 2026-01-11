@@ -5,9 +5,9 @@ It provides a unified storage layer for vector data and related GIS assets, with
 
 The backend runs on Django’s native server (for development) and can be exposed to serve public-facing GIS data and files.
 
----
 
 **tech stack**
+- UI: Django-Tailwind -> https://django-tailwind.readthedocs.io/en/latest/installation.html
 - Backend Hosting: Vultr
 - Backend Framework: Django
 - Database: PostgreSQL (vector / spatial data)
@@ -51,9 +51,44 @@ python manage.py migrate
 python manage.py shell
 ```
 
+#### ENV SETTINGS
+For Development
+```
+touch .env.dev
+```
+
+**file .env.dev structure**
+DJANGO_ENV=env
+PROJECT_KEY= 'YOUR_DJANGO_KEY"
+ALLOWED_HOSTS=localhost,127.0.0.1
+DEUBG=True
+EMAIL_BACKEND=console
+
+
+then run
+```
+export DJANGO_ENV=dev
+python manage.py runserver
+```
+
+
 For Production
 ```
+touch .env.prod
+```
+
+**file .env.prod structure**
+DJANGO_ENV=prod
+PROJECT_KEY= 'YOUR_DJANGO_KEY"
+ALLOWED_HOSTS=localhost,127.0.0.1
+DEUBG=True
+EMAIL_BACKEND=console
+
+
+```
 python manage.py collectstatic
+export DJANGO_ENV=prod
+gunicorn centralize_gis_db.wsgi:application
 ```
 
 ------

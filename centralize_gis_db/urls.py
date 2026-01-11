@@ -21,5 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('gis_database.urls'))
+    path('', include('gis_database.urls')),
+    path("accounts/", include("allauth.urls")),
 ]
+
+if not settings.IS_PROD:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
