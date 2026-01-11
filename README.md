@@ -8,8 +8,9 @@ The backend runs on Django’s native server (for development) and can be expose
 
 **tech stack**
 - UI: Django-Tailwind -> https://django-tailwind.readthedocs.io/en/latest/installation.html
-- Backend Hosting: Vultr
+- Auth: Django AllAuth -> https://docs.allauth.org/en/latest/account/configuration.html
 - Backend Framework: Django
+- Backend Hosting: Vultr
 - Database: PostgreSQL (vector / spatial data)
 - Object Storage: Backblaze B2 (for files, exports, and large assets)
 
