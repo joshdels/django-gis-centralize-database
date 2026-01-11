@@ -93,3 +93,9 @@ gunicorn centralize_gis_db.wsgi:application
 ```
 
 ------
+### Tailwind Config
+
+```
+python manage.py tailwind init
+python manage.py tailwind start
+```

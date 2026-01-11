@@ -1,10 +1,15 @@
 @import "tailwindcss";
 
-/**
-  * A catch-all path to Django template files, JavaScript, and Python files
-  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
-  *
-  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
-  * the scope of this path.
-  */
-@source "../../../**/*.{html,py,js}";
+@theme {
+  /* DigitalOcean Brand Colors */
+  --color-do-blue: #0069FF;       /* The signature "Blue Ribbon" */
+  --color-do-navy: #031B4E;       /* Deep background/sidebar navy */
+  --color-do-light: #F3F8FF;      /* Very soft blue tint for backgrounds */
+  
+  /* Modern UI Spacing */
+  --radius-do: 8px;
+}
+
+/* Ensure your Django templates are being watched */
+@source "../../templates/**/*.html";
+@source "../../../**/templates/**/*.html";

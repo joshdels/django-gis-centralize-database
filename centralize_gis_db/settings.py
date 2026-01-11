@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "tailwind",
     "django_browser_reload",
+    'widget_tweaks',
     "storages",
     "allauth",
     "allauth.account",

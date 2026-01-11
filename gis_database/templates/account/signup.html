@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 font-sans">
+  <div class="w-full max-w-md">
+    
+    <div class="mb-10 text-center">
+      <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-do-blue shadow-lg shadow-do-blue/20">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold tracking-tight text-do-navy">Create your account</h2>
+      <p class="mt-2 text-sm text-gray-500">Centralized GIS Database Management</p>
+    </div>
+
+    <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+      <form method="post" action="{% url 'account_signup' %}" class="space-y-6">
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="space-y-1">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+              {{ field.label }}
+            </label>
+            
+            {# Styled Input with DO-blue focus ring #}
+            {{ field|add_class:"block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-do-blue focus:outline-none focus:ring-4 focus:ring-do-blue/10 sm:text-sm" }}
+            
+            {% if field.errors %}
+              {% for error in field.errors %}
+                <p class="mt-1 text-xs font-semibold text-red-600">{{ error }}</p>
+              {% endfor %}
+            {% endif %}
+            
+            {% if field.help_text %}
+              <p class="mt-1 text-[11px] leading-tight text-gray-400">{{ field.help_text|safe }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="flex w-full justify-center rounded-md bg-do-blue px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-do-blue focus:ring-offset-2">
+          Sign up
+        </button>
+      </form>
+
+      <div class="relative my-8">
+        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+          <div class="w-full border-t border-gray-100"></div>
+        </div>
+        <div class="relative flex justify-center text-xs uppercase">
+          <span class="bg-white px-2 text-gray-400">Or continue with</span>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <p class="text-sm text-gray-600">
+          Already have an account? 
+          <a href="{% url 'account_login' %}" class="font-bold text-do-blue hover:text-blue-700">
+            Log in
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <p class="mt-6 text-center text-[11px] text-gray-400">
+      By signing up, you agree to our 
+      <a href="#" class="underline hover:text-gray-600">Terms of Service</a> 
+      and <a href="#" class="underline hover:text-gray-600">Privacy Policy</a>.
+    </p>
+
+  </div>
+</div>
+{% endblock %}
