@@ -29,11 +29,11 @@ db.sqlite3
 media/
 *.log
 
-# Static files collected
-staticfiles/
-static/
-# Tailwind CSS output folder (if inside theme/static/css/dist)
-theme/static/css/dist/
+# # Static files collected
+# staticfiles/
+# static/
+# # Tailwind CSS output folder (if inside theme/static/css/dist)
+# theme/static/css/dist/
 
 # Django local settings
 *.env
