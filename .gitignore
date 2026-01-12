@@ -96,3 +96,8 @@ build/
 *.swp
 *.swo
 *.tmp
+
+----
+root@*
+postgres_data/
+----

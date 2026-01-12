@@ -11,7 +11,7 @@ The backend runs on Django’s native server (for development) and can be expose
 - Auth: Django AllAuth -> https://docs.allauth.org/en/latest/account/configuration.html
 - Backend Framework: Django
 - Backend Hosting: Vultr
-- Database: PostgreSQL (vector / spatial data)
+- Database (Vultr): PostgreSQL (vector / spatial data)
 - Object Storage: Backblaze B2 (for files, exports, and large assets)
 
 **Features**
@@ -52,8 +52,9 @@ python manage.py migrate
 python manage.py shell
 ```
 
-#### ENV SETTINGS
-For Development
+#### CONFIGURATION
+Development Environment (.env.dev)
+Create a file named .env.dev for local testing:
 ```
 touch .env.dev
 ```
@@ -72,20 +73,29 @@ export DJANGO_ENV=dev
 python manage.py runserver
 ```
 
-
-For Production
+Production Environment (.env.prod)
+Create a file named .env.prod for the Vultr VM:
 ```
 touch .env.prod
 ```
 
 **file .env.prod structure**
-DJANGO_ENV=prod
-PROJECT_KEY= 'YOUR_DJANGO_KEY"
-ALLOWED_HOSTS=localhost,127.0.0.1
-DEUBG=True
-EMAIL_BACKEND=console
+DJANGO_ENV=prod PROJECT_KEY=your_production_key 
+ALLOWED_HOSTS=your_domain.com,your_vultr_ip 
+DEBUG=False 
+DB_NAME=your_db
+DB_USER=user 
+DB_PASSWORD=your_password 
+DB_HOST=your_db_vm_private_ip 
+DB_PORT=port 
+B2_APP_KEY_ID=your_id 
+B2_APP_KEY=your_key 
+B2_BUCKET_NAME=your_bucket
 
+---
 
+#### Deployment Commands
+Database Migrations
 ```
 python manage.py collectstatic
 export DJANGO_ENV=prod
