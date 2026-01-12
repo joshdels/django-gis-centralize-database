@@ -1,26 +1,25 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold text-do-navy mb-6">Upload Spatial File</h2>
-
-    <form method="post" enctype="multipart/form-data" class="space-y-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        {% csrf_token %}
-        <div>
-            <label class="block text-gray-700 font-semibold mb-1">File Name</label>
-            {{ form.name }}
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-do-navy mb-6">Upload Spatial File</h2>
+        <form method="post"
+              enctype="multipart/form-data"
+              class="space-y-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            {% csrf_token %}
+            <div>
+                <label class="block text-gray-700 font-semibold mb-1">File Name</label>
+                {{ form.name }}
+            </div>
+            <div>
+                <label class="block text-gray-700 font-semibold mb-1">Select File</label>
+                {{ form.file }}
+            </div>
+            <button type="submit"
+                    class="bg-do-blue text-white px-6 py-2 rounded font-bold hover:bg-blue-700">Upload</button>
+        </form>
+        <div class="mt-4">
+            <a href="{% url 'file:dashboard' %}"
+               class="text-do-blue hover:underline">← Back to Dashboard</a>
         </div>
-        <div>
-            <label class="block text-gray-700 font-semibold mb-1">Select File</label>
-            {{ form.file }}
-        </div>
-        <button type="submit" class="bg-do-blue text-white px-6 py-2 rounded font-bold hover:bg-blue-700">
-            Upload
-        </button>
-    </form>
-
-    <div class="mt-4">
-        <a href="{% url 'file:dashboard' %}" class="text-do-blue hover:underline">← Back to Dashboard</a>
     </div>
-</div>
 {% endblock %}

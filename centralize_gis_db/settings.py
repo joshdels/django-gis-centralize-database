@@ -114,8 +114,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # AllAuth settings
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
@@ -219,6 +219,10 @@ else:
 # TAILWIND
 # ----------------------------
 TAILWIND_APP_NAME = "theme"
+
+# THIS IS FOR WINDOWS SETUP
+# Get-Command npm => powershell
+NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
 
 # ----------------------------
 # DEFAULT AUTO FIELD
