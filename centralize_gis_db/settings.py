@@ -55,7 +55,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "tailwind",
     "django_browser_reload",
-    'widget_tweaks',
+    "widget_tweaks",
     "storages",
     "allauth",
     "allauth.account",
@@ -63,7 +63,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "gis_database",
-    "theme",  # Tailwind app
+    "theme",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -93,7 +93,7 @@ WSGI_APPLICATION = "centralize_gis_db.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "gis_database" /"templates"],
+        "DIRS": [BASE_DIR / "gis_database" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -192,12 +192,13 @@ else:
 DEFAULT_FROM_EMAIL = "Centralize GIS <no-reply@centralizegis.com>"
 
 if IS_PROD:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.getenv("EMAIL_HOST")
-    EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    # EMAIL_HOST = os.getenv("EMAIL_HOST")
+    # EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+    # EMAIL_USE_TLS = True
+    # EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+    # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

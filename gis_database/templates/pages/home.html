@@ -51,7 +51,7 @@
                                 <p class="text-sm text-gray-500">Upload Shapefiles, GeoJSON, or KML.</p>
                             </div>
                         </div>
-                        <a href="#" class="bg-do-blue text-white px-4 py-2 rounded font-bold text-sm hover:bg-blue-700">
+                        <a href="{% url 'file:upload' %}" class="bg-do-blue text-white px-4 py-2 rounded font-bold text-sm hover:bg-blue-700">
                             Upload
                         </a>
                     </div>
@@ -60,21 +60,48 @@
                 {% endif %}
             </div>
 
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <h3 class="text-lg font-bold text-do-navy mb-4">Database Status</h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500">PostGIS Status</span>
-                        <span class="flex items-center gap-1.5 text-sm font-bold text-green-600">
-                            <span class="h-2 w-2 rounded-full bg-green-500"></span> Active
-                        </span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500">Total Layers</span>
-                        <span class="text-sm font-bold text-do-navy">24</span>
-                    </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-do-navy mb-4">My Uploads</h3>
+
+            {% if uploads %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b text-gray-500">
+                                <th class="text-left py-2">Name</th>
+                                <th class="text-left py-2">Uploaded</th>
+                                <th class="text-right py-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in uploads %}
+                                <tr class="border-b last:border-0">
+                                    <td class="py-2 font-medium text-do-navy">
+                                        {{ file.name }}
+                                    </td>
+                                    <td class="py-2 text-gray-500">
+                                        {{ file.created_at|date:"M d, Y" }}
+                                    </td>
+                                    <td class="py-2 text-right">
+                                        <a
+                                            href="{% url 'file:detail' file.pk %}"
+                                            class="text-do-blue font-semibold hover:underline"
+                                        >
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            {% else %}
+                <p class="text-sm text-gray-500">
+                    You haven’t uploaded any files yet.
+                </p>
+            {% endif %}
+        </div>
+
 
         </div>
     {% else %}
@@ -84,11 +111,11 @@
                 The simplest way to <br> manage your GIS data.
             </h2>
             <p class="text-gray-500 mt-4 max-w-lg mx-auto">
-                Connect your Postgres/PostGIS database, upload spatial files, and visualize your layers in seconds.
+                Connect your 24/7 Cloud, upload spatial files, and visualize your layers in seconds.
             </p>
             <div class="mt-8">
-                <a href="{% url 'account_signup' %}" class="inline-block bg-do-blue text-white px-8 py-4 rounded-lg font-bold text-lg shadow-xl shadow-do-blue/20 hover:scale-105 transition-transform">
-                    Deploy your first layer
+                <a href="{% url 'account_signup' %}" class="inline-block bg-do-blue text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-transform">
+                    Upload your shapefiles
                 </a>
             </div>
         </div>

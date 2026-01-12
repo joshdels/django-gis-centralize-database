@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+    {# --- HEADER SECTION --- #}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-do-navy">GIS Central</h1>
+            <p class="text-gray-500 mt-1">Manage your spatial data and database clusters.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            {% if user.is_authenticated %}
+                <div class="flex items-center gap-4 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm">
+                    <div class="flex flex-col text-right">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</span>
+                        <span class="text-sm font-bold text-do-navy">{{ user.username }}</span>
+                    </div>
+                    <form method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-sm font-semibold text-red-500 hover:text-red-700 transition">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+
+    {# --- DASHBOARD --- #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+        {# --- GRAPH 1 --- #}
+        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-do-navy mb-4">Layer Uploads</h3>
+            <canvas id="lineChart" height="120"></canvas>
+        </div>
+
+        {# --- GRAPH 2 --- #}
+        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-do-navy mb-4">Storage Usage</h3>
+            <canvas id="barChart" height="120"></canvas>
+        </div>
+
+    </div>
+
+    {# --- MAP --- #}
+    <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-do-navy mb-4">Spatial Overview</h3>
+        <div
+            id="map"
+            class="w-full rounded-lg border"
+            style="height: 420px;"
+        ></div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{# --- CHART.JS --- #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const lineCtx = document.getElementById('lineChart');
+new Chart(lineCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+            label: 'Uploads',
+            data: [3, 6, 4, 8, 10],
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    }
+});
+
+const barCtx = document.getElementById('barChart');
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Vector', 'Raster', 'GeoJSON', 'KML'],
+        datasets: [{
+            label: 'Files',
+            data: [12, 5, 8, 3]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    }
+});
+</script>
+
+{# --- LEAFLET --- #}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const map = L.map("map").setView([14.5995, 120.9842], 6);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    L.marker([14.5995, 120.9842])
+        .addTo(map)
+        .bindPopup("Central GIS Node");
+
+    // 🔑 CRITICAL FIX
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 200);
+});
+</script>
+
+
+{% endblock %}
