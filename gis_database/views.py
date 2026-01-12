@@ -41,7 +41,7 @@ def upload_file(request):
 
 def layer_detail(request, pk):
     layer = get_object_or_404(MyFile, pk=pk)
-    return render(request, "detail.html", {"layer": layer})
+    return render(request, "pages/detail.html", {"layer": layer})
 
 
 # @login_required
