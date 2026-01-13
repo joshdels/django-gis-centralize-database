@@ -32,11 +32,12 @@ if IS_PROD and not SECRET_KEY:
 
 DEBUG = not IS_PROD
 
-ALLOWED_HOSTS = (
-    [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
-    if IS_PROD
-    else ["localhost", "127.0.0.1"]
-)
+raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0")
+
+if IS_PROD:
+    ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
+else:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 # ----------------------------
 # INSTALLED APPS
@@ -75,6 +76,7 @@ SITE_ID = 1
 # ----------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -169,6 +171,13 @@ USE_TZ = True
 # STATIC & MEDIA
 # ----------------------------
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "theme" / "static",
+]
+
 
 # Dev vs Prod storage
 if IS_PROD:
@@ -184,19 +193,16 @@ if IS_PROD:
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-            "OPTIONS": {"default_acl": None, "file_overwrite": False},
+            "OPTIONS": {"default_acl": None, "file_overwrite": True},
         },
         "staticfiles": {
-            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-        },
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        }
     }
 
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 else:
     # Local filesystem
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
 
@@ -223,7 +229,7 @@ TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
-NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+# NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
 
 # ----------------------------
 # DEFAULT AUTO FIELD

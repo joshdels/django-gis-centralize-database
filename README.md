@@ -13,6 +13,7 @@ The backend runs on Django’s native server (for development) and can be expose
 - Backend Hosting: Vultr
 - Database (Vultr): PostgreSQL (vector / spatial data)
 - Object Storage: Backblaze B2 (for files, exports, and large assets)
+- Email: Brevo
 
 **Features**
 - Centralized GIS data storage
@@ -119,8 +120,13 @@ DB_NAME="YOUR_DB_NAME"
 DB_USER="USER"
 DB_PASSWORD="PASSWORD"
 ```
-docker-compose up -d # to run
-docker ps #to check
-docker-compose down # to stop
+
+### For dockerize Django
+use the .env.prod for deployment
+```
+docker-compose up -d  # to run
+docker ps             # to check
+docker-compose down   # to stop
 docker exect -it CONTAINER_NAME bash # to perform inside the container
+```
 ```
