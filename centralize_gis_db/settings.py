@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ----------------------------
 # ENVIRONMENT
 # ----------------------------
-ENV = os.getenv("DJANGO_ENV", "dev")  # 'dev' or 'prod'
+ENV = os.getenv("DJANGO_ENV", "prod")  # 'dev' or 'prod'
 IS_PROD = ENV == "prod"
 
 # Load .env file
@@ -114,8 +114,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # AllAuth settings
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
@@ -173,6 +173,8 @@ STATIC_URL = "/static/"
 # Dev vs Prod storage
 if IS_PROD:
     # AWS / Backblaze B2
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    
     AWS_ACCESS_KEY_ID = os.getenv("B2_APP_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("B2_APP_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("B2_BUCKET_NAME")
@@ -190,7 +192,6 @@ if IS_PROD:
     }
 
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
-
 else:
     # Local filesystem
     STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -202,16 +203,16 @@ else:
 # ----------------------------
 # EMAIL
 # ----------------------------
-DEFAULT_FROM_EMAIL = "Centralize GIS <no-reply@centralizegis.com>"
+WEBSITE_EMAIL = os.getenv("WEBSITE_EMAIL")
+DEFAULT_FROM_EMAIL = f"Centralize GIS <no-reply@{WEBSITE_EMAIL}>"
 
 if IS_PROD:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    # EMAIL_HOST = os.getenv("EMAIL_HOST")
-    # EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-    # EMAIL_USE_TLS = True
-    # EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-    # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.getenv("BREVO_HOST")
+    EMAIL_PORT = int(os.getenv("BREVO_PORT", 587))
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv("BREVO_SMTP_LOGIN")
+    EMAIL_HOST_PASSWORD = os.getenv("BREVO_SMTP_PASSWORD")
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -219,6 +220,10 @@ else:
 # TAILWIND
 # ----------------------------
 TAILWIND_APP_NAME = "theme"
+
+# THIS IS FOR WINDOWS SETUP
+# Get-Command npm => powershell
+NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
 
 # ----------------------------
 # DEFAULT AUTO FIELD

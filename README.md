@@ -109,3 +109,18 @@ gunicorn centralize_gis_db.wsgi:application
 python manage.py tailwind init
 python manage.py tailwind start
 ```
+
+--- 
+### Remote Postgres Instruction
+this connects to the virtual machine and docker hosted a postgres/postgis image
+on your virtual machine, copy the docker-postgis.yml
+it should have 
+DB_NAME="YOUR_DB_NAME"
+DB_USER="USER"
+DB_PASSWORD="PASSWORD"
+```
+docker-compose up -d # to run
+docker ps #to check
+docker-compose down # to stop
+docker exect -it CONTAINER_NAME bash # to perform inside the container
+```
