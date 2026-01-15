@@ -16,8 +16,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ----------------------------
 # ENVIRONMENT
 # ----------------------------
-ENV = os.getenv("DJANGO_ENV", "prod")  # 'dev' or 'prod'
+ENV = os.getenv("DJANGO_ENV", "dev")  # 'dev' or 'prod'
 IS_PROD = ENV == "prod"
+
+WINDOWS = os.getenv("WINDOWS", "0").lower() in ("1", "true", "yes")
 
 # Load .env file
 env_file = BASE_DIR / (".env.prod" if IS_PROD else ".env.dev")
@@ -229,7 +231,8 @@ TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
-# NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+if WINDOWS:
+    NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
 
 # ----------------------------
 # DEFAULT AUTO FIELD

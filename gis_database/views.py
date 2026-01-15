@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import MyFile
-from .forms import MyFileForm
+from .models import Project
+from .forms import ProjectForm
 from django.shortcuts import redirect
 
 
@@ -13,7 +13,7 @@ def home(request):
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
-    uploads = MyFile.objects.filter(user=request.user).order_by("-created_at")
+    uploads = Project.objects.filter(user=request.user).order_by("-created_at")
 
     return render(
         request,
@@ -27,24 +27,20 @@ def dashboard(request):
 @login_required
 def upload_file(request):
     if request.method == "POST":
-        form = MyFileForm(request.POST, request.FILES)
+        form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
             return redirect("file:dashboard")
     else:
-        form = MyFileForm()
+        form = ProjectForm()
 
     return render(request, "pages/upload.html", {"form": form})
 
 
+@login_required
 def layer_detail(request, pk):
-    layer = get_object_or_404(MyFile, pk=pk)
+    layer = get_object_or_404(Project, pk=pk)
     return render(request, "pages/detail.html", {"layer": layer})
 
-
-# @login_required
-# def home(request):
-#     layers = MyFile.objects.all()
-#     return render(request, "pages/home.html", {"layers": layers})

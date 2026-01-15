@@ -1,8 +1,8 @@
 from django import forms
-from .models import MyFile
+from .models import Project
 
 
-class MyFileForm(forms.ModelForm):
+class ProjectForm(forms.ModelForm):
     class Meta:
-        model = MyFile
+        model = Project
         fields = ["name", "file"]
