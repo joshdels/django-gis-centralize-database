@@ -1,6 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
     <div class="max-w-4xl mx-auto px-4 py-8">
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
         <h2 class="text-2xl font-bold text-do-navy mb-6">Upload Spatial File</h2>
         <form method="post"
               enctype="multipart/form-data"
