@@ -13,6 +13,7 @@ from django.core.exceptions import ImproperlyConfigured
 # ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # ----------------------------
 # ENVIRONMENT
 # ----------------------------
@@ -29,9 +30,11 @@ def load_env():
     else:
         print("--- No .env files found. Using System Environment Variables ---")
 
+
 load_env()
 
-IS_PROD = os.getenv("DJANGO_ENV", "dev").lower() == "prod"
+env_status = str(os.getenv("DJANGO_ENV", "dev")).strip().lower()
+IS_PROD = env_status == "prod"
 
 WINDOWS = os.getenv("WINDOWS", "False").lower() == "true"
 
@@ -44,10 +47,13 @@ if IS_PROD and not SECRET_KEY:
 
 DEBUG = not IS_PROD
 
-raw_hosts = os.getenv("ALLOWED_HOSTS","localhost,127.0.0.1,0.0.0.0",)
+raw_hosts = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,0.0.0.0",
+)
 
 if IS_PROD:
-    ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
+    ALLOWED_HOSTS = ["*"]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
@@ -104,9 +110,14 @@ MIDDLEWARE += [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
+if not IS_PROD:
+    MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
+    
+
+if IS_PROD:
+    CSRF_TRUSTED_ORIGINS = ["https://topmapsolutions.com", "http://149.28.129.119:8002", "http://149.28.129.119"]
 
 # ----------------------------
 # URLS & TEMPLATES
@@ -152,7 +163,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # Session & Security
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
-ACCOUNT_SESSION_REMEMBER = True  
+ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_PREVENT_ENUMERATION = False
 
 # Redirects
