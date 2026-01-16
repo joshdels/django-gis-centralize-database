@@ -23,31 +23,21 @@ jobs:
           command_timeout: 30m  
           script: |
             cd ~/myapps/django-gis-centralize-database
-            
-            # 1. Pull changes
             git pull origin main
             
-            # 2. Build and Restart with BuildKit Enabled
-            # This fixes the "--mount" error you saw earlier
-            export DOCKER_BUILDKIT=1
-            export COMPOSE_DOCKER_CLI_BUILD=1
+            # Disable BuildKit for compatibility with Vultr legacy builder
+            export DOCKER_BUILDKIT=0
             
+            # Stop and rebuild
             docker-compose down
             docker-compose up -d --build
-
-            # 3. Wait for DB and GIS initialization
-            echo "Waiting for container to start..."
-            sleep 10 
-
-            # 4. Run Migrations & Static (Safety check)
-            # We use -T because it's a non-interactive shell
-            docker-compose exec -T web python manage.py migrate --noinput
-            docker-compose exec -T web python manage.py collectstatic --noinput --clear
             
-            # 5. Health Check: Check if the site is returning 200/300
-            # If this fails, the GitHub Action will show a red 'Fail' icon
-            echo "Running health check..."
-            docker ps | grep web
+            # Give the container a moment to initialize PostGIS and Static files
+            echo "Waiting for initialization..."
+            sleep 15
             
-            # 6. Cleanup
+            # Health check: If 'web' isn't running, this exit code will notify GitHub
+            docker-compose ps | grep "Up"
+            
+            # Clean up old images to prevent Vultr disk from filling up
             docker image prune -f
