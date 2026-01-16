@@ -13,17 +13,32 @@ from django.core.exceptions import ImproperlyConfigured
 # ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+
 # ----------------------------
 # ENVIRONMENT
 # ----------------------------
-ENV = os.getenv("DJANGO_ENV", "dev")  # 'dev' or 'prod'
-IS_PROD = ENV == "prod"
+# ----------------------------
+# ENVIRONMENT
+# ----------------------------
+def load_env():
+    env_dev = BASE_DIR / ".env.dev"
+    env_prod = BASE_DIR / ".env.prod"
 
-WINDOWS = os.getenv("WINDOWS", "0").lower() in ("1", "true", "yes")
+    if env_dev.exists():
+        print("--- Loading Environment: DEV ---")
+        load_dotenv(env_dev)
+    elif env_prod.exists():
+        print("--- Loading Environment: PROD ---")
+        load_dotenv(env_prod)
+    else:
+        print("--- No .env files found. Using System Environment Variables ---")
 
-# Load .env file
-env_file = BASE_DIR / (".env.prod" if IS_PROD else ".env.dev")
-load_dotenv(dotenv_path=env_file)
+load_env()
+
+IS_PROD = os.getenv("DJANGO_ENV", "False").lower() == "true"
+
+WINDOWS = os.getenv("WINDOWS", "False").lower() == "true"
 
 # ----------------------------
 # SECURITY
@@ -254,8 +269,8 @@ TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
-# if WINDOWS:
-NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+if WINDOWS:
+    NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
