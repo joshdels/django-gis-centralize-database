@@ -22,22 +22,27 @@ jobs:
           timeout: 30m  
           command_timeout: 30m  
           script: |
+            # Exit immediately if a command exits with a non-zero status
+            set -e 
+
             cd ~/myapps/django-gis-centralize-database
             git pull origin main
             
-            # Disable BuildKit for compatibility with Vultr legacy builder
+            # Disable BuildKit for compatibility with your Vultr legacy builder
             export DOCKER_BUILDKIT=0
             
-            # Stop and rebuild
+            echo "--- Starting Docker Rebuild ---"
+            # Using 'down' and 'up --build' ensures a clean state
             docker-compose down
             docker-compose up -d --build
             
-            # Give the container a moment to initialize PostGIS and Static files
-            echo "Waiting for initialization..."
+            echo "--- Waiting for PostGIS and Django initialization ---"
             sleep 15
             
-            # Health check: If 'web' isn't running, this exit code will notify GitHub
-            docker-compose ps | grep "Up"
+            # Health check: Specifically check for the 'web' service
+            # If grep finds nothing, it returns code 1, which 'set -e' catches
+            docker-compose ps | grep "web" | grep "Up"
             
-            # Clean up old images to prevent Vultr disk from filling up
+            echo "--- Running Post-Deployment Cleanup ---"
             docker image prune -f
+            echo "--- Deployment Complete ---"
