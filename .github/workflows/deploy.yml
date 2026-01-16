@@ -26,7 +26,8 @@ jobs:
             set -e 
 
             cd ~/myapps/django-gis-centralize-database
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             
             # Disable BuildKit for compatibility with your Vultr legacy builder
             export DOCKER_BUILDKIT=0
