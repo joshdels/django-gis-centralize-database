@@ -31,7 +31,7 @@ def load_env():
 
 load_env()
 
-IS_PROD = os.getenv("DJANGO_ENV", "False").lower() == "true"
+IS_PROD = os.getenv("DJANGO_ENV", "dev").lower() == "prod"
 
 WINDOWS = os.getenv("WINDOWS", "False").lower() == "true"
 
@@ -44,7 +44,7 @@ if IS_PROD and not SECRET_KEY:
 
 DEBUG = not IS_PROD
 
-raw_hosts = os.getenv("ALLOWED_HOSTS","localhost","127.0.0.1","0.0.0.0",)
+raw_hosts = os.getenv("ALLOWED_HOSTS","localhost,127.0.0.1,0.0.0.0",)
 
 if IS_PROD:
     ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
