@@ -34,7 +34,7 @@ jobs:
             
             echo "--- Starting Docker Rebuild ---"
             # Using 'down' and 'up --build' ensures a clean state
-            docker-compose down
+            # docker-compose down
             docker-compose up -d --build
             
             echo "--- Waiting for PostGIS and Django initialization ---"
