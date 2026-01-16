@@ -64,5 +64,13 @@ EXPOSE 8000
 CMD sh -c "\
     python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput && \
-    gunicorn centralize_gis_db.wsgi:application --bind 0.0.0.0:8000 --workers 4 --access-logfile - --error-logfile - \
+    gunicorn centralize_gis_db.wsgi:application \
+      --bind 0.0.0.0:8000 \
+      --workers 1 \
+      --timeout 120 \
+      --graceful-timeout 120 \
+      --max-requests 1000 \
+      --max-requests-jitter 100 \
+      --access-logfile - \
+      --error-logfile - \
 "
