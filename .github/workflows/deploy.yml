@@ -33,7 +33,6 @@ jobs:
             export DOCKER_BUILDKIT=0
             
             echo "--- Starting Docker Rebuild ---"
-            # Using 'down' and 'up --build' ensures a clean state
             # docker-compose down
             docker-compose up -d --build
             
