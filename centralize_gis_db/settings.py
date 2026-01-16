@@ -13,11 +13,6 @@ from django.core.exceptions import ImproperlyConfigured
 # ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
-# ----------------------------
-# ENVIRONMENT
-# ----------------------------
 # ----------------------------
 # ENVIRONMENT
 # ----------------------------
@@ -49,7 +44,7 @@ if IS_PROD and not SECRET_KEY:
 
 DEBUG = not IS_PROD
 
-raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0")
+raw_hosts = os.getenv("ALLOWED_HOSTS","localhost","127.0.0.1","0.0.0.0",)
 
 if IS_PROD:
     ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]

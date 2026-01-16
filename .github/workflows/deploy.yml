@@ -1,0 +1,34 @@
+name: Deploy to Vultr
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Navigate to your project directory
+            cd ~/myapps/django-gis-centralize-database
+            
+            # Pull the latest changes
+            git pull origin main
+            
+            # Restart the containers with a fresh build
+            docker-compose stop
+            docker-compose up -d --build
+            
+            # Clean up old/dangling images to save space on Vultr
+            docker image prune -f
