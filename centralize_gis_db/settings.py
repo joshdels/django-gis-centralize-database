@@ -45,7 +45,7 @@ SECRET_KEY = os.getenv("PROJECT_KEY")
 if IS_PROD and not SECRET_KEY:
     raise ImproperlyConfigured("PROJECT_KEY must be set in production")
 
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG")
 
 raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
@@ -113,13 +113,6 @@ if not IS_PROD:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 
-if IS_PROD:
-    CSRF_TRUSTED_ORIGINS = [
-        "https://topmapsolutions.com",
-        "http://149.28.129.119:8002",
-        "http://149.28.129.119",
-    ]
-
 # ----------------------------
 # URLS & TEMPLATES
 # ----------------------------
@@ -158,7 +151,7 @@ ACCOUNT_LOGIN_METHODS = {"email", "username"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 # Email Verification logic
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
@@ -183,6 +176,7 @@ if IS_PROD:
             "PASSWORD": os.getenv("DB_PASSWORD"),
             "HOST": os.getenv("DB_HOST", "127.0.0.1"),
             "PORT": os.getenv("DB_PORT", "5432"),
+            "CONN_MAX_AGE": 600,
         }
     }
 
@@ -243,7 +237,7 @@ if IS_PROD:
             "OPTIONS": {"default_acl": None, "file_overwrite": True},
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
 

@@ -1,35 +1,38 @@
+# syntax=docker/dockerfile:1
 # --- Stage 1: Build ---
 FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-# Install system dependencies (Build-time)
-RUN apt-get update && \
-    apt-get install -y \
-        build-essential \
-        python3-dev \
-        libpq-dev \
-        git \
-        curl \
-        nodejs \
-        npm \
-        gdal-bin \
-        libgdal-dev \
-        libgeos-dev \
-        libproj-dev \
+# 1. Install system dependencies first (These change almost never)
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential python3-dev libpq-dev git curl nodejs npm \
+        gdal-bin libgdal-dev libgeos-dev libproj-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# 1. Create a virtual environment and use it for all subsequent pip commands
+# 2. Virtual Env setup
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+# 3. Cache Pip dependencies (Only re-runs if requirements.txt changes)
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy project files and build Tailwind
+# 4. Cache NPM dependencies (Only re-runs if package.json changes)
+# We move into the theme folder BEFORE copying the whole project
+WORKDIR /app/theme/static_src
+COPY theme/static_src/package*.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm install
+
+# 5. Copy the rest of the project and build Tailwind
+WORKDIR /app
 COPY . .
 WORKDIR /app/theme/static_src
-RUN npm install && npm run build
+RUN npm run build
 WORKDIR /app
 
 # --- Stage 2: Production runtime ---
@@ -37,40 +40,29 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install ONLY runtime GIS and Postgres libraries
-RUN apt-get update && \
-    apt-get install -y \
-        gdal-bin \
-        libgdal-dev \
-        libgeos-dev \
-        libproj-dev \
-        libpq5 && \
-    rm -rf /var/lib/apt/lists/*
+# 6. Install ONLY runtime libraries (Minimal)
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+        gdal-bin libgdal-dev libgeos-dev libproj-dev libpq5 \
+    && rm -rf /var/lib/apt/lists/*
 
-# 2. Copy the virtual environment from the builder
 COPY --from=builder /opt/venv /opt/venv
-
-# 3. Copy the application code (including the built Tailwind assets)
 COPY --from=builder /app /app
 
-# 4. Set environment variables so the system uses the venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-# 5. ing the full path for Gunicorn ensures it starts correctly
+# Use 2 workers as we discussed to prevent the '3-minute hang'
 CMD sh -c "\
     python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput && \
     gunicorn centralize_gis_db.wsgi:application \
       --bind 0.0.0.0:8000 \
-      --workers 1 \
-      --timeout 120 \
-      --graceful-timeout 120 \
+      --workers 2 \
+      --timeout 30 \
       --max-requests 1000 \
-      --max-requests-jitter 100 \
-      --access-logfile - \
-      --error-logfile - \
 "

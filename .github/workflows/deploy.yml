@@ -19,6 +19,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          timeout: 30m  
+          command_timeout: 30m  
           script: |
             # Navigate to your project directory
             cd ~/myapps/django-gis-centralize-database
@@ -29,6 +31,9 @@ jobs:
             # Restart the containers with a fresh build
             docker-compose stop
             docker-compose up -d --build
+
+            # Collect static
+            docker-compose exec -T web python manage.py collectstatic --noinput
             
             # Clean up old/dangling images to save space on Vultr
             docker image prune -f
