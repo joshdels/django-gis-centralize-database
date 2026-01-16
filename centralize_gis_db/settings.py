@@ -130,11 +130,24 @@ AUTHENTICATION_BACKENDS = [
 # AllAuth settings
 LOGIN_REDIRECT_URL = "/dashboard"
 LOGOUT_REDIRECT_URL = "/"
+
+# Authentication Method
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# Email Verification logic
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+# Session & Security
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+ACCOUNT_SESSION_REMEMBER = True  
+ACCOUNT_PREVENT_ENUMERATION = False
+
+# Redirects
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/dashboard"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"
 
 # ----------------------------
 # DATABASE
@@ -222,7 +235,7 @@ else:
 # EMAIL
 # ----------------------------
 WEBSITE_EMAIL = os.getenv("WEBSITE_EMAIL")
-DEFAULT_FROM_EMAIL = f"Centralize GIS <no-reply@{WEBSITE_EMAIL}>"
+DEFAULT_FROM_EMAIL = f"TopMapSolution Customer Support <no-reply@{WEBSITE_EMAIL}>"
 
 if IS_PROD:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

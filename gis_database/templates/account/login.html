@@ -3,18 +3,17 @@
 
 {% block content %}
 <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
-    
     <div class="w-full max-w-md">
         
         {# --- BRAND HEADER --- #}
         <div class="text-center mb-10">
             <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
-            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">User Authentication</p>
+            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">User Login</p>
         </div>
 
         {# --- LOGIN CARD --- #}
         <div class="card bg-base-100 shadow-2xl border border-base-200">
-            <form method="post" action="{% url 'account_login' %}" class="card-body gap-5 p-8">
+            <form id="login-form" method="post" action="{% url 'account_login' %}" class="card-body gap-5 p-8">
                 {% csrf_token %}
 
                 <div class="mb-2">
@@ -22,9 +21,9 @@
                     <p class="text-sm opacity-50">Log in to your spatial dashboard</p>
                 </div>
 
-                {# Non-field Errors #}
+                {# Non-field Errors (e.g. "Wrong password") #}
                 {% if form.non_field_errors %}
-                <div class="alert alert-error text-xs py-3 shadow-inner rounded-lg">
+                <div id="non-field-errors" class="alert alert-error text-xs py-3 shadow-inner rounded-lg flex items-start gap-2 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     <span class="font-bold">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</span>
                 </div>
@@ -35,9 +34,10 @@
                     <label class="label">
                         <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">Email or Username</span>
                     </label>
-                    {{ form.login|add_class:"input input-bordered focus:outline-primary w-full font-medium" }}
+                    {# Added js-input class #}
+                    {{ form.login|add_class:"input input-bordered focus:outline-primary w-full font-medium js-input" }}
                     {% if form.login.errors %}
-                        <label class="label">
+                        <label class="label js-field-error">
                             <span class="label-text-alt text-error font-bold">{{ form.login.errors.0 }}</span>
                         </label>
                     {% endif %}
@@ -47,17 +47,18 @@
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">Password</span>
-                        <a href="{% url 'account_reset_password' %}" class="label-text-alt link link-hover link-primary font-bold">Forgot?</a>
                     </label>
-                    {{ form.password|add_class:"input input-bordered focus:outline-primary w-full font-medium" }}
+                    {# Added js-input class #}
+                 
+                    {{ form.password|add_class:"input input-bordered focus:outline-primary w-full font-medium js-input" }}
                     {% if form.password.errors %}
-                        <label class="label">
+                        <label class="label js-field-error">
                             <span class="label-text-alt text-error font-bold">{{ form.password.errors.0 }}</span>
                         </label>
                     {% endif %}
                 </div>
 
-                {# Remember Me #}
+                {# ... Remaining Form (Remember Me, Button, etc) ... #}
                 {% if form.remember %}
                 <div class="form-control">
                     <label class="label cursor-pointer justify-start gap-3">
@@ -67,16 +68,16 @@
                 </div>
                 {% endif %}
 
-                {# Log In Button #}
                 <div class="form-control mt-4">
                     <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
                         Log In
                     </button>
                 </div>
 
+                <a href="{% url 'account_reset_password' %}" class="label-text-alt link link-hover link-primary font-bold text-center">Forgot Password?</a>
+
                 <div class="divider opacity-10 my-2"></div>
 
-                {# Sign Up Footer #}
                 <div class="text-center text-sm font-medium">
                     <span class="opacity-50">New to TopMap Solutions?</span>
                     <a href="{% url 'account_signup' %}" class="text-primary font-black hover:underline ml-1">Create Account</a>
@@ -84,10 +85,34 @@
             </form>
         </div>
 
-        {# Support Info #}
-        <p class="text-center mt-10 text-[10px] opacity-30 font-black uppercase tracking-widest">
-            &copy; 2026 Spatial Node Services
-        </p>
+        {% include "components/footer.html" %}
     </div>
 </div>
+
+{# --- JAVASCRIPT TO HIDE ERRORS ON TYPE --- #}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('login-form');
+        const nonFieldErrors = document.getElementById('non-field-errors');
+
+        loginForm.addEventListener('input', (e) => {
+            if (e.target.classList.contains('js-input')) {
+                // 1. Hide the specific field error (the red text below input)
+                const fieldContainer = e.target.closest('.form-control');
+                const errorLabel = fieldContainer.querySelector('.js-field-error');
+                if (errorLabel) {
+                    errorLabel.style.display = 'none';
+                }
+
+                // 2. Hide the top "Non-field" alert (the red box)
+                if (nonFieldErrors) {
+                    nonFieldErrors.style.opacity = '0';
+                    setTimeout(() => {
+                        nonFieldErrors.style.display = 'none';
+                    }, 300); // Wait for fade transition
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

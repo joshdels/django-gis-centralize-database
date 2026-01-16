@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <div class="max-w-md w-full card bg-base-100 shadow-2xl border border-base-200 overflow-hidden">
+        
+        {# Brand Header #}
+        <div class="p-8 pb-0 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black tracking-tighter text-primary">Verify Access</h2>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mt-2">Check Your Inbox</p>
+        </div>
+
+        <div class="card-body p-8 text-center">
+            <p class="text-sm font-bold opacity-70 leading-relaxed">
+                We have sent a verification link to your email address. Please Check your email for the verification link.
+            </p>
+
+            <div class="mt-8 pt-6 border-t border-base-200">
+                <p class="text-xs font-bold opacity-50 mb-4">Didn't receive the transmission?</p>
+                <a href="{% url 'account_email' %}" class="btn btn-outline btn-sm font-black uppercase tracking-widest text-[10px]">
+                    Resend Authorization
+                </a>
+            </div>
+
+        </div>
+    </div>
+    {% include "components/footer.html" %}
+</div>
+{% endblock %}

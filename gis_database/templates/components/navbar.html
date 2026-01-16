@@ -6,7 +6,7 @@
         <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mt-1">Spatial Node Management v1.0</p>
     </div>
     
-    <div class="flex-none gap-4">
+    <div class="gap-5">
         {% if user.is_authenticated %}
             {# Refined Account Pill #}
             <div class="flex items-center gap-3 bg-base-100 pl-4 pr-1 py-1 rounded-full border border-base-200 shadow-sm">
@@ -47,9 +47,15 @@
                 </div>
             </div>
         {% else %}
-            <div class="join border border-base-200 shadow-sm">
-                <a href="{% url 'account_login' %}" class="btn btn-ghost join-item font-bold">Log In</a>
-                <a href="{% url 'account_signup' %}" class="btn btn-primary join-item px-8 font-black">Sign Up</a>
+            <div class="border-base-300">
+                <a href="{% url 'account_login' %}" 
+                class="btn btn-ghost px-6 font-bold uppercase text-xs tracking-widest border-r border-base-300">
+                    Log In
+                </a>
+                <a href="{% url 'account_signup' %}" 
+                class="btn btn-primary  px-8 font-black uppercase text-xs tracking-widest">
+                    Sign Up
+                </a>
             </div>
         {% endif %}
     </div>

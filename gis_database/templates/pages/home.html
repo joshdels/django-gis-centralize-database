@@ -9,19 +9,11 @@
     <div class="relative bg-base-100 rounded-[3rem] border border-base-200 shadow-2xl overflow-hidden mt-8">
         
         {# Optional: Subtle Grid Background Overlay #}
-        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:30px_30px]"></div>
 
         <div class="hero-content text-center py-24 mx-auto relative z-10">
-            <div class="max-w-3xl">
-                
-                {# Technical Status Tag #}
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-8">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                    </span>
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">System v1.0 Live</span>
-                </div>
+            <div class="max-w-3xl">      
+             
 
                 <h2 class="text-6xl md:text-7xl font-black text-base-content tracking-tighter leading-[0.85] mb-8">
                     Spatial Intelligence <br>
@@ -34,11 +26,11 @@
                 
                 <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
                     <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-12 font-black text-lg h-20 rounded-2xl shadow-2xl shadow-primary/20">
-                        Initialize Project
+                        Get Started
                     </a>
-                    <a href="{% url 'account_login' %}" class="btn btn-ghost btn-lg px-12 font-black text-lg h-20 rounded-2xl border-2 border-base-200">
+                    <!-- <a href="{% url 'account_login' %}" class="btn btn-ghost btn-lg px-12 font-black text-lg h-20 rounded-2xl border-2 border-base-200">
                         Access Portal
-                    </a>
+                    </a> -->
                 </div>
 
                 {# Stats Footer #}
@@ -60,8 +52,5 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
 {% endblock %}

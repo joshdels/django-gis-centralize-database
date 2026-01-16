@@ -1,0 +1,83 @@
+{% extends "_base.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Verify Your Email" %}{% endblock %}
+
+{% block content %}
+{# min-h-screen for perfect vertical centering #}
+<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+        
+        {# --- BRAND HEADER --- #}
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
+            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">Final Step</p>
+        </div>
+
+        {# --- CONFIRMATION CARD --- #}
+        <div class="card bg-base-100 shadow-2xl border border-base-200 overflow-hidden">
+            
+            {# Header Icon Section #}
+            <div class="bg-base-200/50 py-8 flex flex-col items-center justify-center border-b border-base-200">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="card-body gap-6 p-8 text-center">
+                
+                {% if confirmation %}
+                    {% user_display confirmation.email_address.user as user_display %}
+                    
+                    <div>
+                        <h2 class="text-2xl font-black">Verify Your Email</h2>
+                        <p class="text-sm font-medium opacity-60 mt-2">
+                            Hi <span class="text-primary">{{ user_display }}</span>, let's make it official!
+                        </p>
+                    </div>
+
+                    <div class="bg-base-200/50 p-4 rounded-xl border border-base-200">
+                        <p class="text-sm font-bold opacity-70">
+                            Confirm that <span class="underline decoration-primary/30 decoration-2 underline-offset-2">{{ confirmation.email_address.email }}</span> is your correct email address.
+                        </p>
+                    </div>
+
+                    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
+                            Confirm and Finish
+                        </button>
+                    </form>
+
+                {% else %}
+                    <div class="mb-2">
+                        <div class="flex justify-center mb-4">
+                            <div class="p-4 bg-error/10 text-error rounded-full shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl font-black text-error">Link Expired</h2>
+                        <p class="text-sm opacity-50 mt-2">For your security, these links expire quickly. This one is no longer valid or has already been used.</p>
+                    </div>
+                    
+                    <div class="divider opacity-10 my-2"></div>
+                    
+                    <a href="{% url 'account_email' %}" class="btn btn-ghost btn-block font-black opacity-60 uppercase tracking-widest text-xs">
+                        Request a New Link
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Footer #}
+        <div class="mt-8">
+            {% include "components/footer.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
