@@ -1,162 +1,207 @@
-{% extends "base.html" %}
+{% extends "_base.html" %}
 {% block content %}
-    <div class="max-w-6xl mx-auto px-4 py-8">
-        {# --- HEADER SECTION --- #}
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-do-navy">GIS Central</h1>
-                <p class="text-gray-500 mt-1">Manage your spatial data and database clusters.</p>
-            </div>
-            <div class="flex items-center gap-3">
-                {% if user.is_authenticated %}
-                    <div class="flex items-center gap-4 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm">
-                        <div class="flex flex-col text-right">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</span>
-                            <span class="text-sm font-bold text-do-navy">{{ user.username }}</span>
-                        </div>
-                        <form method="post" action="{% url 'account_logout' %}">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="text-sm font-semibold text-red-500 hover:text-red-700 transition">
-                                Logout
-                            </button>
-                        </form>
+<div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+
+    {# --- NAVBAR COMPONENT --- #}
+    <div class="navbar bg-base-100 px-0 flex-col md:flex-row gap-4 border-b border-base-200 pb-8 mb-8">
+        <div class="flex-1 flex flex-col items-start">
+            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mt-1">Spatial Node Management v1.0</p>
+        </div>
+        
+        <div class="flex-none gap-4">
+            {% if user.is_authenticated %}
+                <div class="flex items-center gap-3 bg-base-100 pl-4 pr-1 py-1 rounded-full border border-base-200 shadow-sm">
+                    <div class="flex flex-col text-right hidden sm:flex">
+                        <span class="text-[9px] uppercase font-black opacity-30 leading-none mb-1">Authenticated</span>
+                        <span class="text-sm font-black tracking-tight text-base-content">{{ user.username }}</span>
                     </div>
-                {% else %}
-                    <a href="{% url 'account_login' %}"
-                       class="text-sm font-bold text-do-blue hover:text-blue-700">Log In</a>
-                    <a href="{% url 'account_signup' %}"
-                       class="bg-do-blue text-white px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-do-blue/20 hover:bg-blue-700 transition">
-                        Sign Up
-                    </a>
-                {% endif %}
+                    
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder hover:bg-primary/10 transition-colors">
+                            <div class="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center border-2 border-base-100 shadow-sm">
+                                <span class="text-lg font-black">{{ user.username|first|upper }}</span>
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="mt-4 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-xl w-52 border border-base-200 z-[100]">
+                            <li class="menu-title px-4 py-2 text-[10px] font-black uppercase opacity-40 tracking-widest">User Menu</li>
+                            <li><a href="#" class="py-3 font-bold">Profile</a></li>
+                            <div class="divider my-1 opacity-5"></div>
+                            <li class="p-1">
+                                <form method="post" action="{% url 'account_logout' %}" class="w-full">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-error btn-sm w-full text-white font-black border-none">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="join border border-base-200 shadow-sm">
+                    <a href="{% url 'account_login' %}" class="btn btn-ghost join-item font-bold">Log In</a>
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary join-item px-8 font-black">Sign Up</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        
+        {# --- SECTION 1: QUICK ACTIONS & STORAGE --- #}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {# Action Hero Card #}
+            <div class="lg:col-span-2 card bg-primary text-primary-content shadow-2xl overflow-hidden border-none">
+                <div class="card-body flex-row items-center justify-between p-8">
+                    <div class="max-w-md">
+                        <h2 class="text-3xl font-black tracking-tight mb-2">Ingest Spatial Data</h2>
+                        <p class="opacity-90 font-medium text-sm leading-relaxed">Push Shapefiles, GeoJSON, or KML directly to your active database clusters.</p>
+                        <div class="card-actions mt-6">
+                            {% if perms.file.add_layer %}
+                                <a href="{% url 'file:upload' %}" class="btn btn-neutral btn-md px-8 font-black shadow-xl border-none">Upload Files</a>
+                            {% else %}
+                                <div class="badge badge-outline font-bold border-2 opacity-50">Admin Access Required</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="hidden sm:block opacity-10">
+                        <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            {# Storage Usage Card #}
+            <div class="card bg-base-100 shadow-xl border border-base-200">
+                <div class="card-body justify-center">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Cluster Storage</span>
+                    <div class="flex items-end gap-2 mt-1">
+                        <span class="text-5xl font-black tracking-tighter">84%</span>
+                        <span class="text-sm font-bold opacity-40 pb-1 mb-1">CAPACITY</span>
+                    </div>
+                    <progress class="progress progress-primary w-full mt-4 h-3" value="84" max="100"></progress>
+                    <p class="text-[10px] font-bold opacity-50 mt-2 italic text-center w-full">2.1GB remaining on Node-01</p>
+                </div>
             </div>
         </div>
-        {% if user.is_authenticated %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {# --- RESOURCES / UPLOAD SECTION --- #}
-                <div class="md:col-span-2 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold text-do-navy mb-4">Resources</h3>
-                    {% if perms.file.add_layer %}
-                        <div class="flex items-center justify-between p-4 bg-do-light rounded-lg border border-do-blue">
-                            <div class="flex items-center gap-4">
-                                <div class="bg-do-blue p-2 rounded-md">
-                                    <svg class="w-6 h-6 text-white"
-                                         fill="none"
-                                         stroke="currentColor"
-                                         viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-do-navy">Add Spatial Data</p>
-                                    <p class="text-sm text-gray-500">Upload Shapefiles, GeoJSON, or KML.</p>
-                                </div>
-                            </div>
-                            <a href="{% url 'file:upload' %}"
-                               class="bg-do-blue text-white px-4 py-2 rounded font-bold text-sm hover:bg-blue-700">
-                                Upload
-                            </a>
-                        </div>
-                    {% else %}
-                        <p class="text-gray-500 text-sm">You don't have permission to add layers. Contact an admin.</p>
-                    {% endif %}
-                </div>
-                {# --- MY UPLOADS TABLE --- #}
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold text-do-navy mb-4">My Uploads</h3>
-                    {% if uploads %}
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
-                                <thead>
-                                    <tr class="border-b text-gray-500">
-                                        <th class="text-left py-2">Name</th>
-                                        <th class="text-left py-2">Uploaded</th>
-                                        <th class="text-right py-2">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for file in uploads %}
-                                        <tr class="border-b last:border-0">
-                                            <td class="py-2 font-medium text-do-navy">{{ file.name }}</td>
-                                            <td class="py-2 text-gray-500">{{ file.created_at|date:"M d, Y" }}</td>
-                                            <td class="py-2 text-right">
-                                                <a href="{% url 'file:detail' file.pk %}"
-                                                   class="text-do-blue font-semibold hover:underline">View</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <p class="text-sm text-gray-500">You haven’t uploaded any files yet.</p>
-                    {% endif %}
-                </div>
-            </div>
-            {# --- DASHBOARD GRAPHS --- #}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold text-do-navy mb-4">Layer Uploads</h3>
-                    <canvas id="lineChart" height="120"></canvas>
-                </div>
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-bold text-do-navy mb-4">Storage Usage</h3>
-                    <canvas id="barChart" height="120"></canvas>
-                </div>
-            </div>
-            {# --- MAP --- #}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <h3 class="text-lg font-bold text-do-navy mb-4">Spatial Overview</h3>
-                <div id="map"
-                     class="w-full rounded-lg border border-gray-500"
-                     style="height: 420px"></div>
-            </div>
-        {% else %}
-            {# --- GUEST HERO SECTION --- #}
-            <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-xl">
-                <h2 class="text-4xl font-extrabold text-do-navy leading-tight">
-                    The simplest way to
-                    <br>
-                    manage your GIS data.
-                </h2>
-                <p class="text-gray-500 mt-4 max-w-lg mx-auto">
-                    Connect your 24/7 Cloud, upload spatial files, and visualize your layers in seconds.
-                </p>
-                <div class="mt-8">
-                    <a href="{% url 'account_signup' %}"
-                       class="inline-block bg-do-blue text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-transform">
-                        Upload your shapefiles
-                    </a>
-                </div>
-            </div>
-        {% endif %}
-    </div>
-    {# --- CHART.JS --- #}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-const lineCtx = document.getElementById('lineChart');
-new Chart(lineCtx, {
-    type: 'line',
-    data: { labels: ['Jan','Feb','Mar','Apr','May'], datasets:[{label:'Uploads', data:[3,6,4,8,10], tension:0.4}] },
-    options: { responsive:true, plugins:{ legend:{ display:false } } }
-});
 
-const barCtx = document.getElementById('barChart');
-new Chart(barCtx, {
-    type: 'bar',
-    data: { labels:['Vector','Raster','GeoJSON','KML'], datasets:[{label:'Files', data:[12,5,8,3]}] },
-    options: { responsive:true, plugins:{ legend:{ display:false } } }
-});
-    </script>
-    {# --- LEAFLET --- #}
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
+        {# --- SECTION 2: DATA TABLE & MAP --- #}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {# My Uploads Table #}
+            <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="px-6 py-5 flex justify-between items-center border-b border-base-200">
+                        <div>
+                            <h3 class="font-black text-xl tracking-tight">My Layers</h3>
+                            <p class="text-[10px] font-black opacity-30 uppercase tracking-[0.15em]">Registry Index</p>
+                        </div>
+                        <div class="badge badge-neutral font-black rounded-md px-3">{{ uploads|length }}</div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr class="bg-base-200/50 text-base-content/50 border-b border-base-200">
+                                    <th class="font-black uppercase text-[10px] tracking-widest py-4">Layer Name</th>
+                                    <th class="font-black uppercase text-[10px] tracking-widest text-right py-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in uploads %}
+                                <tr class="hover:bg-base-200/50 transition-colors border-b border-base-100">
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex items-center justify-center bg-base-200 text-base-content rounded-md w-9 h-9 shrink-0 shadow-sm border border-base-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                                            </div>
+                                            <span class="font-bold text-sm truncate max-w-[140px]">{{ file.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="{% url 'file:detail' file.pk %}" class="btn btn-ghost btn-xs font-black uppercase tracking-tighter hover:bg-primary hover:text-white">Open</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center py-16 opacity-20">
+                                        <span class="text-[10px] font-black uppercase tracking-widest">No active layers in node</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {# Spatial Overview (Map) #}
+            <div class="lg:col-span-2 card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="p-4 border-b border-base-200 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-black text-lg tracking-tight">Spatial Overview</h3>
+                            <p class="text-[10px] font-black opacity-30 uppercase tracking-widest text-left">Global Node Visibility</p>
+                        </div>
+                        <div class="badge badge-success badge-sm py-3 px-4 gap-2 font-black text-[10px] uppercase tracking-widest">
+                          <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span> Service: Online
+                        </div>
+                    </div>
+                    <div id="map" style="height: 440px; width: 100%; z-index: 1;"></div>
+                </div>
+            </div>
+        </div>
+
+        {# --- SECTION 3: ANALYTICS --- #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+            <div class="card bg-base-100 shadow-xl border border-base-200 p-8">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-6">Layer Ingestion Rate</h3>
+                <canvas id="lineChart" height="100"></canvas>
+            </div>
+            <div class="card bg-base-100 shadow-xl border border-base-200 p-8">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-6">Distribution by Type</h3>
+                <canvas id="barChart" height="100"></canvas>
+            </div>
+        </div>
+
+    {% else %}
+        {# --- GUEST HERO STATE --- #}
+        <div class="hero bg-base-100 rounded-[3rem] py-32 border border-base-200 shadow-2xl relative overflow-hidden text-center">
+            <div class="hero-content">
+                <div class="max-w-2xl">
+                    <h2 class="text-7xl font-black text-primary tracking-tighter leading-[0.85] mb-6">Spatial Data <br>Management.</h2>
+                    <p class="text-lg font-medium opacity-60 mb-10">Connect cloud nodes, ingest files, and visualize layers instantly.</p>
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg shadow-2xl px-12 font-black text-lg h-20 rounded-2xl">Initialize Account</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{# --- CHART.JS CONFIG --- #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartOptions = { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } };
+    
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: { labels: ['01','02','03','04','05'], datasets:[{ data:[3,6,4,8,10], borderColor: '#570df8', tension:0.4, borderWeight: 4, pointRadius: 0 }] },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: { labels:['Vector','Raster','GeoJSON','KML'], datasets:[{ data:[12,5,8,3], backgroundColor: '#f000b8', borderRadius: 4 }] },
+        options: chartOptions
+    });
+</script>
+
+{# --- LEAFLET MAP CONFIG --- #}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
 document.addEventListener("DOMContentLoaded", function(){
-    const map = L.map("map").setView([14.5995,120.9842],6);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19, attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
-    L.marker([14.5995,120.9842]).addTo(map).bindPopup("Central GIS Node");
-    setTimeout(()=>{ map.invalidateSize(); },200);
+    const map = L.map("map", { zoomControl: false }).setView([14.5995, 120.9842], 6);
+    L.tileLayer("https://{s}.tile.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png").addTo(map);
+    L.marker([14.5995, 120.9842]).addTo(map);
+    setTimeout(() => { map.invalidateSize(); }, 300);
 });
-    </script>
+</script>
 {% endblock %}

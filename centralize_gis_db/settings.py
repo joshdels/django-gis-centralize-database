@@ -57,12 +57,13 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "tailwind",
-    "django_browser_reload",
     "widget_tweaks",
-    "storages",
     "allauth",
     "allauth.account",
 ]
+
+if IS_PROD:
+    THIRD_PARTY_APPS += ["storages"]
 
 LOCAL_APPS = [
     "gis_database",
@@ -78,7 +79,14 @@ SITE_ID = 1
 # ----------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+
+if IS_PROD:
+    MIDDLEWARE += [
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+    ]
+
+MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -86,7 +94,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
 
 # ----------------------------
 # URLS & TEMPLATES
@@ -185,7 +195,7 @@ STATICFILES_DIRS = [
 if IS_PROD:
     # AWS / Backblaze B2
     STATIC_ROOT = BASE_DIR / "staticfiles"
-    
+
     AWS_ACCESS_KEY_ID = os.getenv("B2_APP_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("B2_APP_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("B2_BUCKET_NAME")
@@ -199,7 +209,7 @@ if IS_PROD:
         },
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        }
+        },
     }
 
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
@@ -231,8 +241,11 @@ TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
-if WINDOWS:
-    NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+# if WINDOWS:
+NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload"]
 
 # ----------------------------
 # DEFAULT AUTO FIELD

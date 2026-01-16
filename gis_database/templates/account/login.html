@@ -1,64 +1,93 @@
-{% extends "base.html" %}
+{% extends "_base.html" %}
 {% load widget_tweaks %}
+
 {% block content %}
-    <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 font-sans">
-        <div class="w-full max-w-md">
-            <div class="mb-10 text-center">
-                <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-do-blue shadow-lg shadow-do-blue/20">
-                    <svg class="h-8 w-8 text-white"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold tracking-tight text-do-navy">Welcome back</h2>
-                <p class="mt-2 text-sm text-gray-500">Log in to manage your GIS data</p>
-            </div>
-            <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-                <form method="post" action="{% url 'account_login' %}" class="space-y-6">
-                    {% csrf_token %}
-                    {% if form.non_field_errors %}
-                        <div class="rounded-md bg-red-50 p-3">
-                            {% for error in form.non_field_errors %}<p class="text-sm font-medium text-red-800">{{ error }}</p>{% endfor %}
-                        </div>
-                    {% endif %}
-                    <div class="space-y-1">
-                        <label for="{{ form.login.id_for_label }}"
-                               class="block text-sm font-medium text-gray-700">Email or Username</label>
-                        {{ form.login|add_class:"block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 transition focus:border-do-blue focus:outline-none focus:ring-4 focus:ring-do-blue/10 sm:text-sm" }}
-                        {% if form.login.errors %}<p class="mt-1 text-xs font-semibold text-red-600">{{ form.login.errors.0 }}</p>{% endif %}
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex items-center justify-between">
-                            <label for="{{ form.password.id_for_label }}"
-                                   class="block text-sm font-medium text-gray-700">Password</label>
-                            <a href="{% url 'account_reset_password' %}"
-                               class="text-xs font-semibold text-do-blue hover:text-blue-700">Forgot?</a>
-                        </div>
-                        {{ form.password|add_class:"block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 transition focus:border-do-blue focus:outline-none focus:ring-4 focus:ring-do-blue/10 sm:text-sm" }}
-                        {% if form.password.errors %}
-                            <p class="mt-1 text-xs font-semibold text-red-600">{{ form.password.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    {% if form.remember %}
-                        <div class="flex items-center">
-                            {{ form.remember|add_class:"h-4 w-4 rounded border-gray-300 text-do-blue focus:ring-do-blue" }}
-                            <label for="{{ form.remember.id_for_label }}"
-                                   class="ml-2 block text-sm text-gray-700">Remember me</label>
-                        </div>
-                    {% endif %}
-                    <button type="submit"
-                            class="flex w-full justify-center rounded-md bg-do-blue px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-do-blue focus:ring-offset-2">
-                        Sign in
-                    </button>
-                </form>
-                <div class="mt-8 border-t border-gray-100 pt-6 text-center text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="{% url 'account_signup' %}"
-                       class="font-bold text-do-blue hover:text-blue-700">Sign up</a>
-                </div>
-            </div>
+<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
+    
+    <div class="w-full max-w-md">
+        
+        {# --- BRAND HEADER --- #}
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
+            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">User Authentication</p>
         </div>
+
+        {# --- LOGIN CARD --- #}
+        <div class="card bg-base-100 shadow-2xl border border-base-200">
+            <form method="post" action="{% url 'account_login' %}" class="card-body gap-5 p-8">
+                {% csrf_token %}
+
+                <div class="mb-2">
+                    <h2 class="text-2xl font-black">Welcome Back</h2>
+                    <p class="text-sm opacity-50">Log in to your spatial dashboard</p>
+                </div>
+
+                {# Non-field Errors #}
+                {% if form.non_field_errors %}
+                <div class="alert alert-error text-xs py-3 shadow-inner rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span class="font-bold">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</span>
+                </div>
+                {% endif %}
+
+                {# Login Field #}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">Email or Username</span>
+                    </label>
+                    {{ form.login|add_class:"input input-bordered focus:outline-primary w-full font-medium" }}
+                    {% if form.login.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error font-bold">{{ form.login.errors.0 }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+
+                {# Password Field #}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">Password</span>
+                        <a href="{% url 'account_reset_password' %}" class="label-text-alt link link-hover link-primary font-bold">Forgot?</a>
+                    </label>
+                    {{ form.password|add_class:"input input-bordered focus:outline-primary w-full font-medium" }}
+                    {% if form.password.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error font-bold">{{ form.password.errors.0 }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+
+                {# Remember Me #}
+                {% if form.remember %}
+                <div class="form-control">
+                    <label class="label cursor-pointer justify-start gap-3">
+                        {{ form.remember|add_class:"checkbox checkbox-primary checkbox-sm rounded" }}
+                        <span class="label-text text-sm font-bold opacity-70">Stay logged in</span>
+                    </label>
+                </div>
+                {% endif %}
+
+                {# Log In Button #}
+                <div class="form-control mt-4">
+                    <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
+                        Log In
+                    </button>
+                </div>
+
+                <div class="divider opacity-10 my-2"></div>
+
+                {# Sign Up Footer #}
+                <div class="text-center text-sm font-medium">
+                    <span class="opacity-50">New to TopMap Solutions?</span>
+                    <a href="{% url 'account_signup' %}" class="text-primary font-black hover:underline ml-1">Create Account</a>
+                </div>
+            </form>
+        </div>
+
+        {# Support Info #}
+        <p class="text-center mt-10 text-[10px] opacity-30 font-black uppercase tracking-widest">
+            &copy; 2026 Spatial Node Services
+        </p>
     </div>
+</div>
 {% endblock %}

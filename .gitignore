@@ -30,7 +30,7 @@ media/
 *.log
 
 # Static files collected
-staticfiles/
+staticfiles
 static/
 # Tailwind CSS output folder (if inside theme/static/css/dist)
 theme/static/css/dist/

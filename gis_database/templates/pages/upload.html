@@ -1,29 +1,67 @@
-{% extends "base.html" %}
+{% extends "_base.html" %}
 
 {% block content %}
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        {% if error %}
-            <p style="color:red;">{{ error }}</p>
-        {% endif %}
-        <h2 class="text-2xl font-bold text-do-navy mb-6">Upload Spatial File</h2>
-        <form method="post"
-              enctype="multipart/form-data"
-              class="space-y-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            {% csrf_token %}
-            <div>
-                <label class="block text-gray-700 font-semibold mb-1">File Name</label>
-                {{ form.name }}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    
+    {# --- ERROR ALERT --- #}
+    {% if error %}
+    <div class="alert alert-error shadow-lg mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    {# --- FORM CARD --- #}
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+        <div class="card-body">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-14 h-14 shrink-0 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="card-title text-2xl font-black">Upload Spatial File</h2>
+                    <p class="text-sm opacity-60">Supported formats: .shp, .geojson, .kml</p>
+                </div>
             </div>
-            <div>
-                <label class="block text-gray-700 font-semibold mb-1">Select File</label>
-                {{ form.file }}
-            </div>
-            <button type="submit"
-                    class="bg-do-blue text-white px-6 py-2 rounded font-bold hover:bg-blue-700">Upload</button>
-        </form>
-        <div class="mt-4">
-            <a href="{% url 'file:dashboard' %}"
-               class="text-do-blue hover:underline">← Back to Dashboard</a>
+
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                {# File Name Input #}
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">Display Name</span>
+                    </label>
+                    {# Django renders the input, so we use CSS to style it #}
+                    <div class="[&_input]:input [&_input]:input-bordered [&_input]:w-full [&_input]:focus:outline-primary">
+                        {{ form.name }}
+                    </div>
+                </div>
+
+                {# File Selection #}
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">Select File</span>
+                    </label>
+                    <div class="[&_input]:file-input [&_input]:file-input-bordered [&_input]:file-input-primary [&_input]:w-full">
+                        {{ form.file }}
+                    </div>
+                    <label class="label">
+                        <span class="label-text-alt opacity-50">Maximum file size: 50MB</span>
+                    </label>
+                </div>
+
+                <div class="card-actions justify-end items-center gap-4 mt-4">
+                    <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-8">
+                        Upload to Cluster
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+
+</div>
 {% endblock %}
