@@ -45,7 +45,7 @@ SECRET_KEY = os.getenv("PROJECT_KEY")
 if IS_PROD and not SECRET_KEY:
     raise ImproperlyConfigured("PROJECT_KEY must be set in production")
 
-DEBUG = not IS_PROD
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 raw_hosts = os.getenv(
     "ALLOWED_HOSTS",
@@ -114,10 +114,14 @@ MIDDLEWARE += [
 
 if not IS_PROD:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
-    
+
 
 if IS_PROD:
-    CSRF_TRUSTED_ORIGINS = ["https://topmapsolutions.com", "http://149.28.129.119:8002", "http://149.28.129.119"]
+    CSRF_TRUSTED_ORIGINS = [
+        "https://topmapsolutions.com",
+        "http://149.28.129.119:8002",
+        "http://149.28.129.119",
+    ]
 
 # ----------------------------
 # URLS & TEMPLATES

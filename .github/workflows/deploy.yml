@@ -1,4 +1,4 @@
-name: Deploy to Vultr
+name: Deploy to Server Vultr
 
 on:
   push:
