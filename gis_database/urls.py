@@ -8,4 +8,6 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("upload/", views.upload_file, name="upload"),
     path("layer/<int:pk>/", views.layer_detail, name="detail"),
+    path("test", views.test, name="test"),
+    path("test-file", views.test_files, name="test-file"),
 ]

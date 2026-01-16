@@ -47,13 +47,10 @@ if IS_PROD and not SECRET_KEY:
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-raw_hosts = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,0.0.0.0",
-)
+raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 if IS_PROD:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = [host.strip() for host in raw_hosts.split(",") if host.strip()]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
@@ -161,7 +158,7 @@ ACCOUNT_LOGIN_METHODS = {"email", "username"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 # Email Verification logic
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 

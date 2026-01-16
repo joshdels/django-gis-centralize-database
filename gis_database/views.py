@@ -1,10 +1,12 @@
+import os
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect
+
 from .models import Project
 from .forms import ProjectForm
-from django.shortcuts import redirect
-import os
 
 
 MAX_UPLOADS = 3
@@ -21,6 +23,14 @@ def user_storage_used(user):
 
 def home(request):
     return render(request, "pages/home.html")
+
+
+def test_files(request):
+    return render(request, "test/test.html")
+
+
+def test(request):
+    return HttpResponse("<h1>Hello Test</h>")
 
 
 @login_required
