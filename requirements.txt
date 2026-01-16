@@ -28,8 +28,6 @@ jsbeautifier==1.15.4
 json5==0.13.0
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3
-
-
 pathspec==1.0.3
 psycopg2-binary==2.9.11
 Pygments==2.19.2

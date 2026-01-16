@@ -36,7 +36,7 @@ load_env()
 env_status = str(os.getenv("DJANGO_ENV", "dev")).strip().lower()
 IS_PROD = env_status == "prod"
 
-WINDOWS = os.getenv("WINDOWS", "False").lower() == "true"
+WINDOWS = os.getenv("WINDOWS")
 
 # ----------------------------
 # SECURITY
@@ -270,8 +270,13 @@ TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
-if WINDOWS:
-    NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+if not IS_PROD:
+    if WINDOWS:
+        NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+    else:
+        NPM_BIN_PATH = "/usr/local/bin/npm"
+else:
+    NPM_BIN_PATH = None
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
