@@ -36,16 +36,28 @@ load_env()
 env_status = str(os.getenv("DJANGO_ENV", "dev")).strip().lower()
 IS_PROD = env_status == "prod"
 
+DEBUG = os.getenv("DEBUG")
+
 WINDOWS = os.getenv("WINDOWS")
 
 # ----------------------------
 # SECURITY
 # ----------------------------
 SECRET_KEY = os.getenv("PROJECT_KEY")
+
 if IS_PROD and not SECRET_KEY:
     raise ImproperlyConfigured("PROJECT_KEY must be set in production")
 
-DEBUG = os.getenv("DEBUG")
+if IS_PROD:
+    CSRF_TRUSTED_ORIGINS = [
+        "https://topmapsolutions.com",
+        "https://www.topmapsolutions.com",
+    ]
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 
 raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 

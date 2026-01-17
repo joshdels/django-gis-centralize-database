@@ -116,6 +116,7 @@ python manage.py tailwind start
 this connects to the virtual machine and docker hosted a postgres/postgis image
 on your virtual machine, copy the docker-postgis.yml
 it should have 
+```
 DB_NAME="YOUR_DB_NAME"
 DB_USER="USER"
 DB_PASSWORD="PASSWORD"
@@ -129,4 +130,23 @@ docker ps             # to check
 docker-compose down   # to stop
 docker exect -it CONTAINER_NAME bash # to perform inside the container
 ```
+
+---
+### CI/CD Pipelines
+used for deploying apps and adding features continuously
+1. Create a deploy.yml file in .github/workflows
+2. save the following keys in the secret github actions
+```
+SERVER_IP="YOUR_SERVER_IP"
+SERVER_USER="YOUR_USERNAME"
+SSH_PRIVATE_KEY="YOUR_SERVER_KEY_GENERATED
+```
+for generating server keys write this on the server cli
+```
+# FOR GITHUB CI/CD keys
+Authorize keys inside the server
+cat ~/github-action-new.3pub >> ~/.ssh/authorized_keys
+cat ~/github-action-new  #then copy this to your github action secret key env
+
+rm ~/github-action-new ~/github-action-new.pub # optional
 ```
