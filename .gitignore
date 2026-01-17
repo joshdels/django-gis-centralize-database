@@ -98,6 +98,8 @@ build/
 *.swo
 *.tmp
 
+server.sh
+
 ----
 root@*
 postgres_data/

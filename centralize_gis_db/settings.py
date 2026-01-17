@@ -81,6 +81,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "tailwind",
     "widget_tweaks",
     "allauth",
@@ -93,8 +94,7 @@ if IS_PROD:
 LOCAL_APPS = [
     "gis_database",
     "theme",
-    "drf_basics",
-    "api_practice",
+    "api",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -307,6 +307,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication", 
         "rest_framework.authentication.BasicAuthentication",    
     ],
