@@ -16,8 +16,11 @@ MAX_STORAGE_MB = 5
 def user_storage_used(user):
     total = 0
     for upload in Project.objects.filter(user=user):
-        if upload.file and os.path.exists(upload.file.path):
-            total += os.path.getsize(upload.file.path)
+        if upload.file:
+            try:
+                total += upload.file.size
+            except Exception:
+                continue
     return total / (1024 * 1024)
 
 

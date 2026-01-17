@@ -28,5 +28,4 @@ class Project(models.Model):
 def delete_file_on_instance_delete(sender, instance, **kwargs):
     """Delete file/s from storage when Project instance is deleted"""
     if instance.file:
-        if os.path.isfile(instance.file.path):
-            os.remove(instance.file.path)
+        instance.file.delete(save=False)
