@@ -93,6 +93,8 @@ if IS_PROD:
 LOCAL_APPS = [
     "gis_database",
     "theme",
+    "drf_basics",
+    "api_practice",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -297,3 +299,25 @@ if DEBUG:
 # DEFAULT AUTO FIELD
 # ----------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# -----------------------------
+# DJANGO REST FRAMEWORK API
+# ------------------------------
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication", 
+        "rest_framework.authentication.BasicAuthentication",    
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",          
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "10/min", 
+    },
+}
+

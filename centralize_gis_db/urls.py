@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('gis_database.urls')),
     path("accounts/", include("allauth.urls")),
+    path("api/v1", include("drf_basics.urls")),
+    path("api/v2/", include("api_practice.urls")),
 ]
 
 if settings.DEBUG:
