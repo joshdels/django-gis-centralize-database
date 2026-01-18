@@ -3,49 +3,10 @@
 <div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
     {# --- NAVBAR COMPONENT --- #}
-    <div class="navbar bg-base-100 px-0 flex-col md:flex-row gap-4 border-b border-base-200 pb-8 mb-8">
-        <div class="flex-1 flex flex-col items-start">
-            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mt-1">Spatial Node Management v1.0</p>
-        </div>
-        
-        <div class="flex-none gap-4">
-            {% if user.is_authenticated %}
-                <div class="flex items-center gap-3 bg-base-100 pl-4 pr-1 py-1 rounded-full border border-base-200 shadow-sm">
-                    <div class="flex flex-col text-right hidden sm:flex">
-                        <span class="text-[9px] uppercase font-black opacity-30 leading-none mb-1">Authenticated</span>
-                        <span class="text-sm font-black tracking-tight text-base-content">{{ user.username }}</span>
-                    </div>
-                    
-                    <div class="dropdown dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder hover:bg-primary/10 transition-colors">
-                            <div class="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center border-2 border-base-100 shadow-sm">
-                                <span class="text-lg font-black">{{ user.username|first|upper }}</span>
-                            </div>
-                        </div>
-                        <ul tabindex="0" class="mt-4 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-xl w-52 border border-base-200 z-[100]">
-                            <li class="menu-title px-4 py-2 text-[10px] font-black uppercase opacity-40 tracking-widest">User Menu</li>
-                            <li><a href="#" class="py-3 font-bold">Profile</a></li>
-                            <div class="divider my-1 opacity-5"></div>
-                            <li class="p-1">
-                                <form method="post" action="{% url 'account_logout' %}" class="w-full">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-error btn-sm w-full text-white font-black border-none">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            {% else %}
-                <div class="join border border-base-200 shadow-sm">
-                    <a href="{% url 'account_login' %}" class="btn btn-ghost join-item font-bold">Log In</a>
-                    <a href="{% url 'account_signup' %}" class="btn btn-primary join-item px-8 font-black">Sign Up</a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
 
-    {% if user.is_authenticated %}
+    {% include "components/navbar.html" %}
+
+    
         
         {# --- SECTION 1: QUICK ACTIONS & STORAGE --- #}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -166,19 +127,6 @@
                 <canvas id="barChart" height="100"></canvas>
             </div>
         </div>
-
-    {% else %}
-        {# --- GUEST HERO STATE --- #}
-        <div class="hero bg-base-100 rounded-[3rem] py-32 border border-base-200 shadow-2xl relative overflow-hidden text-center">
-            <div class="hero-content">
-                <div class="max-w-2xl">
-                    <h2 class="text-7xl font-black text-primary tracking-tighter leading-[0.85] mb-6">Spatial Data <br>Management.</h2>
-                    <p class="text-lg font-medium opacity-60 mb-10">Connect cloud nodes, ingest files, and visualize layers instantly.</p>
-                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg shadow-2xl px-12 font-black text-lg h-20 rounded-2xl">Initialize Account</a>
-                </div>
-            </div>
-        </div>
-    {% endif %}
 </div>
 
 {# --- CHART.JS CONFIG --- #}
