@@ -16,7 +16,15 @@ class Project(models.Model):
     )
     file = models.FileField(upload_to=user_upload_path)
     name = models.CharField(max_length=255)
+    description = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    archived = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
 
     # ----- Domain Constraints ------
     MAX_FILES = 3
@@ -31,7 +39,7 @@ class Project(models.Model):
         """Validate all constraints before saving"""
 
         # Max rows per user
-        user_projects = Project.objects.filter(user=self.user)
+        user_projects = Project.objects.filter(user=self.user, archived=False)
         if self.pk:
             user_projects = user_projects.exclude(pk=self.pk)
         if user_projects.count() >= self.MAX_FILES:
@@ -59,7 +67,9 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         """Enforce domain rules to automatically save"""
         if not self.user_id:
-            raise ValidationError({'user': "User must be set before saving this Project."})
+            raise ValidationError(
+                {"user": "User must be set before saving this Project."}
+            )
         self.full_clean()
         super().save(*args, **kwargs)
 
