@@ -44,3 +44,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
+    
+class UserProfileView(APIView):
+    """Return the curretly authenticated user's profule"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        data = {
+            "username": user.username
+        }
+    
