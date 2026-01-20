@@ -22,27 +22,32 @@ jobs:
           timeout: 60m  
           command_timeout: 60m  
           script: |
-            # Exit immediately if a command exits with a non-zero status
-            set -e 
+            set -e
 
             cd ~/myapps/django-gis-centralize-database
             git fetch origin main
             git reset --hard origin/main
-            
-            # Disable BuildKit for compatibility with your Vultr legacy builder
+
             export DOCKER_BUILDKIT=0
-            
+
             echo "--- Starting Docker Rebuild ---"
-            # docker-compose down
             docker-compose up -d --build
-            
-            echo "--- Waiting for PostGIS and Django initialization ---"
-            sleep 15
-            
-            # Health check: Specifically check for the 'web' service
-            # If grep finds nothing, it returns code 1, which 'set -e' catches
-            docker-compose ps | grep "web" | grep "Up"
-            
+
+            echo "--- Waiting for Django container to be ready ---"
+            timeout=60
+            count=0
+            while ! docker-compose ps | grep "web" | grep -q "Up"; do
+                sleep 2
+                count=$((count + 2))
+                if [ $count -ge $timeout ]; then
+                    echo "Web container failed to start in time. Logs:"
+                    docker-compose logs web
+                    exit 1
+                fi
+            done
+            echo "Web container is up ✅"
+
             echo "--- Running Post-Deployment Cleanup ---"
             docker image prune -f
+
             echo "--- Deployment Complete ---"
