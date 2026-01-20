@@ -42,4 +42,4 @@
 
 
 /* Django scan paths */
-@source "../../../**/*.{html,py,js}";
+@source "../../../../**/*";

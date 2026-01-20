@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from gis_database.models import Project
-from .serializers import ProjectSerializer
+from .serializers import ProjectSerializer, UserSerializer
 
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -13,7 +13,7 @@ from rest_framework.permissions import AllowAny
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
-  
+
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -44,3 +44,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
+
+
+class UserProfileView(APIView):
+    """Return the curretly authenticated user's profule"""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)

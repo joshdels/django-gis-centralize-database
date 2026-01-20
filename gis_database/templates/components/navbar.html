@@ -1,62 +1,41 @@
-{# --- HEADER SECTION --- #}
-<div class="navbar bg-base-100 px-0 flex-col md:flex-row gap-4 border-b border-base-200 pb-8 mb-8">
-    <div class="flex-1 flex flex-col items-start">
-        {# High-Contrast Brand #}
-        <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
-        <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mt-1">One stop spatial solution</p>
+{# Added items-center and text-center for mobile, reset with md: prefix #}
+<div class="navbar bg-base-200 px-0 flex-col md:flex-row border-b border-base-300 pb-6 mb-8">
+    
+    <div class="flex-1 flex flex-col items-center md:items-start">
+        <h1 class="text-4xl font-black tracking-tight text-primary text-center md:text-left">TopMap Solutions</h1>
+        <p class="text-[10px] font-black uppercase tracking-widest mt-1 opacity-60 text-center md:text-left">
+            Making spatial easy to use
+        </p>
     </div>
     
-    <div class="gap-5">
+    {# Added mt-4 for mobile spacing, removed on md: screens #}
+    <div class="flex items-center gap-2 mt-4 md:mt-0">
         {% if user.is_authenticated %}
-            {# Refined Account Pill #}
-            <div class="flex items-center gap-3 bg-base-100 pl-4 pr-1 py-1 rounded-full border border-base-200 shadow-sm">
-                <div class="flex flex-col text-right hidden sm:flex">
-                    <span class="text-[9px] uppercase font-black opacity-30 leading-none mb-1">Authenticated</span>
-                    <span class="text-sm font-black tracking-tight text-base-content">{{ user.username }}</span>
-                </div>
+            <div class="flex items-center gap-3 bg-base-100 pl-4 pr-1 py-1">
+                <span class="text-xs font-black uppercase tracking-tight">{{ user.username }}</span>
                 
                 <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder hover:bg-primary/10 transition-colors">
-                        {# Perfectly Centered Initial with Primary Accent #}
-                        <div class="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center border-2 border-base-100 shadow-sm">
-                            <span class="text-lg font-black">{{ user.username|first|upper }}</span>
+                    <div tabindex="0" role="button" class="btn btn-sm">
+                        <div class="bg-neutral text-neutral-content w-8 h-8 flex items-center justify-center">
+                            <span class="font-black">{{ user.username|first|upper }}</span>
                         </div>
                     </div>
                     
-                    <ul tabindex="0" class="mt-4 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-xl w-52 border border-base-200 z-[100]">
-                        <li class="menu-title px-4 py-2 text-[10px] font-black uppercase opacity-40 tracking-widest">User Menu</li>
+                    <ul tabindex="0" class="card mt-4 p-2 menu menu-sm dropdown-content bg-base-100 w-52 z-100 shadow-sm rounded-none border border-base-300">
+                        <li><a href="#" class="font-bold uppercase">Profile</a></li>
+                        <div class="divider my-0"></div>
                         <li>
-                            <a href="#" class="py-3 font-bold flex justify-between items-center group">
-                                Profile
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            </a>
-                        </li>
-                        
-                        <div class="divider my-1 opacity-5"></div>
-                        
-                        {# NATIVE RED LOGOUT - HIGHLIGHTED STYLE #}
-                        <li class="p-1 mt-1">
-                            <form method="post" action="{% url 'account_logout' %}" class="w-full">
+                            <form method="post" action="{% url 'account_logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-error btn-sm w-full text-white font-black border-none shadow-md">
-                                    Logout
-                                </button>
+                                <button type="submit" class="text-error font-black uppercase">Logout</button>
                             </form>
                         </li>
                     </ul>
                 </div>
             </div>
         {% else %}
-            <div class="border-base-300">
-                <a href="{% url 'account_login' %}" 
-                class="btn btn-ghost px-6 font-bold uppercase text-xs tracking-widest border-r border-base-300">
-                    Log In
-                </a>
-                <a href="{% url 'account_signup' %}" 
-                class="btn btn-primary  px-8 font-black uppercase text-xs tracking-widest">
-                    Sign Up
-                </a>
-            </div>
+            <a href="{% url 'account_login' %}" class="btn btn-ghost btn-md font-black uppercase">Log In</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-md font-black uppercase">Sign Up</a>
         {% endif %}
     </div>
 </div>

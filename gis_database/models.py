@@ -9,16 +9,20 @@ def user_upload_path(instance, filename):
 
 
 class Project(models.Model):
+    """Represents a user project with filem, name, description, and owner"""
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="uploads",
+        help_text="The user who created this project",
     )
     file = models.FileField(upload_to=user_upload_path)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    owner = models.CharField(max_length=255, null=True, blank=True)
     archived = models.BooleanField(default=False)
 
     class Meta:
@@ -27,9 +31,8 @@ class Project(models.Model):
         verbose_name_plural = "Projects"
 
     # ----- Domain Constraints ------
-    MAX_FILES = 3
-    MAX_STORAGE_MB = 10
-    MAX_FILE_SIZE = 50 * 1024 * 1024
+    MAX_STORAGE_MB = 50
+    MAX_FILE_SIZE = 100 * 1024 * 1024
 
     def __str__(self):
         return self.name
@@ -42,10 +45,6 @@ class Project(models.Model):
         user_projects = Project.objects.filter(user=self.user, archived=False)
         if self.pk:
             user_projects = user_projects.exclude(pk=self.pk)
-        if user_projects.count() >= self.MAX_FILES:
-            raise ValidationError(
-                {"file": f"You can only have {self.MAX_FILES} project per user."}
-            )
 
         # Total file size per user
         total_used_bytes = sum(p.file.size for p in user_projects if p.file)
@@ -70,6 +69,10 @@ class Project(models.Model):
             raise ValidationError(
                 {"user": "User must be set before saving this Project."}
             )
+
+        if not self.owner:
+            self.owner = self.user.username
+
         self.full_clean()
         super().save(*args, **kwargs)
 
