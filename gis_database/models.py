@@ -31,9 +31,8 @@ class Project(models.Model):
         verbose_name_plural = "Projects"
 
     # ----- Domain Constraints ------
-    MAX_FILES = 3
-    MAX_STORAGE_MB = 10
-    MAX_FILE_SIZE = 50 * 1024 * 1024
+    MAX_STORAGE_MB = 100
+    MAX_FILE_SIZE = 100 * 1024 * 1024
 
     def __str__(self):
         return self.name
@@ -46,10 +45,6 @@ class Project(models.Model):
         user_projects = Project.objects.filter(user=self.user, archived=False)
         if self.pk:
             user_projects = user_projects.exclude(pk=self.pk)
-        if user_projects.count() >= self.MAX_FILES:
-            raise ValidationError(
-                {"file": f"You can only have {self.MAX_FILES} project per user."}
-            )
 
         # Total file size per user
         total_used_bytes = sum(p.file.size for p in user_projects if p.file)

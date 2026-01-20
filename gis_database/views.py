@@ -25,7 +25,6 @@ def test(request):
 @ensure_csrf_cookie
 def dashboard(request):
     uploads = Project.objects.filter(user=request.user).order_by("-created_at")
-    remaining_uploads = max(Project.MAX_FILES - uploads.count(), 0)
 
     total_bytes = 0
     for p in uploads:
@@ -49,10 +48,9 @@ def dashboard(request):
         "pages/dashboard.html",
         {
             "uploads": uploads,
-            "remaining_uploads": remaining_uploads,
-            "max_uploads": Project.MAX_FILES,
             "storage_percentage": storage_percent_remaining,
-            "remaining_mb": f"{remaining_mb:.1f}",
+            "remaining_mb": round(remaining_mb, 1),
+            "max_storage": Project.MAX_STORAGE_MB
         },
     )
 

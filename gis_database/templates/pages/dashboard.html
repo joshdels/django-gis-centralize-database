@@ -18,13 +18,13 @@
                         <p class="opacity-90 font-medium text-sm leading-relaxed">Please Make it sure that your project is in "GeoPackage" format .gkpg</p>
                         <div class="card-actions mt-6">
                         <div class="card-actions mt-6">
-                            {% if remaining_uploads > 0 %}
+                            {% if remaining_mb > 0 %}
                                 <a href="{% url 'file:upload' %}" class="btn btn-neutral btn-md px-8 font-black shadow-xl border-none">
                                     Upload Files
                                 </a>
-                                <span class="text-xs font-bold ml-2">{{ remaining_uploads }} uploads remaining (Max {{ max_uploads }})</span>
+                                <span class="text-xs font-bold ml-2">{{ remaining_mb }} uploads remaining (Max {{ max_storage }})</span>
                             {% else %}
-                                <span class="badge badge-outline font-bold border-2 opacity-50">Upload Limit Reached ({{ max_uploads }})</span>
+                                <span class="badge badge-outline font-bold border-2 opacity-50">Insufficient Storage</span>
                             {% endif %}
                         </div>
 
