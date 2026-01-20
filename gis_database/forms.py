@@ -5,7 +5,7 @@ from .models import Project
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["name", "file"]
+        fields = ["name", "file", "description"]
         
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)

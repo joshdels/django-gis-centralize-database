@@ -1,55 +1,33 @@
 {% extends "_base.html" %}
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-6">
 
     {# --- HEADER SECTION --- #}
     {% include "components/navbar.html" %}
 
-    {# --- TOPMAP SOLUTIONS HERO SECTION --- #}
-    <div class="relative bg-base-100 rounded-[3rem] border border-base-200 shadow-2xl overflow-hidden mt-8">
-        
-        {# Optional: Subtle Grid Background Overlay #}
-        <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:30px_30px]"></div>
-
-        <div class="hero-content text-center py-24 mx-auto relative z-10">
-            <div class="max-w-3xl">      
-             
-
-                <h2 class="text-6xl md:text-7xl font-black text-base-content tracking-tighter leading-[0.85] mb-8">
-                    Spatial Intelligence <br>
-                    <span class="text-primary">Simplified.</span>
+    {# --- HERO SECTION --- #}
+    <div class="card bg-base-100 shadow-sm mt-4 border border-base-300">
+        <div class="card-body py-24 items-center text-center"> 
+            
+            <div class="max-w-4xl">      
+                <h2 class="text-6xl md:text-8xl font-black  mb-6 uppercase leading-none">
+                    Spatial <br>
+                    <span class="text-primary">Solutions</span>
                 </h2>
                 
-                <p class="py-6 text-xl font-medium text-base-content/60 max-w-xl mx-auto leading-relaxed">
-                    Deploy your GIS infrastructure in seconds. Connect cloud nodes, ingest complex spatial datasets, and visualize layers with professional precision.
+                <p class="text-sm md:text-base font-black uppercase opacity-60 leading-relaxed">
+                    Your maps, organized. <br class="hidden md:block"> 
+                    Save your GIS projects and share them with the your coworker.
                 </p>
                 
-                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-12 font-black text-lg h-20 rounded-2xl shadow-2xl shadow-primary/20">
+                <div class="flex justify-center mt-10">
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg rounded-xl font-black text-xl h-20 px-12 uppercase">
                         Get Started
                     </a>
-                    <!-- <a href="{% url 'account_login' %}" class="btn btn-ghost btn-lg px-12 font-black text-lg h-20 rounded-2xl border-2 border-base-200">
-                        Access Portal
-                    </a> -->
-                </div>
-
-                {# Stats Footer #}
-                <div class="grid grid-cols-3 gap-8 mt-20 pt-12 border-t border-base-200/60 max-w-lg mx-auto">
-                    <div>
-                        <p class="text-2xl font-black tracking-tighter text-base-content">24/7</p>
-                        <p class="text-[9px] font-black uppercase tracking-widest opacity-40">Node Uptime</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-black tracking-tighter text-base-content">L-4</p>
-                        <p class="text-[9px] font-black uppercase tracking-widest opacity-40">Encryption</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-black tracking-tighter text-base-content">OS</p>
-                        <p class="text-[9px] font-black uppercase tracking-widest opacity-40">Cloud Native</p>
-                    </div>
                 </div>
 
             </div>
+
         </div>
     </div>
 </div>

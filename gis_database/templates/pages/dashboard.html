@@ -1,161 +1,32 @@
 {% extends "_base.html" %}
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+<div class="max-w-7xl mx-auto px-4 py-6 lg:py-8 space-y-8">
 
-    {# --- NAVBAR COMPONENT --- #}
-
+    {# 1. Navigation #}
     {% include "components/navbar.html" %}
 
-    
-        
-        {# --- SECTION 1: QUICK ACTIONS & STORAGE --- #}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {# Action Hero Card #}
-            <div class="lg:col-span-2 card bg-primary text-primary-content shadow-2xl overflow-hidden border-none">
-                <div class="card-body flex-row items-center justify-between p-8">
-                    <div class="max-w-md">
-                        <h2 class="text-3xl font-black tracking-tight mb-2">Upload You GIS Project</h2>
-                        <p class="opacity-90 font-medium text-sm leading-relaxed">Please Make it sure that your project is in "GeoPackage" format .gkpg</p>
-                        <div class="card-actions mt-6">
-                        <div class="card-actions mt-6">
-                            {% if remaining_mb > 0 %}
-                                <a href="{% url 'file:upload' %}" class="btn btn-neutral btn-md px-8 font-black shadow-xl border-none">
-                                    Upload Files
-                                </a>
-                                <span class="text-xs font-bold ml-2">{{ remaining_mb }} uploads remaining (Max {{ max_storage }})</span>
-                            {% else %}
-                                <span class="badge badge-outline font-bold border-2 opacity-50">Insufficient Storage</span>
-                            {% endif %}
-                        </div>
+    {# 2. Top Stats Section #}
+    <div class="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {% include "components/dashboard/upload_card.html" %}
+        {% include "components/dashboard/storage_card.html" %}
+    </div>
 
-                        </div>
-                    </div>
-                    <div class="hidden sm:block opacity-10">
-                        <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                </div>
-            </div>
+    {# 3. Project Registry Section #}
+    <div class="space-y-4">
+        {# TqbleView #}
+        {% include "components/dashboard/projects_table.html" %}
 
-            {# Storage Usage Card #}
-            <div class="card bg-base-100 shadow-xl border border-base-200">
-                <div class="card-body justify-center">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Cloud Storage</span>
-                    <div class="flex items-end gap-2 mt-1">
-                        <span class="text-5xl font-black tracking-tighter">{{ storage_percentage }}%</span>
-                        <span class="text-sm font-bold opacity-40 pb-1 mb-1">CAPACITY</span>
-                    </div>
-                    <progress class="progress progress-primary w-full mt-4 h-3" value="{{ storage_percentage }}" max="100"></progress>
-                    <p class="text-[10px] font-bold opacity-50 mt-2 italic text-center w-full">{{ remaining_mb }} MB remaining</p>
-                </div>
-            </div>
-        </div>
+    </div>
 
-        {# --- SECTION 2: DATA TABLE & MAP --- #}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {# My Uploads Table #}
-            <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-                <div class="card-body p-0">
-                    <div class="px-6 py-5 flex justify-between items-center border-b border-base-200">
-                        <div>
-                            <h3 class="font-black text-xl tracking-tight">My Projects</h3>
-                            <p class="text-[10px] font-black opacity-30 uppercase tracking-[0.15em]">Current Saved Projects</p>
-                        </div>
-                        <div class="badge badge-neutral font-black rounded-md px-3">{{ uploads|length }}</div>
-                    </div>
+    {# 4. Analytics Section #}
+    <div class="hidden lg:block">
+        {% include "components/charts/analytics_section.html" %}
+    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="table w-full">
-                            <thead>
-                                <tr class="bg-base-200/50 text-base-content/50 border-b border-base-200">
-                                    <th class="font-black uppercase text-[10px] tracking-widest py-4">Layer Name</th>
-                                    <th class="font-black uppercase text-[10px] tracking-widest text-right py-4">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for file in uploads %}
-                                <tr class="hover:bg-base-200/50 transition-colors border-b border-base-100">
-                                    <td>
-                                        <div class="flex items-center gap-3">
-                                            <div class="flex items-center justify-center bg-base-200 text-base-content rounded-md w-9 h-9 shrink-0 shadow-sm border border-base-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
-                                            </div>
-                                            <span class="font-bold text-sm truncate max-w-[140px]">{{ file.name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-right">
-                                        <a href="{% url 'file:detail' file.pk %}" class="btn btn-ghost btn-xs font-black uppercase tracking-tighter hover:bg-primary hover:text-white">Open</a>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="2" class="text-center py-16 opacity-20">
-                                        <span class="text-[10px] font-black uppercase tracking-widest">No active layers in node</span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            {# Spatial Overview (Map) #}
-            <div class="lg:col-span-2 card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-                <div class="card-body p-0">
-                    <div class="p-4 border-b border-base-200 flex justify-between items-center">
-                        <div>
-                            <h3 class="font-black text-lg tracking-tight">Spatial Overview</h3>
-                            <p class="text-[10px] font-black opacity-30 uppercase tracking-widest text-left">Global Node Visibility</p>
-                        </div>
-                        <div class="badge badge-success badge-sm py-3 px-4 gap-2 font-black text-[10px] uppercase tracking-widest">
-                          <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span> Service: Online
-                        </div>
-                    </div>
-                   <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:30px_30px]"></div>
-                </div>
-            </div>
-        </div>
-
-        {# --- SECTION 3: ANALYTICS --- #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-            <div class="card bg-base-100 shadow-xl border border-base-200 p-8">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-6">Uploaded Layers</h3>
-                <canvas id="lineChart" height="100"></canvas>
-            </div>
-            <div class="card bg-base-100 shadow-xl border border-base-200 p-8">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-6">Distribution by Type</h3>
-                <canvas id="barChart" height="100"></canvas>
-            </div>
-        </div>
 </div>
 
-{# --- CHART.JS CONFIG --- #}
+{# Keep the Charts JS here or move to a separate JS file #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const chartOptions = { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } };
-    
-    new Chart(document.getElementById('lineChart'), {
-        type: 'line',
-        data: { labels: ['01','02','03','04','05'], datasets:[{ data:[3,6,4,8,10], borderColor: '#570df8', tension:0.4, borderWeight: 4, pointRadius: 0 }] },
-        options: chartOptions
-    });
+{% include "components/charts/_chart_logic.js.html" %} 
 
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: { labels:['Vector','Raster','GeoJSON','KML'], datasets:[{ data:[12,5,8,3], backgroundColor: '#f000b8', borderRadius: 4 }] },
-        options: chartOptions
-    });
-</script>
-
-{# --- LEAFLET MAP CONFIG --- #}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-    const map = L.map("map", { zoomControl: false }).setView([14.5995, 120.9842], 6);
-    L.tileLayer("https://{s}.tile.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png").addTo(map);
-    L.marker([14.5995, 120.9842]).addTo(map);
-    setTimeout(() => { map.invalidateSize(); }, 300);
-});
-</script>
 {% endblock %}

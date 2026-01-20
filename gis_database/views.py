@@ -9,6 +9,26 @@ from .models import Project
 from .forms import ProjectForm
 
 
+# Utility
+def get_user_storage_context(user):
+    """Calculates storage stats for a specific user."""
+    uploads = Project.objects.filter(user=user).order_by("-created_at")
+
+    total_bytes = sum(p.file.size for p in uploads if p.file)
+    total_mb = total_bytes / (1024 * 1024)
+
+    remaining_mb = max(Project.MAX_STORAGE_MB - total_mb, 0)
+    storage_percent = min(round((remaining_mb / Project.MAX_STORAGE_MB) * 100, 1), 100)
+
+    return {
+        "uploads": uploads,
+        "storage_percentage": storage_percent,
+        "remaining_mb": round(remaining_mb, 1),
+        "max_storage": round(Project.MAX_STORAGE_MB, 1),
+    }
+
+
+# Public Views
 def home(request):
     return render(request, "pages/home.html")
 
@@ -24,39 +44,14 @@ def test(request):
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
-    uploads = Project.objects.filter(user=request.user).order_by("-created_at")
-
-    total_bytes = 0
-    for p in uploads:
-        if p.file:
-            try:
-                print(f"{p.file.name} -> {p.file.size} bytes")  # debug
-                total_bytes += p.file.size
-            except Exception as e:
-                print("Error reading file size:", e)
-
-    total_mb = total_bytes / (1024 * 1024)
-    remaining_mb = max(Project.MAX_STORAGE_MB - total_mb, 0)
-    storage_percent_remaining = min(
-        round((remaining_mb / Project.MAX_STORAGE_MB) * 100, 1), 100
-    )
-
-    print("Total MB:", total_mb, "Storage %:", storage_percent_remaining)
-
-    return render(
-        request,
-        "pages/dashboard.html",
-        {
-            "uploads": uploads,
-            "storage_percentage": storage_percent_remaining,
-            "remaining_mb": round(remaining_mb, 1),
-            "max_storage": Project.MAX_STORAGE_MB
-        },
-    )
+    context = get_user_storage_context(request.user)
+    return render(request, "pages/dashboard.html", context)
 
 
 @login_required
 def upload_file(request):
+    context = get_user_storage_context(request.user)
+
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():

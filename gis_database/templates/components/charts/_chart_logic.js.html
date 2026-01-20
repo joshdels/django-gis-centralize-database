@@ -1,0 +1,22 @@
+<script>
+    const chartOptions = { 
+        responsive: true, 
+        plugins: { legend: { display: false } }, 
+        scales: { 
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' }, ticks: { font: { weight: 'bold', size: 10 } } }, 
+            x: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } } 
+        } 
+    };
+    
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: { labels: ['01','02','03','04','05'], datasets:[{ data:[3,6,4,8,10], borderColor: '#000', tension:0, borderWeight: 3, pointRadius: 4, pointBackgroundColor: '#570df8' }] },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: { labels:['VEC','RAS','GJS','KML'], datasets:[{ data:[12,5,8,3], backgroundColor: '#000', borderRadius: 0 }] },
+        options: chartOptions
+    });
+</script>

@@ -31,7 +31,7 @@ class Project(models.Model):
         verbose_name_plural = "Projects"
 
     # ----- Domain Constraints ------
-    MAX_STORAGE_MB = 100
+    MAX_STORAGE_MB = 50
     MAX_FILE_SIZE = 100 * 1024 * 1024
 
     def __str__(self):
