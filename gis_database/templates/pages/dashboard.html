@@ -18,6 +18,10 @@
 
     </div>
 
+    <div class="block lg:hidden grid-cols-1 gap-6">
+        {% include "components/dashboard/upload_card.html" %}
+    </div>
+
     {# 4. Analytics Section #}
     <div class="hidden lg:block">
         {% include "components/charts/analytics_section.html" %}
@@ -25,7 +29,6 @@
 
 </div>
 
-{# Keep the Charts JS here or move to a separate JS file #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% include "components/charts/_chart_logic.js.html" %} 
 

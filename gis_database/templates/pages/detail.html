@@ -8,69 +8,78 @@
     {% include "components/navbar.html" %}
 
     
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            {# --- LEFT COLUMN: FILE INFO --- #}
-            <div class="lg:col-span-2">
-                <div class="card bg-base-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="flex items-center gap-6 mb-6">
-                            {# Centered Icon Container #}
-                            <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0 shadow-lg">
-                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-3xl font-black text-base-content">{{ layer.name }}</h3>
-                                <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter">Verified Layer</div>
-                            </div>
-                        </div>
+       <div class="lg:col-span-2">
+    <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
 
-                        {# Stats Section #}
-                        <div class="stats stats-vertical lg:stats-horizontal shadow bg-base-200 w-full mb-6 overflow-hidden">
-                            <div class="stat">
-                                <div class="stat-title font-bold opacity-50 uppercase text-xs">Owner</div>
-                                <div class="stat-value text-xl">{{ layer.user.username }}</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-title font-bold opacity-50 uppercase text-xs">Timestamp</div>
-                                <div class="stat-value text-xl">{{ layer.created_at|date:"M d, Y" }}</div>
-                            </div>
-                        </div>
+            {# --- HEADER SECTION: ICON + NAME LEFT, OWNER/CREATED RIGHT --- #}
+            <div class="flex justify-between items-start mb-4">
 
-                        {# Action Box #}
-                        <div class="bg-base-200 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <div class="flex items-center gap-3">
-                                <div class="kbd kbd-sm font-mono opacity-70">{{ layer.file.name|truncatechars:20 }}</div>
-                            </div>
-                            <a href="{{ layer.file.url }}" class="btn btn-primary px-10 shadow-md shadow-primary/20" target="_blank">
-                                Download File
-                            </a>
-                        </div>
+                {# Left: Icon + Project Name + Badge #}
+                <div class="flex items-center gap-3">  {# reduced gap from 6 -> 3 #}
+                    <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0 shadow-lg">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-black text-base-content">{{ layer.name }}</h3>
+                        <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter text-sm">Verified Layer</div>
+                    </div>
+                </div>
 
-                        <div class="card-actions mt-10">
-                            <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm no-underline opacity-50 hover:opacity-100">
-                                ← Back to Dashboard
-                            </a>
-                        </div>
+                {# Right: Owner + Created On Stats #}
+                <div class="flex flex-col text-right gap-1">  {# added small gap between lines #}
+                    <div>
+                        <div class="font-bold uppercase text-sm">Owner</div>
+                        <div class="text-xs font-mono">{{ layer.user.username }}</div>
+                    </div>
+                    <div>
+                        <div class="font-bold uppercase text-sm">Created on</div>
+                        <div class="text-xs font-mono">{{ layer.created_at|date:"M d, Y" }}</div>
                     </div>
                 </div>
             </div>
 
-            {# --- RIGHT COLUMN: SIDEBAR --- #}
-            <div class="space-y-6">
-                <div class="card bg-accent text-accent-content shadow-sm">
-                    <div class="card-body">
-                        <h3 class="card-title text-sm uppercase font-black opacity-80">GIS Metadata</h3>
-                        <p class="text-sm">Spatial data is ready for clustering. Geometry validation has been completed successfully.</p>
-                        <div class="card-actions justify-end mt-4">
-                            <button class="btn btn-sm btn-ghost bg-base-100/20 hover:bg-base-100/40 border-none">Quick Inspect</button>
-                        </div>
+            {# --- ACTIONS: Download + Push Changes --- #}
+            <div class="grid grid-cols-1 gap-5 mb-6 mt-10">
+
+                <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
+                    <div class="text-xs font-mono md:mr-4 text-center md:text-left">
+                        📥 Download the project's latest saved on the cloud
+                    </div>
+                    <a href="{% url 'file:download-file' layer.pk %}" class="btn btn-primary py-5 shadow-sm w-full text-lg font-bold">
+                        Download Project
+                    </a>
+                    <div class="flex items-center">
+                        <div class="text-xs font-mono opacity-70">{{ layer.file.name|truncatechars:40 }}</div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
+                    <div class="text-xs font-mono md:mr-4 text-center md:text-left">
+                        ☁️ Updates from your device to the cloud
+                    </div>
+                    <a href="{% url 'file:update-file' layer.pk %}" class="btn btn-primary py-5 shadow-sm w-full text-lg font-bold">
+                        Push Changes
+                    </a>
+                    <div class="text-xs font-mono opacity-70">
+                        Last Updated on {{ layer.updated_at|date:"M d, Y h:i A" }} PH Time
                     </div>
                 </div>
             </div>
+
+            {# --- Back Button --- #}
+            <div class="card-actions mt-10">
+                <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm opacity-50">
+                    ← Back to Dashboard
+                </a>
+            </div>
+
         </div>
+    </div>
+</div>
 
 </div>
 {% endblock %}

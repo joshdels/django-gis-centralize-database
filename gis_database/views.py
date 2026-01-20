@@ -1,12 +1,12 @@
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ValidationError
 
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectForm, FileUpdateForm
 
 
 # Utility
@@ -66,6 +66,54 @@ def upload_file(request):
         form = ProjectForm()
 
     return render(request, "pages/upload.html", {"form": form})
+
+
+@login_required
+def download_file(request, pk):
+    """Force download of a user's project file."""
+    project = get_object_or_404(Project, pk=pk)
+
+    if project.user != request.user:
+        raise Http404("You do not have permission to download this file.")
+
+    if not project.file:
+        raise Http404("File not found.")
+
+    try:
+        response = FileResponse(
+            project.file.open("rb"),
+            as_attachment=True,
+            filename=os.path.basename(project.file.name),
+        )
+        return response
+    except FileNotFoundError:
+        raise Http404("File not found.")
+
+
+@login_required
+def update_file(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if project.user != request.user:
+        raise Http404("You do not have permission to update this file.")
+
+    if request.method == "POST":
+        form = FileUpdateForm(request.POST, request.FILES, instance=project, user=request.user)
+        if form.is_valid():
+            # Optional: delete old file to free storage
+            if 'file' in request.FILES and project.file:
+                project.file.delete(save=False)
+
+            form.save()
+            return redirect("file:dashboard")
+    else:
+        form = FileUpdateForm(instance=project)
+
+    return render(
+        request, 
+        "pages/update_file.html",  # can be a simpler template
+        {"form": form, "project": project}
+    )
 
 
 @login_required
