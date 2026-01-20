@@ -9,5 +9,5 @@ urlpatterns = [
     path("", include(router.urls)),
     path("login/", LoginView.as_view(), name="api-login"),
     path("logout/", LogoutView.as_view(), name="api-logout"),
-    path("profile/", UserProfileView.as_view(), name="user-profile"),
+    path("user-profile/", UserProfileView.as_view(), name="user-profile"),
 ]

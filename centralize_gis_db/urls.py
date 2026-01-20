@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("gis_database.urls")),
     path("accounts/", include("allauth.urls")),
+    path('accounts/', include('accounts.urls')),
     path("api/v1/", include("api.urls")),
 ]
 

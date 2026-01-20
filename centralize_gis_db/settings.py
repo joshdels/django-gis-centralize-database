@@ -93,6 +93,7 @@ if IS_PROD:
 
 LOCAL_APPS = [
     "gis_database",
+    "accounts",
     "theme",
     "api",
 ]
