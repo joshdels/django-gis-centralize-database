@@ -50,8 +50,8 @@ def dashboard(request):
 
 @login_required
 def project_detail(request, pk):
-    layer = get_object_or_404(Project, pk=pk)
-    return render(request, "pages/detail.html", {"layer": layer})
+    project = get_object_or_404(Project, pk=pk)
+    return render(request, "pages/project-details.html", {"project": project})
 
 
 @login_required
