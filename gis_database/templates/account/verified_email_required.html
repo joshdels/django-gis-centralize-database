@@ -4,66 +4,66 @@
 {% block head_title %}{% trans "Verify Your Email Address" %}{% endblock %}
 
 {% block content %}
-<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
-    <div class="max-w-md w-full">
-        
-        <div class="card bg-base-100 shadow-xl border border-base-200">
-            
+    <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div class="max-w-md w-full">
+
+            <div class="card bg-base-100 shadow-xl border border-base-200">
+
             {# --- CUSTOM ICON HEADER (KEPT AS REQUESTED) --- #}
-            <div class="p-8 pb-0 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+                <div class="p-8 pb-0 text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-black tracking-tighter text-primary uppercase">{% trans "Verify Access" %}</h2>
+                    <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mt-2">{% trans "Check Your Inbox" %}</p>
                 </div>
-                <h2 class="text-3xl font-black tracking-tighter text-primary uppercase">{% trans "Verify Access" %}</h2>
-                <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mt-2">{% trans "Check Your Inbox" %}</p>
-            </div>
 
-            <div class="card-body items-center text-center p-10 pt-6">
-                
+                <div class="card-body items-center text-center p-10 pt-6">
+
                 {# NATIVE DAISY BADGE #}
-                <div class="badge badge-primary badge-outline font-bold py-4 px-6 mb-6">
-                    {{ user.email|default:"(no email)" }}
-                </div>
+                    <div class="badge badge-primary badge-outline font-bold py-4 px-6 mb-6">
+                        {{ user.email|default:"(no email)" }}
+                    </div>
 
-                <p class="text-sm opacity-70 mb-8">
-                    {% blocktrans %}To access <strong>TopMap Solutions</strong> features, we need to verify your identity.{% endblocktrans %}
-                </p>
+                    <p class="text-sm opacity-70 mb-8">
+                        {% blocktrans %}To access <strong>TopMap Solutions</strong> features, we need to verify your identity.{% endblocktrans %}
+                    </p>
 
                 {# NATIVE DAISY ALERT #}
-                <div class="alert alert-success shadow-sm mb-8">
-                    <div class="flex flex-col items-center w-full gap-2">
-                        <div class="flex items-center gap-2">
-                            <span class="relative flex h-3 w-3">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
-                            </span>
-                            <span class="text-xs font-black uppercase tracking-widest">{% trans "Current Status" %}</span>
+                    <div class="alert alert-success shadow-sm mb-8">
+                        <div class="flex flex-col items-center w-full gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+                                </span>
+                                <span class="text-xs font-black uppercase tracking-widest">{% trans "Current Status" %}</span>
+                            </div>
+                            <p class="text-xs font-medium text-center">
+                                {% trans "Verification email has been sent. Please check your inbox and spam folder." %}
+                            </p>
                         </div>
-                        <p class="text-xs font-medium text-center">
-                            {% trans "Verification email has been sent. Please check your inbox and spam folder." %}
-                        </p>
                     </div>
-                </div>
 
                 {# NATIVE DAISY ACTIONS #}
-                <div class="card-actions w-full flex flex-col gap-3">
-                    <a href="{% url 'account_email' %}" class="btn btn-primary btn-block uppercase font-black">
-                        {% trans "Manage Email Settings" %}
-                    </a>
-                    
-                    <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm font-bold btn-block">
-                        {% trans "Back to Dashboard" %}
-                    </a>
+                    <div class="card-actions w-full flex flex-col gap-3">
+                        <a href="{% url 'account_email' %}" class="btn btn-primary btn-block uppercase font-black">
+                            {% trans "Manage Email Settings" %}
+                        </a>
+
+                        <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm font-bold btn-block">
+                            {% trans "Back to Dashboard" %}
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
         {# FOOTER #}
-        <div class="mt-10 text-center">
-            {% include "components/footer.html" %}
+            <div class="mt-10 text-center">
+                {% include "components/footer.html" %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

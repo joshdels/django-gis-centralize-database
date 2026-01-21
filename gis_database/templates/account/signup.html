@@ -2,107 +2,107 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-md">
-        
+    <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+
         {# --- BRAND HEADER --- #}
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
-            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">User Registration</p>
-        </div>
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
+                <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">User Registration</p>
+            </div>
 
         {# --- SIGNUP CARD --- #}
-        <div class="card bg-base-100 shadow-2xl border border-base-200">
+            <div class="card bg-base-100 shadow-2xl border border-base-200">
             {# Added id="signup-form" #}
-            <form id="signup-form" method="post" action="{% url 'account_signup' %}" class="card-body gap-5 p-8">
-                {% csrf_token %}
+                <form id="signup-form" method="post" action="{% url 'account_signup' %}" class="card-body gap-5 p-8">
+                    {% csrf_token %}
 
-                <div class="mb-2">
-                    <h2 class="text-2xl font-black">Get Started</h2>
-                    <p class="text-sm opacity-50">Create your spatial management account</p>
-                </div>
+                    <div class="mb-2">
+                        <h2 class="text-2xl font-black">Get Started</h2>
+                        <p class="text-sm opacity-50">Create your spatial management account</p>
+                    </div>
 
                 {# --- ACCOUNT ALREADY EXISTS ERRORS --- #}
-                {% if form.non_field_errors %}
+                    {% if form.non_field_errors %}
                 {# Added id="non-field-errors" #}
-                <div id="non-field-errors" class="alert alert-error text-xs py-3 shadow-inner rounded-lg flex items-start gap-2 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <div class="font-bold">
-                        {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
+                        <div id="non-field-errors" class="alert alert-error text-xs py-3 shadow-inner rounded-lg flex items-start gap-2 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <div class="font-bold">
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
 
                 {# Loop through fields #}
-                {% for field in form %}
-                <div class="form-control">
-                    <label class="label" for="{{ field.id_for_label }}">
-                        <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">{{ field.label }}</span>
-                    </label>
-                    
+                    {% for field in form %}
+                        <div class="form-control">
+                            <label class="label" for="{{ field.id_for_label }}">
+                                <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">{{ field.label }}</span>
+                            </label>
+
                     {# Added js-input class #}
-                    {{ field|add_class:"input input-bordered focus:outline-primary w-full font-medium js-input" }}
-                    
-                    {% if field.errors %}
+                            {{ field|add_class:"input input-bordered focus:outline-primary w-full font-medium js-input" }}
+
+                            {% if field.errors %}
                         {# Added js-field-error class #}
-                        <label class="label js-field-error">
-                            <span class="label-text-alt text-error font-bold">{{ field.errors.0 }}</span>
-                        </label>
-                    {% endif %}
-                    
-                    {% if field.help_text and "password" not in field.name.lower %}
-                        <label class="label">
-                            <span class="label-text-alt text-[10px] opacity-40 leading-tight italic uppercase">{{ field.help_text|safe }}</span>
-                        </label>
-                    {% endif %}
-                </div>
-                {% endfor %}
+                                <label class="label js-field-error">
+                                    <span class="label-text-alt text-error font-bold">{{ field.errors.0 }}</span>
+                                </label>
+                            {% endif %}
 
-                <div class="form-control mt-4">
-                    <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
-                        Create Account
-                    </button>
-                </div>
+                            {% if field.help_text and "password" not in field.name.lower %}
+                                <label class="label">
+                                    <span class="label-text-alt text-[10px] opacity-40 leading-tight italic uppercase">{{ field.help_text|safe }}</span>
+                                </label>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
 
-                <div class="divider opacity-10 my-2 text-[10px] font-bold uppercase tracking-widest">Verification Required</div>
+                    <div class="form-control mt-4">
+                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
+                            Create Account
+                        </button>
+                    </div>
 
-                <div class="text-center text-sm font-medium">
-                    <span class="opacity-50">Already have an account?</span>
-                    <a href="{% url 'account_login' %}" class="text-primary font-black hover:underline ml-1">Log In</a>
-                </div>
-            </form>
+                    <div class="divider opacity-10 my-2 text-[10px] font-bold uppercase tracking-widest">Verification Required</div>
+
+                    <div class="text-center text-sm font-medium">
+                        <span class="opacity-50">Already have an account?</span>
+                        <a href="{% url 'account_login' %}" class="text-primary font-black hover:underline ml-1">Log In</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 {# --- JAVASCRIPT TO HIDE ERRORS ON TYPE --- #}
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const signupForm = document.getElementById('signup-form');
-        const nonFieldErrors = document.getElementById('non-field-errors');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signup-form');
+            const nonFieldErrors = document.getElementById('non-field-errors');
 
-        signupForm.addEventListener('input', (e) => {
-            if (e.target.classList.contains('js-input')) {
+            signupForm.addEventListener('input', (e) => {
+                if (e.target.classList.contains('js-input')) {
                 // 1. Hide the specific field error below the input
-                const fieldContainer = e.target.closest('.form-control');
-                const errorLabel = fieldContainer.querySelector('.js-field-error');
-                if (errorLabel) {
-                    errorLabel.style.display = 'none';
-                }
+                    const fieldContainer = e.target.closest('.form-control');
+                    const errorLabel = fieldContainer.querySelector('.js-field-error');
+                    if (errorLabel) {
+                        errorLabel.style.display = 'none';
+                    }
 
                 // 2. Hide the top "Account Already Exists" alert if user starts typing
-                if (nonFieldErrors) {
-                    nonFieldErrors.style.opacity = '0';
-                    setTimeout(() => {
-                        nonFieldErrors.style.display = 'none';
-                    }, 300); // Smooth fade out
+                    if (nonFieldErrors) {
+                        nonFieldErrors.style.opacity = '0';
+                        setTimeout(() => {
+                            nonFieldErrors.style.display = 'none';
+                        }, 300); // Smooth fade out
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}

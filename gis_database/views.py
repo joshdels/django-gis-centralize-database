@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ValidationError
 
-from .models import Project
-from .forms import ProjectForm, FileUpdateForm
+from .models import Project, ProjectVersion
+from .forms import ProjectForm, ProjectVersionForm
 
 
 # Utility
@@ -46,6 +46,12 @@ def test(request):
 def dashboard(request):
     context = get_user_storage_context(request.user)
     return render(request, "pages/dashboard.html", context)
+
+
+@login_required
+def project_detail(request, pk):
+    layer = get_object_or_404(Project, pk=pk)
+    return render(request, "pages/detail.html", {"layer": layer})
 
 
 @login_required
@@ -94,29 +100,55 @@ def download_file(request, pk):
 def update_file(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
+    # Ownership check
     if project.user != request.user:
-        raise Http404("You do not have permission to update this file.")
+        raise Http404("You do not have permission to update this project.")
 
     if request.method == "POST":
-        form = FileUpdateForm(request.POST, request.FILES, instance=project, user=request.user)
+        form = ProjectVersionForm(request.POST, request.FILES)
         if form.is_valid():
-            # Optional: delete old file to free storage
-            if 'file' in request.FILES and project.file:
-                project.file.delete(save=False)
+            new_file = form.cleaned_data["file"]
 
-            form.save()
-            return redirect("file:dashboard")
+            # --- STORAGE VALIDATION ---
+            user_projects = Project.objects.filter(user=request.user, archived=False)
+            total_bytes = 0
+            for p in user_projects:
+                # Exclude current project's file since it will be replaced
+                if p.pk != project.pk and p.file:
+                    total_bytes += p.file.size
+                for v in p.versions.all():
+                    if v.file:
+                        total_bytes += v.file.size
+
+            total_bytes += new_file.size
+            total_mb = total_bytes / (1024 * 1024)
+
+            if total_mb > Project.MAX_STORAGE_MB:
+                form.add_error(
+                    "file", f"Total storage exceeded ({Project.MAX_STORAGE_MB} MB max)."
+                )
+            else:
+                # --- CREATE NEW VERSION ---
+                last_version = project.versions.first()  # latest version
+                new_version_number = (
+                    last_version.version_number if last_version else 0
+                ) + 1
+
+                new_version = ProjectVersion.objects.create(
+                    project=project,
+                    file=new_file,
+                    version_number=new_version_number,
+                )
+
+                # --- UPDATE MAIN PROJECT FILE + updated_at ---
+                from django.utils import timezone
+
+                project.file = new_version.file
+                project.updated_at = timezone.now()  # force updated_at update
+                project.save(update_fields=["file", "updated_at"])
+
+                return redirect("file:project-detail", pk=project.pk)
     else:
-        form = FileUpdateForm(instance=project)
+        form = ProjectVersionForm()
 
-    return render(
-        request, 
-        "pages/update_file.html",  # can be a simpler template
-        {"form": form, "project": project}
-    )
-
-
-@login_required
-def layer_detail(request, pk):
-    layer = get_object_or_404(Project, pk=pk)
-    return render(request, "pages/detail.html", {"layer": layer})
+    return render(request, "pages/update_file.html", {"form": form, "project": project})

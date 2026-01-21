@@ -2,107 +2,107 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
-    
-    <div class="w-full max-w-2xl">
-        
-        {# --- BRAND HEADER --- #}
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
-            <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">Identity Management</p>
-        </div>
+    <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
+        <div class="w-full max-w-2xl">
+
+        {# --- BRAND HEADER --- #}
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-black tracking-tight text-primary">TopMap Solutions</h1>
+                <p class="text-sm opacity-60 mt-2 uppercase font-bold tracking-widest text-base-content">Identity Management</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
             {# --- MANAGE EMAILS SECTION --- #}
-            <div class="card bg-base-100 shadow-2xl border border-base-200">
-                <div class="card-body p-8">
-                    <h2 class="text-2xl font-black mb-4">Linked Emails</h2>
-                    
-                    {% if user.emailaddress_set.all %}
-                    <form method="post" action="{% url 'account_email' %}" class="space-y-4">
-                        {% csrf_token %}
-                        
-                        {% for emailaddress in user.emailaddress_set.all %}
-                        <div class="flex items-center justify-between p-4 rounded-xl border-2 {% if emailaddress.primary %}border-primary/30 bg-primary/5{% else %}border-base-200{% endif %}">
-                            <div class="flex items-center gap-3">
-                                <input type="radio" name="email" value="{{ emailaddress.email }}" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %} class="radio radio-primary radio-sm" />
-                                <div>
-                                    <p class="font-bold text-sm">{{ emailaddress.email }}</p>
-                                    <div class="flex gap-2 mt-1">
-                                        {% if emailaddress.verified %}
-                                            <span class="badge badge-success badge-xs font-black text-[8px] uppercase">Verified</span>
-                                        {% else %}
-                                            <span class="badge badge-warning badge-xs font-black text-[8px] uppercase">Unverified</span>
-                                        {% endif %}
-                                        {% if emailaddress.primary %}
-                                            <span class="badge badge-primary badge-xs font-black text-[8px] uppercase">Primary</span>
-                                        {% endif %}
+                <div class="card bg-base-100 shadow-2xl border border-base-200">
+                    <div class="card-body p-8">
+                        <h2 class="text-2xl font-black mb-4">Linked Emails</h2>
+
+                        {% if user.emailaddress_set.all %}
+                            <form method="post" action="{% url 'account_email' %}" class="space-y-4">
+                                {% csrf_token %}
+
+                                {% for emailaddress in user.emailaddress_set.all %}
+                                    <div class="flex items-center justify-between p-4 rounded-xl border-2 {% if emailaddress.primary %}border-primary/30 bg-primary/5{% else %}border-base-200{% endif %}">
+                                        <div class="flex items-center gap-3">
+                                            <input type="radio" name="email" value="{{ emailaddress.email }}" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %} class="radio radio-primary radio-sm" />
+                                            <div>
+                                                <p class="font-bold text-sm">{{ emailaddress.email }}</p>
+                                                <div class="flex gap-2 mt-1">
+                                                    {% if emailaddress.verified %}
+                                                        <span class="badge badge-success badge-xs font-black text-[8px] uppercase">Verified</span>
+                                                    {% else %}
+                                                        <span class="badge badge-warning badge-xs font-black text-[8px] uppercase">Unverified</span>
+                                                    {% endif %}
+                                                    {% if emailaddress.primary %}
+                                                        <span class="badge badge-primary badge-xs font-black text-[8px] uppercase">Primary</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                <div class="flex flex-col gap-2 pt-4">
+                                    <button class="btn btn-primary btn-sm font-black uppercase" type="submit" name="action_primary">Make Primary</button>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button class="btn btn-outline btn-sm font-black uppercase" type="submit" name="action_send">Resend Link</button>
+                                        <button class="btn btn-error btn-outline btn-sm font-black uppercase" type="submit" name="action_remove">Remove</button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-
-                        <div class="flex flex-col gap-2 pt-4">
-                            <button class="btn btn-primary btn-sm font-black uppercase" type="submit" name="action_primary">Make Primary</button>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="btn btn-outline btn-sm font-black uppercase" type="submit" name="action_send">Resend Link</button>
-                                <button class="btn btn-error btn-outline btn-sm font-black uppercase" type="submit" name="action_remove">Remove</button>
-                            </div>
-                        </div>
-                    </form>
-                    {% endif %}
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
 
             {# --- ADD EMAIL SECTION --- #}
-            <div class="card bg-base-100 shadow-2xl border border-base-200">
-                <div class="card-body p-8">
-                    <h2 class="text-2xl font-black mb-2">Add Email</h2>
-                    <p class="text-xs opacity-50 mb-6">Connect an additional spatial node identity.</p>
+                <div class="card bg-base-100 shadow-2xl border border-base-200">
+                    <div class="card-body p-8">
+                        <h2 class="text-2xl font-black mb-2">Add Email</h2>
+                        <p class="text-xs opacity-50 mb-6">Connect an additional spatial node identity.</p>
 
-                    <form method="post" action="{% url 'account_email' %}" class="space-y-4">
-                        {% csrf_token %}
-                        
-                        <div class="form-control">
-                            <label class="label py-1">
-                                <span class="label-text text-[10px] font-black uppercase tracking-widest opacity-60">New Email Address</span>
-                            </label>
-                            {{ form.email|add_class:"input input-bordered focus:outline-primary w-full font-medium h-12" }}
-                            {% if form.email.errors %}
-                                <p class="text-error text-xs font-bold mt-1">{{ form.email.errors.0 }}</p>
-                            {% endif %}
-                        </div>
+                        <form method="post" action="{% url 'account_email' %}" class="space-y-4">
+                            {% csrf_token %}
 
-                        <button class="btn btn-neutral btn-block font-black uppercase mt-4" name="action_add" type="submit">
-                            Add Address
-                        </button>
-                    </form>
+                            <div class="form-control">
+                                <label class="label py-1">
+                                    <span class="label-text text-[10px] font-black uppercase tracking-widest opacity-60">New Email Address</span>
+                                </label>
+                                {{ form.email|add_class:"input input-bordered focus:outline-primary w-full font-medium h-12" }}
+                                {% if form.email.errors %}
+                                    <p class="text-error text-xs font-bold mt-1">{{ form.email.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <button class="btn btn-neutral btn-block font-black uppercase mt-4" name="action_add" type="submit">
+                                Add Address
+                            </button>
+                        </form>
+                    </div>
                 </div>
+
             </div>
 
-        </div>
-
         {# Support Info #}
-        <p class="text-center mt-10 text-[10px] opacity-30 font-black uppercase tracking-widest">
-            © 2026 Spatial Node Services
-        </p>
+            <p class="text-center mt-10 text-[10px] opacity-30 font-black uppercase tracking-widest">
+                © 2026 Spatial Node Services
+            </p>
+        </div>
     </div>
-</div>
 
 {# Custom Script to handle removal confirmation #}
-<script type="text/javascript">
-(function() {
-  const message = "Do you really want to remove the selected email address?";
-  const actions = document.getElementsByName('action_remove');
-  if (actions.length) {
-    actions[0].addEventListener("click", function(e) {
-      if (!confirm(message)) {
-        e.preventDefault();
-      }
-    });
-  }
-})();
-</script>
+    <script type="text/javascript">
+        (function() {
+            const message = "Do you really want to remove the selected email address?";
+            const actions = document.getElementsByName('action_remove');
+            if (actions.length) {
+                actions[0].addEventListener("click", function(e) {
+                    if (!confirm(message)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        })();
+    </script>
 {% endblock %}

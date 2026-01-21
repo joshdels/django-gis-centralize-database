@@ -4,8 +4,12 @@ from django.db import models
 
 
 def user_upload_path(instance, filename):
-    """Creates a designated folder per user of project file"""
-    return f"uploads/user_{instance.user.id}/{filename}"
+    """Uploads to a folder per user of the parent project."""
+    try:
+        user_id = instance.user.id
+    except AttributeError:
+        user_id = instance.project.user.id
+    return f"uploads/user_{user_id}/{filename}"
 
 
 class Project(models.Model):
@@ -17,7 +21,7 @@ class Project(models.Model):
         related_name="uploads",
         help_text="The user who created this project",
     )
-    file = models.FileField(upload_to=user_upload_path)
+    file = models.FileField(upload_to=user_upload_path, blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -83,5 +87,18 @@ class Project(models.Model):
         if storage and name:
             storage.delete(name)
 
-    # def can_user_download(self, user):
-    #     return user.is_staff or self.user_id == user.id
+
+class ProjectVersion(models.Model):
+    project = models.ForeignKey(
+        Project, related_name="versions", on_delete=models.CASCADE
+    )
+    file = models.FileField(upload_to=user_upload_path)
+    version_number = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-version_number"]
+        unique_together = ("project", "version_number")
+
+    def __str__(self):
+        return f"{self.project.name} v{self.version_number}"

@@ -3,14 +3,16 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="max-w-md">
                 <h2 class="text-2xl lg:text-3xl font-black uppercase mb-1">Upload GIS Project</h2>
-                <p class="font-bold text-xs tracking-wide uppercase ">Please Prepare a zipfile of it</p>
+                <p class="font-bold text-xs tracking-wide uppercase">Please prepare a zip file of it</p>
                 <div class="mt-10">
                     {% if remaining_mb > 0 %}
                         <a href="{% url 'file:upload' %}" class="btn btn-neutral px-6 font-black uppercase tracking-widest">
                             Upload
                         </a>
                     {% else %}
-                        <span class="badge badge-ghost font-black px-4 py-2 text-xs">Insuffiecient Storage</span>
+                        <span class="badge badge-warning p-4 text-xs font-black text-error">
+                            Insufficient Storage
+                        </span>
                     {% endif %}
                 </div>
             </div>

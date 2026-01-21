@@ -17,7 +17,7 @@
 
                 {# Left: Icon + Project Name + Badge #}
                 <div class="flex items-center gap-3">  {# reduced gap from 6 -> 3 #}
-                    <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0 shadow-lg">
+                    <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -25,12 +25,12 @@
                     </div>
                     <div>
                         <h3 class="text-3xl font-black text-base-content">{{ layer.name }}</h3>
-                        <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter text-sm">Verified Layer</div>
+                        <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter text-sm">Active Project</div>
                     </div>
                 </div>
 
                 {# Right: Owner + Created On Stats #}
-                <div class="flex flex-col text-right gap-1">  {# added small gap between lines #}
+                <div class="flex flex-col text-right gap-3  ">
                     <div>
                         <div class="font-bold uppercase text-sm">Owner</div>
                         <div class="text-xs font-mono">{{ layer.user.username }}</div>
@@ -42,24 +42,38 @@
                 </div>
             </div>
 
+            <!-- file description -->
+            <div class="grid grid-cols-1 mb-6 mt-6">
+                
+                <div class="card bg-base-200 p-5 flex items-center justify-between gap-4">
+                    <div class="text-sm font-black uppercase tracking-wide">
+                        Project's Description
+                    </div>
+                    <div class="flex items-center">
+                        <div class="text-xs font-mono">{{ layer.description | default:"No Description yet" }}</div>
+                    </div>
+                </div>
+                
+            </div>
+            
             {# --- ACTIONS: Download + Push Changes --- #}
-            <div class="grid grid-cols-1 gap-5 mb-6 mt-10">
+            <div class="grid grid-cols-1 gap-5 mb-6">
 
                 <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
-                    <div class="text-xs font-mono md:mr-4 text-center md:text-left">
-                        📥 Download the project's latest saved on the cloud
+                    <div class="text-xs font-mono ">
+                        Download the project's latest saved on the cloud
                     </div>
                     <a href="{% url 'file:download-file' layer.pk %}" class="btn btn-primary py-5 shadow-sm w-full text-lg font-bold">
                         Download Project
                     </a>
                     <div class="flex items-center">
-                        <div class="text-xs font-mono opacity-70">{{ layer.file.name|truncatechars:40 }}</div>
+                        <div class="text-xs font-mono">{{ layer.file.name|truncatechars:40 }}</div>
                     </div>
                 </div>
 
                 <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
-                    <div class="text-xs font-mono md:mr-4 text-center md:text-left">
-                        ☁️ Updates from your device to the cloud
+                    <div class="text-xs font-mono">
+                        Updates from your device to the cloud
                     </div>
                     <a href="{% url 'file:update-file' layer.pk %}" class="btn btn-primary py-5 shadow-sm w-full text-lg font-bold">
                         Push Changes
