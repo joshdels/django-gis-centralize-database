@@ -39,9 +39,9 @@
                 </div>
             </div>
         {% else %}
-            <div class="flex items-center gap-1">
-                <a href="{% url 'account_login' %}" class="btn btn-ghost btn-sm font-black uppercase rounded-none">Log In</a>
-                <div class="h-4 bg-base-300 mx-2"></div> <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm font-black uppercase rounded-none">Sign Up</a>
+            <div class="flex items-center">
+                <a href="{% url 'account_login' %}" class="btn btn-ghost btn-sm font-black uppercase">Log In</a>
+                <div class="h-4 bg-base-300 mx-2"></div> <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm font-black uppercase">Sign Up</a>
             </div>
         {% endif %}
     </div>

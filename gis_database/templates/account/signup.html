@@ -12,7 +12,7 @@
             </div>
 
         {# --- SIGNUP CARD --- #}
-            <div class="card bg-base-100 shadow-2xl border border-base-200">
+            <div class="card bg-base-100 shadow-sm border border-base-200">
             {# Added id="signup-form" #}
                 <form id="signup-form" method="post" action="{% url 'account_signup' %}" class="card-body gap-5 p-8">
                     {% csrf_token %}
@@ -63,12 +63,12 @@
                     {% endfor %}
 
                     <div class="form-control mt-4">
-                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
+                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-sm">
                             Create Account
                         </button>
                     </div>
 
-                    <div class="divider opacity-10 my-2 text-[10px] font-bold uppercase tracking-widest">Verification Required</div>
+                    <div class="divider opacity-50 my-2 text-xs font-black tracking-widest">Email Verification Required</div>
 
                     <div class="text-center text-sm font-medium">
                         <span class="opacity-50">Already have an account?</span>

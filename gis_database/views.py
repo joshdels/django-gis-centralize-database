@@ -55,7 +55,7 @@ def project_detail(request, pk):
 
 
 @login_required
-def upload_file(request):
+def upload_project(request):
     context = get_user_storage_context(request.user)
 
     if request.method == "POST":
@@ -152,3 +152,13 @@ def update_file(request, pk):
         form = ProjectVersionForm()
 
     return render(request, "pages/update_file.html", {"form": form, "project": project})
+
+@login_required
+def delete_file(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if request.method == 'POST':
+        project.delete()
+        return redirect('file:dashboard')
+    return render(request, "components/project_delete.html", {'project': project})
+    
+    

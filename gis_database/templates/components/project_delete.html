@@ -1,0 +1,51 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    {# --- NAVBAR --- #}
+    {% include "components/navbar.html" %}
+
+    <div class="card bg-base-100 shadow-sm border border-error/20">
+        <div class="card-body items-center text-center">
+            <h2 class="card-title text-2xl font-black uppercase text-error">Danger Zone</h2>
+            <p class="text-sm opacity-70">Once you delete a project, there is no going back. Please be certain.</p>
+            
+            <div class="card-actions mt-6">
+                <button class="btn btn-error btn-outline px-10" onclick="delete_modal.showModal()">
+                    Delete Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# --- BACK BUTTON --- #}
+    <div class="text-center">
+        <a href="{% url 'file:dashboard' %}" class="btn btn-ghost btn-sm opacity-50">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    {# --- DELETE CONFIRMATION MODAL --- #}
+    <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box border-t-4 border-error">
+            <h3 class="font-black text-xl">Are you absolutely sure?</h3>
+            <p class="py-4 text-sm font-mono">
+                You are about to delete <span class="text-error font-bold">{{ project.name }}</span>. 
+                This will permanently remove the file from the cloud.
+            </p>
+            
+            <div class="modal-action">
+                <form method="post" action="{% url 'file:delete-file' project.pk %}" class="flex gap-2 w-full justify-end">
+                    {% csrf_token %}
+                    {# Close button #}
+                    <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Cancel</button>
+                    {# Actual Delete button #}
+                    <button type="submit" class="btn btn-error text-white font-bold">Yes, Delete Everything</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+</div>
+{% endblock %}

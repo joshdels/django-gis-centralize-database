@@ -12,7 +12,7 @@
             </div>
 
         {# --- LOGOUT CARD --- #}
-            <div class="card bg-base-100 shadow-2xl border border-base-200">
+            <div class="card bg-base-100 shadow-sm border border-base-200">
                 <form method="post" action="{% url 'account_logout' %}" class="card-body gap-5 p-8 text-center">
                     {% csrf_token %}
 
@@ -34,7 +34,7 @@
 
                 {# Confirm Logout Button #}
                     <div class="form-control mt-4">
-                        <button type="submit" class="btn btn-error btn-block text-lg font-black shadow-lg">
+                        <button type="submit" class="btn btn-error btn-block text-lg font-black shadow-sm">
                             Confirm Sign Out
                         </button>
                     </div>

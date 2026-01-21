@@ -12,7 +12,7 @@
             </div>
 
         {# --- LOGIN CARD --- #}
-            <div class="card bg-base-100 shadow-2xl border border-base-200">
+            <div class="card bg-base-100 shadow-sm border border-base-200">
                 <form id="login-form" method="post" action="{% url 'account_login' %}" class="card-body gap-5 p-8">
                     {% csrf_token %}
 
@@ -69,7 +69,7 @@
                     {% endif %}
 
                     <div class="form-control mt-4">
-                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-lg">
+                        <button type="submit" class="btn btn-primary btn-block text-lg font-black shadow-sm">
                             Log In
                         </button>
                     </div>

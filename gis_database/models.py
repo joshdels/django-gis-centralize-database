@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 def user_upload_path(instance, filename):
@@ -86,6 +87,24 @@ class Project(models.Model):
         super().delete(*args, **kwargs)
         if storage and name:
             storage.delete(name)
+            
+    def create_new_version(self, new_file):
+        """This appends to the ProjectVersion Model Everytime I update the project"""
+        last_version = self.version.first()
+        new_version_number = (last_version.version_number if last_version else 0) + 1
+
+        new_version = ProjectVersion.objects.create(
+            project=self,
+            file=new_file,
+            version_number=new_version_number,
+        )
+
+        self.file = new_version.file
+        self.updated_at = timezone.now()
+        self.save(update_fields=["file", "updated_at"])
+
+        return new_version
+        
 
 
 class ProjectVersion(models.Model):
