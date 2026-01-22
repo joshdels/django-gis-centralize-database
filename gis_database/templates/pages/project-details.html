@@ -59,16 +59,20 @@
                 {# --- ACTIONS: Download + Push Changes --- #}
                 <div class="grid grid-cols-1 gap-5 mb-6 text-center">
 
-                    <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
-                        <div class="text-xs font-mono ">
+                    <div class="card bg-base-200 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="text-xs font-mono">
                             Download the project's latest saved on the cloud
                         </div>
-                        <a href="{% url 'file:download-file' project.pk %}" class="btn btn-primary btn-lg shadow-sm w-full text-lg font-bold">
-                            Download Project
-                        </a>
-                        <div class="flex items-center">
-                            <div class="text-xs font-mono opacity-70">{{ project.file.name|slice:"-20:" }}</div>
-                        </div>
+                        {% if project.files.exists %}
+                            <a href="{% url 'file:download-file' project.pk %}" class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">
+                                Download Project
+                            </a>
+                        {% else %}
+                            <button class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold" disabled>
+                                Download Project
+                            </button>
+                            <div class="text-error mt-1 text-sm">No files available</div>
+                        {% endif %}
                     </div>
 
                     <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">

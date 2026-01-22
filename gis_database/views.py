@@ -1,34 +1,50 @@
 import os
+import zipfile
+from io import BytesIO
 from django.http import HttpResponse, FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
-from .models import Project, ProjectVersion
-from .forms import ProjectForm, ProjectVersionForm
+from .models import Project, ProjectFile
+from .forms import ProjectForm, ProjectFileUpdateForm
 
 
-# Utility
+# -------------------------------
+# Utilities
+# -------------------------------
 def get_user_storage_context(user):
-    """Calculates storage stats for a specific user."""
+    """
+    Calculate total storage usage for a user and return context for templates.
+    """
     uploads = Project.objects.filter(user=user).order_by("-created_at")
 
-    total_bytes = sum(p.file.size for p in uploads if p.file)
-    total_mb = total_bytes / (1024 * 1024)
+    total_bytes = 0
+    for project in uploads:
+        for pf in project.files.all():
+            if pf.file:
+                total_bytes += pf.file.size
+            for v in pf.versions.all():
+                if v.file:
+                    total_bytes += v.file.size
 
+    total_mb = total_bytes / (1024 * 1024)
     remaining_mb = max(Project.MAX_STORAGE_MB - total_mb, 0)
-    storage_percent = min(round((remaining_mb / Project.MAX_STORAGE_MB) * 100, 1), 100)
+    used_percent = min(round((total_mb / Project.MAX_STORAGE_MB) * 100, 1), 100)
 
     return {
         "uploads": uploads,
-        "storage_percentage": storage_percent,
+        "storage_percentage": used_percent,
         "remaining_mb": round(remaining_mb, 1),
-        "max_storage": round(Project.MAX_STORAGE_MB, 1),
+        "max_storage": Project.MAX_STORAGE_MB,
     }
 
 
+# -------------------------------
 # Public Views
+# -------------------------------
 def home(request):
     return render(request, "pages/home.html")
 
@@ -38,9 +54,12 @@ def test_files(request):
 
 
 def test(request):
-    return HttpResponse("<h1>Hello Test</h>")
+    return HttpResponse("<h1>Hello Test</h1>")
 
 
+# -------------------------------
+# Authenticated Views
+# -------------------------------
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
@@ -50,115 +69,119 @@ def dashboard(request):
 
 @login_required
 def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, pk=pk, user=request.user)
     return render(request, "pages/project-details.html", {"project": project})
 
 
 @login_required
 def upload_project(request):
-    context = get_user_storage_context(request.user)
-
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.user = request.user
-            try:
-                obj.save()
-                return redirect("file:dashboard")
-            except ValidationError as e:
-                form.add_error(None, e)
+            obj.owner = request.user 
+            obj.save()
+            # handle file if uploaded
+            if "file" in request.FILES:
+                ProjectFile.objects.create(project=obj, file=request.FILES["file"])
+            return redirect("file:dashboard")
     else:
-        form = ProjectForm()
+        form = ProjectForm(user=request.user) 
 
     return render(request, "pages/upload.html", {"form": form})
 
 
+
 @login_required
-def download_file(request, pk):
-    """Force download of a user's project file."""
-    project = get_object_or_404(Project, pk=pk)
+def download_project(request, pk):
+    """
+    Download an entire project as a ZIP file, including only the latest version of each file.
+    """
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    files = project.files.all()  # all ProjectFile objects
 
-    if project.user != request.user:
-        raise Http404("You do not have permission to download this file.")
+    if not files.exists():
+        raise Http404("No files in this project.")
 
-    if not project.file:
-        raise Http404("File not found.")
+    # Create an in-memory zip
+    zip_buffer = BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+        for pf in files:
+            if pf.file:
+                filename = os.path.basename(pf.file.name)
+                zip_file.writestr(filename, pf.file.read())
 
-    try:
-        response = FileResponse(
-            project.file.open("rb"),
-            as_attachment=True,
-            filename=os.path.basename(project.file.name),
-        )
-        return response
-    except FileNotFoundError:
-        raise Http404("File not found.")
+    zip_buffer.seek(0)
+    response = HttpResponse(zip_buffer, content_type="application/zip")
+    response["Content-Disposition"] = f'attachment; filename="{project.name}.zip"'
+    return response
 
 
 @login_required
 def update_file(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project_file = get_object_or_404(ProjectFile, pk=pk)
 
-    # Ownership check
-    if project.user != request.user:
-        raise Http404("You do not have permission to update this project.")
+    if project_file.project.user != request.user:
+        raise Http404("You do not have permission to update this file.")
 
     if request.method == "POST":
         form = ProjectVersionForm(request.POST, request.FILES)
         if form.is_valid():
             new_file = form.cleaned_data["file"]
 
-            # --- STORAGE VALIDATION ---
-            user_projects = Project.objects.filter(user=request.user, archived=False)
-            total_bytes = 0
-            for p in user_projects:
-                # Exclude current project's file since it will be replaced
-                if p.pk != project.pk and p.file:
-                    total_bytes += p.file.size
-                for v in p.versions.all():
-                    if v.file:
-                        total_bytes += v.file.size
+            # --- Save old version first ---
+            from django.db import transaction
 
-            total_bytes += new_file.size
-            total_mb = total_bytes / (1024 * 1024)
+            with transaction.atomic():
+                # Determine next version number
+                last_version = project_file.versions.first()
+                next_version = (last_version.version_number if last_version else 0) + 1
 
-            if total_mb > Project.MAX_STORAGE_MB:
-                form.add_error(
-                    "file", f"Total storage exceeded ({Project.MAX_STORAGE_MB} MB max)."
-                )
-            else:
-                # --- CREATE NEW VERSION ---
-                last_version = project.versions.first()  # latest version
-                new_version_number = (
-                    last_version.version_number if last_version else 0
-                ) + 1
-
-                new_version = ProjectVersion.objects.create(
-                    project=project,
-                    file=new_file,
-                    version_number=new_version_number,
+                # Create new ProjectFileVersion for the old file
+                ProjectFileVersion.objects.create(
+                    project_file=project_file,
+                    file=project_file.file,  # snapshot of current file
+                    version_number=next_version,
                 )
 
-                # --- UPDATE MAIN PROJECT FILE + updated_at ---
-                from django.utils import timezone
+                # Update ProjectFile with new file
+                project_file.file = new_file
+                project_file.save(update_fields=["file", "updated_at"])
 
-                project.file = new_version.file
-                project.updated_at = timezone.now()  # force updated_at update
-                project.save(update_fields=["file", "updated_at"])
-
-                return redirect("file:project-detail", pk=project.pk)
+            return redirect("file:project-detail", pk=project_file.project.pk)
     else:
         form = ProjectVersionForm()
 
-    return render(request, "pages/update_file.html", {"form": form, "project": project})
+    return render(
+        request,
+        "pages/update_file.html",
+        {"form": form, "project_file": project_file},
+    )
+
 
 @login_required
 def delete_file(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-    if request.method == 'POST':
+    """
+    Delete a project and all associated files and versions.
+    """
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    if request.method == "POST":
         project.delete()
-        return redirect('file:dashboard')
-    return render(request, "components/project_delete.html", {'project': project})
-    
-    
+        return redirect("file:dashboard")
+    return render(request, "components/project_delete.html", {"project": project})
+
+
+@login_required
+def project_file_versions(request, file_id):
+    """
+    List all versions for a specific ProjectFile.
+    """
+    project_file = get_object_or_404(
+        ProjectFile, pk=file_id, project__user=request.user
+    )
+    versions = project_file.versions.all()
+    return render(
+        request,
+        "pages/file_versions.html",
+        {"project_file": project_file, "versions": versions},
+    )
