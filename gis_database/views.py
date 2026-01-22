@@ -66,6 +66,12 @@ def dashboard(request):
     context = get_user_storage_context(request.user)
     return render(request, "pages/dashboard.html", context)
 
+@login_required
+@ensure_csrf_cookie
+def analytics(request):
+    context = get_user_storage_context(request.user)
+    return render(request, "components/analytics/_base.html", context)
+
 
 @login_required
 def project_detail(request, pk):

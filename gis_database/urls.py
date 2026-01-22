@@ -6,6 +6,7 @@ app_name = "file"
 urlpatterns = [
     path("", views.home, name="home"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("analytics/", views.analytics, name="analytics"),
     path("upload/", views.upload_project, name="upload-project"),
     path("project/<int:pk>/", views.project_detail, name="project-detail"),
     path("project/<int:pk>/download", views.download_project, name="download-file"),
