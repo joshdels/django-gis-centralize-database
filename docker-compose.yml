@@ -10,7 +10,13 @@ services:
     restart: unless-stopped
     volumes:
       - static_volume:/app/staticfiles
+    networks:
+      - gis_centralize_db
 
 
 volumes:
   static_volume:
+
+networks:
+  gis_centralize_db:
+    external: true
