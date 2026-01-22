@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+{% block content %}
+    <div class="max-w-7xl mx-auto px-4 py-6 lg:py-8 space-y-8">
+
+        {% include "components/navbar.html" %}
+
+        <div class="space-y-4">
+            {% include "components/analytics/project_list_card.html" %}
+        </div>
+        <div class="card grid grid-cols-3 gap-5 bg-base-300 p-5">
+            <div class="col-span-2">
+                {% include "components/analytics/pie_chart.html" %}
+            </div>
+            <div class="col-span-1">
+                {% include "components/analytics/file_update_logs.html" %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% include "components/analytics/_chart_logic.js.html" %}
+
+{% endblock %}

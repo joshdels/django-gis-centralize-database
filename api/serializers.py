@@ -5,9 +5,10 @@ from accounts.models import Profile
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    """Project's served in the api"""
     class Meta:
         model = Project
-        fields = ["id", "file", "name", "created_at"]
+        fields = ["id", "user", "name", "description", "file", "created_at", "updated_at", "is_private"]
         read_only_fields = ["id", "created_at"]
 
     def create(self, validated_data):
@@ -21,6 +22,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['image', 'first_name', 'last_name', 'location']
 
 class UserSerializer(serializers.ModelSerializer):
+    """Used to serve the user's detail as an api"""
     profile = ProfileSerializer(read_only=True)
     
     class Meta:
