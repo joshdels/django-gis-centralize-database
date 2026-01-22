@@ -8,7 +8,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     """Project's served in the api"""
     class Meta:
         model = Project
-        fields = ["id", "user", "name", "description", "file", "created_at", "updated_at", "is_private"]
+        fields = ["id", "user", "name", "description", "created_at", "updated_at", "is_private"]
         read_only_fields = ["id", "created_at"]
 
     def create(self, validated_data):
