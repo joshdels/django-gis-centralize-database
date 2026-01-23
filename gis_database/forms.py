@@ -1,8 +1,12 @@
 from django import forms
 from .models import Project, ProjectFile
 
+
 class ProjectForm(forms.ModelForm):
-    initial_file = forms.FileField(required=False, help_text="Optional initial file upload")
+    file = forms.FileField(
+        required=False,
+        help_text="Select one or more files",
+    )
 
     class Meta:
         model = Project
@@ -16,11 +20,10 @@ class ProjectForm(forms.ModelForm):
 
     def save(self, commit=True):
         project = super().save(commit=commit)
-        uploaded_file = self.cleaned_data.get("initial_file")
-        if uploaded_file:
+        uploaded_files = self.files.getlist("file")
+        for uploaded_file in uploaded_files:
             ProjectFile.objects.create(project=project, file=uploaded_file)
         return project
-
 
 
 class ProjectFileUpdateForm(forms.ModelForm):

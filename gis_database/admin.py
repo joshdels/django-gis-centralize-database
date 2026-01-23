@@ -8,7 +8,6 @@ class ProjectFileInline(admin.TabularInline):
     extra = 0
     
 
-
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("name", "archived", "is_private", "to_trash", "created_at")

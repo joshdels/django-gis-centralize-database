@@ -1,14 +1,13 @@
 import os
 import zipfile
 from io import BytesIO
-from django.http import HttpResponse, FileResponse, Http404
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.core.exceptions import ValidationError
-from django.utils import timezone
+from django.db import transaction
 
-from .models import Project, ProjectFile
+from .models import Project, ProjectFile, ProjectFileVersion
 from .forms import ProjectForm, ProjectFileUpdateForm
 
 
@@ -20,8 +19,8 @@ def get_user_storage_context(user):
     Calculate total storage usage for a user and return context for templates.
     """
     uploads = Project.objects.filter(user=user).order_by("-created_at")
-
     total_bytes = 0
+
     for project in uploads:
         for pf in project.files.all():
             if pf.file:
@@ -66,6 +65,7 @@ def dashboard(request):
     context = get_user_storage_context(request.user)
     return render(request, "pages/dashboard.html", context)
 
+
 @login_required
 @ensure_csrf_cookie
 def analytics(request):
@@ -84,32 +84,25 @@ def upload_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.owner = request.user 
-            obj.save()
-            # handle file if uploaded
-            if "file" in request.FILES:
-                ProjectFile.objects.create(project=obj, file=request.FILES["file"])
+            form.save()
             return redirect("file:dashboard")
     else:
-        form = ProjectForm(user=request.user) 
+        form = ProjectForm(user=request.user)
 
     return render(request, "pages/upload.html", {"form": form})
-
 
 
 @login_required
 def download_project(request, pk):
     """
-    Download an entire project as a ZIP file, including only the latest version of each file.
+    Download all latest ProjectFiles of a project as a ZIP.
     """
     project = get_object_or_404(Project, pk=pk, user=request.user)
-    files = project.files.all()  # all ProjectFile objects
+    files = project.files.all()
 
     if not files.exists():
         raise Http404("No files in this project.")
 
-    # Create an in-memory zip
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w") as zip_file:
         for pf in files:
@@ -125,48 +118,42 @@ def download_project(request, pk):
 
 @login_required
 def update_file(request, pk):
-    project_file = get_object_or_404(ProjectFile, pk=pk)
-
-    if project_file.project.user != request.user:
-        raise Http404("You do not have permission to update this file.")
+    project_file = get_object_or_404(ProjectFile, pk=pk, project__user=request.user)
 
     if request.method == "POST":
-        form = ProjectVersionForm(request.POST, request.FILES)
+        form = ProjectFileUpdateForm(request.POST, request.FILES, instance=project_file)
         if form.is_valid():
-            new_file = form.cleaned_data["file"]
-
-            # --- Save old version first ---
-            from django.db import transaction
-
-            with transaction.atomic():
-                # Determine next version number
-                last_version = project_file.versions.first()
-                next_version = (last_version.version_number if last_version else 0) + 1
-
-                # Create new ProjectFileVersion for the old file
-                ProjectFileVersion.objects.create(
-                    project_file=project_file,
-                    file=project_file.file,  # snapshot of current file
-                    version_number=next_version,
-                )
-
-                # Update ProjectFile with new file
-                project_file.file = new_file
-                project_file.save(update_fields=["file", "updated_at"])
-
-            return redirect("file:project-detail", pk=project_file.project.pk)
+            new_file = form.cleaned_data.get("file")
+            if new_file:
+                project_file.create_new_version(new_file)
+            return redirect("file:project-detail", pk=project_file.project_id)
     else:
-        form = ProjectVersionForm()
+        form = ProjectFileUpdateForm(instance=project_file)
 
     return render(
         request,
         "pages/update_file.html",
-        {"form": form, "project_file": project_file},
+        {
+            "form": form,
+            "project_file": project_file,
+            "project": project_file.project,
+        },
     )
 
 
 @login_required
 def delete_file(request, pk):
+    """
+    Delete a single file of it
+    """
+    project_file = get_object_or_404(ProjectFile, pk=pk, project__user=request.user)
+    if request.method == "POST":
+        project_file.delete()
+        return redirect("file:project-detail", pk=project_file.project.pk)
+
+
+@login_required
+def delete_project(request, pk):
     """
     Delete a project and all associated files and versions.
     """
@@ -180,7 +167,7 @@ def delete_file(request, pk):
 @login_required
 def project_file_versions(request, file_id):
     """
-    List all versions for a specific ProjectFile.
+    List all versions of a ProjectFile.
     """
     project_file = get_object_or_404(
         ProjectFile, pk=file_id, project__user=request.user

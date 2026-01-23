@@ -12,6 +12,7 @@ urlpatterns = [
     path("project/<int:pk>/download", views.download_project, name="download-file"),
     path("project/<int:pk>/update", views.update_file, name="update-file"),
     path("project/<int:pk>/delete", views.delete_file, name="delete-file"),
+    
     path("test", views.test, name="test"),
     path("test-file", views.test_files, name="test-file"),
 ]
