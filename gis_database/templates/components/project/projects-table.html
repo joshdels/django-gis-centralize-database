@@ -21,7 +21,7 @@
                 <div class="p-4 flex items-center justify-between gap-10">
 
                 {# --- LEFT SIDE: ICON + INFO --- #}
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 sm:gap-4">
                         <div class="card bg-base-100 p-2 shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -36,7 +36,7 @@
                 {# --- RIGHT SIDE: DATE + BUTTON --- #}
                     <div class="flex items-center gap-2">
                         <div class="text-right">
-                            <span class="text-[10px] font-black opacity-40 uppercase tracking-widest">{{ file.created_at|date:"M d, Y" }}</span>
+                            <span class="text-[8px] sm:text-[10px] font-black opacity-40 uppercase tracking-tighter sm:tracking-widest">{{ file.created_at|date:"M d, Y" }}</span>
                         </div>
 
                         <a href="{% url 'file:project-delete' file.pk %}"  

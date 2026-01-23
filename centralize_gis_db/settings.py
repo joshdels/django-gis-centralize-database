@@ -96,6 +96,7 @@ LOCAL_APPS = [
     "accounts",
     "theme",
     "api",
+    "customer_service",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
