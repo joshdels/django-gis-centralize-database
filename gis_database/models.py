@@ -4,17 +4,20 @@ from django.db import models, transaction
 
 
 def user_upload_path(instance, filename):
-    """Uploads to a folder per user of the parent project."""
-    try:
-        # For ProjectFile
-        user_id = instance.user.id
-    except AttributeError:
-        try:
-            # For ProjectFileVersion
-            user_id = instance.project_file.project.user.id
-        except AttributeError:
-            # fallback: unknown user
-            user_id = "unknown"
+    """
+    Upload path per user:
+    - For ProjectFile: instance.project.user
+    - For ProjectFileVersion: instance.project_file.project.user
+    """
+    user_id = "unknown"
+
+    if hasattr(instance, "project") and instance.project is not None:
+        # ProjectFile
+        user_id = instance.project.user.id
+    elif hasattr(instance, "project_file") and instance.project_file is not None:
+        # ProjectFileVersion
+        user_id = instance.project_file.project.user.id
+
     return f"uploads/user_{user_id}/{filename}"
 
 

@@ -10,7 +10,7 @@ class ProjectFileInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "archived", "is_private", "to_trash", "created_at")
+    list_display = ("name", "user", "archived", "is_private", "to_trash", "created_at")
     inlines = [ProjectFileInline]
 
 

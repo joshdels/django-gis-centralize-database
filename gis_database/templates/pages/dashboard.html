@@ -12,24 +12,24 @@
         </div>
 
     {# 3. Project Registry Section #}
-        <div class="space-y-4">
-        {# TqbleView #}
-            {% include "components/dashboard/projects_table.html" %}
-
-        </div>
+        {% include "components/project/projects-table.html" %}
 
         <div class="block lg:hidden grid-cols-1 gap-6">
             {% include "components/dashboard/upload_card.html" %}
         </div>
 
     {# 4. Analytics Section #}
-        <div class="hidden lg:block">
-            {% include "components/charts/analytics_section.html" %}
-        </div>
+        <div class="card hidden lg:grid grid-cols-3 gap-5">
+            <div class="col-span-2">
+                {% include "components/charts/analytics_section.html" %}
+            </div>
+            <div class="col-span-1">
+                {% include "components/dashboard/activity_logs.html" %}
 
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% include "components/charts/_chart_logic.js.html" %}
-
 {% endblock %}

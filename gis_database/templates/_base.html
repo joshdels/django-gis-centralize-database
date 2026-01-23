@@ -7,6 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>{% block title %}TopMap Solutions – GIS & Spatial Analytics{% endblock %}</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <!-- Primary SEO meta -->
     <meta
@@ -39,10 +40,8 @@
     {% block content %}{% endblock %}
     {% django_browser_reload_script %}
 
+    {% block extra_js %}{% endblock %}
     <!-- Leaflet for maps -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </body>
 </html>

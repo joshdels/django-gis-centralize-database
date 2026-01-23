@@ -6,7 +6,7 @@
     {# --- NAVBAR --- #}
     {% include "components/navbar.html" %}
 
-    <div class="card bg-base-100 shadow-sm border border-error/20">
+    <div class="card bg-base-100 shadow-sm">
         <div class="card-body items-center text-center">
             <h2 class="card-title text-2xl font-black uppercase text-error">Danger Zone</h2>
             <p class="text-sm opacity-70">Once you delete a project, there is no going back. Please be certain.</p>
@@ -34,16 +34,11 @@
                 You are about to delete <span class="text-error font-bold">{{ project.name }}</span>. 
                 This will permanently remove the file from the cloud.
             </p>
-            
-            <div class="modal-action">
-                <form method="post" action="{% url 'file:delete-file' project.pk %}" class="flex gap-2 w-full justify-end">
-                    {% csrf_token %}
-                    {# Close button #}
-                    <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Cancel</button>
-                    {# Actual Delete button #}
-                    <button type="submit" class="btn btn-error text-white font-bold">Yes, Delete Everything</button>
-                </form>
-            </div>
+            <form method="post" action="{% url 'file:project-delete' project.pk %}" class="flex gap-2 w-full justify-end">
+                {% csrf_token %}
+                <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Cancel</button>
+                <button type="submit" class="btn btn-error text-white font-bold">Yes, Delete Everything</button>
+            </form>
         </div>
     </dialog>
 

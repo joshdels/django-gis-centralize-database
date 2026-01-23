@@ -1,22 +1,33 @@
 <script>
-    const chartOptions = {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' }, ticks: { font: { weight: 'bold', size: 10 } } },
-            x: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } }
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut', // change to 'pie' if you prefer
+        data: {
+            labels: ['Project 1', 'Project 2', 'Project 3'],
+            datasets: [{
+                data: [30, 50, 20],
+                backgroundColor: [
+                    '#419400',  
+                    '#E1E6D9',  
+                    '#343300' 
+                ],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%', // remove this line if using `type: 'pie'`
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 11, weight: 'bold' },
+                        padding: 16,
+                        usePointStyle: true
+                    }
+                }
+            }
         }
-    };
-
-    new Chart(document.getElementById('lineChart'), {
-        type: 'line',
-        data: { labels: ['01','02','03','04','05'], datasets:[{ data:[3,6,4,8,10], borderColor: '#000', tension:0, borderWeight: 3, pointRadius: 4, pointBackgroundColor: '#570df8' }] },
-        options: chartOptions
-    });
-
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: { labels:['VEC','RAS','GJS','KML'], datasets:[{ data:[12,5,8,3], backgroundColor: '#000', borderRadius: 0 }] },
-        options: chartOptions
     });
 </script>

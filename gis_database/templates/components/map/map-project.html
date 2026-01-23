@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+{% block content %}
+  <div class="card border-2 h-[50vh]">
+      <div id="projectMap" class="w-full h-full"></div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const map = L.map("projectMap").setView([12.8797, 121.7740], 6);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    const projects = [
+        { name: "Flood Risk Mapping", owner: "Joshua", lat: 14.5995, lng: 120.9842 },
+        { name: "Land Use Plan", owner: "Admin", lat: 10.3157, lng: 123.8854 },
+        { name: "Coastal Survey", owner: "GIS Team", lat: 7.1907, lng: 125.4553 },
+    ];
+
+    projects.forEach(p => {
+        L.marker([p.lat, p.lng])
+            .addTo(map)
+            .bindPopup(`
+                <div class="space-y-1">
+                    <div class="font-black text-sm">${p.name}</div>
+                    <div class="opacity-60 text-xs">Owner: ${p.owner}</div>
+                </div>
+            `);
+    });
+
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 100);
+
+});
+</script>
+{% endblock %}

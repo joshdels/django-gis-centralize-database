@@ -49,7 +49,7 @@ def home(request):
 
 
 def test_files(request):
-    return render(request, "test/test.html")
+    return render(request, "components/map/map-project.html")
 
 
 def test(request):
@@ -67,16 +67,17 @@ def dashboard(request):
 
 
 @login_required
-@ensure_csrf_cookie
-def analytics(request):
-    context = get_user_storage_context(request.user)
-    return render(request, "components/analytics/_base.html", context)
+def project_sync(request, pk):
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    return render(request, "components/project/project-sync.html", {"project": project})
 
 
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, user=request.user)
-    return render(request, "pages/project-details.html", {"project": project})
+    return render(
+        request, "components/project/project-detail.html", {"project": project}
+    )
 
 
 @login_required
@@ -118,7 +119,11 @@ def download_project(request, pk):
 
 @login_required
 def update_file(request, pk):
-    project_file = get_object_or_404(ProjectFile, pk=pk, project__user=request.user)
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+
+    project_file = project.files.first()
+    if not project_file:
+        raise Http404("No file exists for this project.")
 
     if request.method == "POST":
         form = ProjectFileUpdateForm(request.POST, request.FILES, instance=project_file)
@@ -126,7 +131,7 @@ def update_file(request, pk):
             new_file = form.cleaned_data.get("file")
             if new_file:
                 project_file.create_new_version(new_file)
-            return redirect("file:project-detail", pk=project_file.project_id)
+            return redirect("file:project-sync", pk=project.id)
     else:
         form = ProjectFileUpdateForm(instance=project_file)
 
@@ -136,7 +141,7 @@ def update_file(request, pk):
         {
             "form": form,
             "project_file": project_file,
-            "project": project_file.project,
+            "project": project,
         },
     )
 
@@ -161,7 +166,9 @@ def delete_project(request, pk):
     if request.method == "POST":
         project.delete()
         return redirect("file:dashboard")
-    return render(request, "components/project_delete.html", {"project": project})
+    return render(
+        request, "components/project/project_delete.html", {"project": project}
+    )
 
 
 @login_required
