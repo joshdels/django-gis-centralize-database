@@ -1,24 +1,52 @@
+import os
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from django.utils.text import slugify
+from datetime import datetime
+
+
+import os
+from datetime import datetime
+from django.utils.text import slugify
 
 
 def user_upload_path(instance, filename):
     """
-    Upload path per user:
-    - For ProjectFile: instance.project.user
-    - For ProjectFileVersion: instance.project_file.project.user
+    Upload path structure:
+    uploads/user_<id>/<project_slug>/<original_filename_slug>/<new_filename>
     """
+
+    # Default values
     user_id = "unknown"
+    project_name = "unknown_project"
 
+    # Determine user/project from instance
     if hasattr(instance, "project") and instance.project is not None:
-        # ProjectFile
         user_id = instance.project.user.id
+        project_name = instance.project.name
     elif hasattr(instance, "project_file") and instance.project_file is not None:
-        # ProjectFileVersion
         user_id = instance.project_file.project.user.id
+        project_name = instance.project_file.project.name
 
-    return f"uploads/user_{user_id}/{filename}"
+    # Safe slugs
+    project_slug = slugify(project_name)
+    base_name, ext = os.path.splitext(filename)
+    original_filename_slug = slugify(base_name)
+
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    version = ""
+    if hasattr(instance, "version_number"):
+        version = f"_v{instance.version_number}"
+
+    # Final file name
+    new_filename = f"{original_filename_slug}{version}_{timestamp}{ext}"
+
+    # Full path including original filename as a folder
+    return (
+        f"uploads/user_{user_id}/{project_slug}/{original_filename_slug}/{new_filename}"
+    )
 
 
 class Project(models.Model):
@@ -116,6 +144,8 @@ class ProjectFile(models.Model):
 
             self.file = version.file
             self.save(update_fields=["file"])
+            
+            Project.objects.filter(pk=self.project.pk).update(updated_at=datetime.now())
 
             return version
 

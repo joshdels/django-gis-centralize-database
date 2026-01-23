@@ -24,13 +24,13 @@
                     </div>
 
                     <ul tabindex="0" class="card mt-4 p-2 menu menu-sm dropdown-content bg-base-100 w-52 z-100 shadow-sm border border-base-300">
-                        <li class="menu-title text-[10px] uppercase font-black opacity-40">Account</li>
-                        <li><a href="#" class="font-bold uppercase rounded-none py-2">Profile</a></li>
-                        <div class="divider my-1"></div>
+                        <li class="menu-title text-sm uppercase font-black">Account</li>
+                        <div class="divider my-0"></div>
+                        <li><a href="#" class="font-black uppercase w-full text-xs py-3">Profile</a></li>
                         <li>
-                            <form method="post" action="{% url 'account_logout' %}" class="p-0">
+                            <form method="post" action="{% url 'account_logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="text-error font-black uppercase w-full text-left rounded-none py-2">
+                                <button type="submit" class="text-error font-black uppercase w-full text-xs py-3">
                                     Logout
                                 </button>
                             </form>
