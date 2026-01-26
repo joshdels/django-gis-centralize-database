@@ -1,14 +1,17 @@
 import os
 import zipfile
 from io import BytesIO
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.db.models import Sum
 from django.db import transaction
 
-from .models import Project, ProjectFile, ProjectFileVersion
-from .forms import ProjectForm, ProjectFileUpdateForm
+from .models import Project, File, FileActivity
+from .forms import ProjectForm
+from .utils import compute_hash
 
 
 # -------------------------------
@@ -18,16 +21,16 @@ def get_user_storage_context(user):
     """
     Calculate total storage usage for a user and return context for templates.
     """
-    uploads = Project.objects.filter(user=user).order_by("-created_at")
-    total_bytes = 0
+    uploads = Project.objects.filter(owner=user, is_deleted=False).order_by(
+        "-created_at"
+    )
 
-    for project in uploads:
-        for pf in project.files.all():
-            if pf.file:
-                total_bytes += pf.file.size
-            for v in pf.versions.all():
-                if v.file:
-                    total_bytes += v.file.size
+    total_bytes = (
+        File.objects.filter(project__owner=user).aggregate(total=Sum("file__size"))[
+            "total"
+        ]
+        or 0
+    )
 
     total_mb = total_bytes / (1024 * 1024)
     remaining_mb = max(Project.MAX_STORAGE_MB - total_mb, 0)
@@ -39,6 +42,16 @@ def get_user_storage_context(user):
         "remaining_mb": round(remaining_mb, 1),
         "max_storage": Project.MAX_STORAGE_MB,
     }
+
+
+def unset_latest(user, project, file_name):
+    """Helper to unset is_latest for previous files if the are the same hash"""
+    File.objects.filter(
+        owner=user,
+        project=project,
+        name=file_name,
+        is_latest=True,
+    ).update(is_latest=False)
 
 
 # -------------------------------
@@ -68,13 +81,13 @@ def dashboard(request):
 
 @login_required
 def project_sync(request, pk):
-    project = get_object_or_404(Project, pk=pk, user=request.user)
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
     return render(request, "components/project/project-sync.html", {"project": project})
 
 
 @login_required
 def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk, user=request.user)
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
     return render(
         request, "components/project/project-detail.html", {"project": project}
     )
@@ -83,12 +96,12 @@ def project_detail(request, pk):
 @login_required
 def upload_project(request):
     if request.method == "POST":
-        form = ProjectForm(request.POST, request.FILES, user=request.user)
+        form = ProjectForm(request.POST, request.FILES, owner=request.user)
         if form.is_valid():
             form.save()
             return redirect("file:dashboard")
     else:
-        form = ProjectForm(user=request.user)
+        form = ProjectForm(owner=request.user)
 
     return render(request, "pages/upload.html", {"form": form})
 
@@ -98,8 +111,8 @@ def download_project(request, pk):
     """
     Download all latest ProjectFiles of a project as a ZIP.
     """
-    project = get_object_or_404(Project, pk=pk, user=request.user)
-    files = project.files.all()
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
+    files = project.files.filter(is_latest=True, project__is_deleted=False)
 
     if not files.exists():
         raise Http404("No files in this project.")
@@ -109,7 +122,8 @@ def download_project(request, pk):
         for pf in files:
             if pf.file:
                 filename = os.path.basename(pf.file.name)
-                zip_file.writestr(filename, pf.file.read())
+                with pf.file.open("rb") as f:
+                    zip_file.writestr(filename, f.read())
 
     zip_buffer.seek(0)
     response = HttpResponse(zip_buffer, content_type="application/zip")
@@ -119,29 +133,42 @@ def download_project(request, pk):
 
 @login_required
 def update_file(request, pk):
-    project = get_object_or_404(Project, pk=pk, user=request.user)
-
-    project_file = project.files.first()
-    if not project_file:
-        raise Http404("No file exists for this project.")
+    project_file = get_object_or_404(File, pk=pk, owner=request.user, is_latest=True)
 
     if request.method == "POST":
-        form = ProjectFileUpdateForm(request.POST, request.FILES, instance=project_file)
-        if form.is_valid():
-            new_file = form.cleaned_data.get("file")
-            if new_file:
-                project_file.create_new_version(new_file)
-            return redirect("file:project-sync", pk=project.id)
-    else:
-        form = ProjectFileUpdateForm(instance=project_file)
+        uploaded_file = request.FILES.get("uploaded_file")
+        if not uploaded_file:
+            raise Http404("No file uploaded")
+
+        with transaction.atomic():
+
+            unset_latest(request.user, project_file.project, project_file.name)
+
+            File.objects.create(
+                project=project_file.project,
+                owner=request.user,
+                name=project_file.name,
+                file_folder=project_file.file_folder,
+                file=uploaded_file,
+                hash=compute_hash(uploaded_file),
+                version=project_file.version + 1,
+                is_latest=True,
+            )
+
+            FileActivity.objects.create(
+                file=project_file,
+                owner=request.user,
+                action="upload_new_version",
+            )
+
+        return redirect("file:project-sync", pk=project_file.project.id)
 
     return render(
         request,
         "pages/update_file.html",
         {
-            "form": form,
             "project_file": project_file,
-            "project": project,
+            "project": project_file.project,
         },
     )
 
@@ -149,12 +176,15 @@ def update_file(request, pk):
 @login_required
 def delete_file(request, pk):
     """
-    Delete a single file of it
+    Delete a single file of file (hard delete)
     """
-    project_file = get_object_or_404(ProjectFile, pk=pk, project__user=request.user)
+    project_file = get_object_or_404(File, pk=pk, project__owner=request.user)
     if request.method == "POST":
         project_file.delete()
         return redirect("file:project-detail", pk=project_file.project.pk)
+
+    # Temporary fix. will make the delete.html
+    return render(request, "components/file/file_delete.html", {"file": project_file})
 
 
 @login_required
@@ -162,26 +192,18 @@ def delete_project(request, pk):
     """
     Delete a project and all associated files and versions.
     """
-    project = get_object_or_404(Project, pk=pk, user=request.user)
+    project_file = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == "POST":
-        project.delete()
+        project_file.delete()
         return redirect("file:dashboard")
     return render(
-        request, "components/project/project_delete.html", {"project": project}
+        request, "components/project/project_delete.html", {"project": project_file}
     )
 
 
 @login_required
-def project_file_versions(request, file_id):
-    """
-    List all versions of a ProjectFile.
-    """
-    project_file = get_object_or_404(
-        ProjectFile, pk=file_id, project__user=request.user
-    )
-    versions = project_file.versions.all()
-    return render(
-        request,
-        "pages/file_versions.html",
-        {"project_file": project_file, "versions": versions},
-    )
+def delete_project_soft(request, pk):
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
+    if request.method == "POST":
+        project.soft_delete()
+    return redirect("file:dashboard")
