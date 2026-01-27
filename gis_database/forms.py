@@ -23,9 +23,22 @@ class ProjectForm(forms.ModelForm):
         help_text="If provided, this will create a new project.",
     )
 
+    new_project_description = forms.CharField(
+        max_length=500,
+        required=False,
+        label="Project Description",
+        widget=forms.Textarea(
+            attrs={
+                "rows": 5,  # taller
+                "class": "textarea textarea-bordered w-full border-base-100 text-base-200",  # DaisyUI styling
+            }
+        ),
+        help_text="Optional description for the new project.",
+    )
+
     class Meta:
         model = File
-        fields = ["uploaded_file", "project", "new_project_name"]
+        fields = []
 
     def clean(self):
         cleaned_data = super().clean()
@@ -42,10 +55,13 @@ class ProjectForm(forms.ModelForm):
         uploaded_file = self.cleaned_data["uploaded_file"]
         project = self.cleaned_data.get("project")
         new_project_name = self.cleaned_data.get("new_project_name")
+        new_project_description = self.cleaned_data.get("new_project_description")
         owner = self.owner
 
         if not project:
-            project = Project.objects.create(name=new_project_name, owner=owner)
+            project = Project.objects.create(
+                name=new_project_name, owner=owner, description=new_project_description
+            )
 
         file_obj = File.objects.create(
             project=project,
@@ -62,9 +78,7 @@ class ProjectForm(forms.ModelForm):
         file = self.cleaned_data["file"]
 
         if file.size > File.MAX_FILE_SIZE:
-            raise forms.ValidationError(
-                "File exceeds 50MB Limit"
-            )
+            raise forms.ValidationError("File exceeds 50MB Limit")
         return file
 
     def clean_uploaded_file(self):
@@ -72,12 +86,10 @@ class ProjectForm(forms.ModelForm):
 
         if file.size > File.MAX_FILE_SIZE:
             raise forms.ValidationError("File exceeds 50MB limit")
-        
+
         if not self.owner.profile.can_store(file.size):
-            raise forms.ValidationError(
-                "You have exceeded your storage quota"
-            )
-        
+            raise forms.ValidationError("You have exceeded your storage quota")
+
         return file
 
     def __init__(self, *args, owner=None, **kwargs):

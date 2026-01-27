@@ -34,7 +34,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True)
 
     storage_limit_mb = models.PositiveIntegerField(
-        default=50, help_text="Maximum allowed storage for this user in MB"
+        default=10, help_text="Maximum allowed storage for this user in MB"
     )
 
     def __str__(self):

@@ -155,7 +155,12 @@ def download_project(request, pk):
 
 @login_required
 def update_file(request, pk):
-    project_file = get_object_or_404(File, pk=pk, owner=request.user, is_latest=True)
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
+
+    project_file = project.files.filter(is_latest=True).order_by("-version").first()
+
+    if not project_file:
+        raise Http404("No latest file to update")
 
     if request.method == "POST":
         uploaded_file = request.FILES.get("uploaded_file")
@@ -163,39 +168,42 @@ def update_file(request, pk):
             raise Http404("No file uploaded")
 
         profile = request.user.profile
-
         if not profile.can_store(uploaded_file.size):
             return HttpResponse("Storage quota exceeded", status=400)
 
+        new_hash = compute_hash(uploaded_file)
+
+        if new_hash == project_file.hash:
+            return HttpResponse("No changes detected", status=400)
+
         with transaction.atomic():
+            unset_latest(request.user, project, project_file.name)
 
-            unset_latest(request.user, project_file.project, project_file.name)
-
-            File.objects.create(
-                project=project_file.project,
+            new_file = File.objects.create(
+                project=project,
                 owner=request.user,
                 name=project_file.name,
                 file_folder=project_file.file_folder,
                 file=uploaded_file,
-                hash=compute_hash(uploaded_file),
+                hash=new_hash,
                 version=project_file.version + 1,
                 is_latest=True,
             )
 
             FileActivity.objects.create(
-                file=project_file,
+                file=new_file,
                 owner=request.user,
                 action="upload_new_version",
             )
 
-        return redirect("file:project-sync", pk=project_file.project.id)
+        return redirect("file:project-sync", pk=project.id) 
 
     return render(
         request,
         "pages/update_file.html",
         {
             "project_file": project_file,
-            "project": project_file.project,
+            "project": project,
         },
     )
 

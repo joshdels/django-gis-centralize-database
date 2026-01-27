@@ -5,5 +5,5 @@ def compute_hash(uploaded_file):
     hasher = hashlib.sha256()
     for chunk in uploaded_file.chunks():
         hasher.update(chunk)
-    uploaded_file.skee(0)
+    uploaded_file.seek(0)
     return hasher.hexdigest()
