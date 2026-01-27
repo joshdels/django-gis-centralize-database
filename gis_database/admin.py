@@ -1,25 +1,32 @@
 from django.contrib import admin
-from .models import Project, ProjectFile, ProjectFileVersion
+from .models import Project, File, FileActivity
 
 
-# --- Inline for ProjectFile ---
-class ProjectFileInline(admin.TabularInline):
-    model = ProjectFile
+# Inline for Files under a Project
+class FileInline(admin.TabularInline):
+    model = File
     extra = 0
-    
+    readonly_fields = ("version", "hash", "is_latest", "created_at")
+    fields = ("name", "file_folder", "file", "version", "hash", "is_latest", "created_at")
+
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "user", "archived", "is_private", "to_trash", "created_at")
-    inlines = [ProjectFileInline]
+    list_display = ("name", "owner", "is_deleted", "is_private", "created_at")
+    search_fields = ("name", "owner__username")
+    list_filter = ("is_deleted", "is_private", "created_at")
+    inlines = [FileInline]
 
 
-@admin.register(ProjectFile)
-class ProjectFileAdmin(admin.ModelAdmin):
-    list_display = ("project", "file", "created_at")
+@admin.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ("project", "name", "version", "is_latest", "created_at")
+    search_fields = ("name", "project__name", "owner__username")
+    list_filter = ("is_latest", "created_at", "project")
 
 
-@admin.register(ProjectFileVersion)
-class ProjectFileVersionAdmin(admin.ModelAdmin):
-    list_display = ("project_file", "version_number", "created_at", "synced")
-    readonly_fields = ("version_number", "created_at", "synced", "checksum", "remote_path", "synced_at")
+@admin.register(FileActivity)
+class FileActivityAdmin(admin.ModelAdmin):
+    list_display = ("file", "owner", "action", "created_at")
+    search_fields = ("file__name", "owner__username", "action")
+    list_filter = ("action", "created_at")

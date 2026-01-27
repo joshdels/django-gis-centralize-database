@@ -1,39 +1,19 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <title>{% block title %}TopMap Solutions{% endblock %}</title>
+    <title>Django Tailwind</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <meta name="description" content="{% block meta_description %}Secure GIS and spatial data management solutions by TopMap Solutions.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}GIS, spatial data, mapping, database management, TopMap{% endblock %}">
-    
     {% tailwind_css %}
 </head>
 
-<body class="bg-base-200 text-base-content font-sans leading-normal tracking-normal min-h-screen">
-
-    {% if messages %}
-    <div class="toast toast-top toast-end z-[9999]">
-        {% for message in messages %}
-        <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} shadow-lg font-bold">
-            <span>{{ message }}</span>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <main>
-        {% block content %}
-        <div class="container mx-auto">
-            <section class="flex items-center justify-center h-screen">
-                <h1 class="text-5xl font-black text-primary">Django + Tailwind = ❤️</h1>
-            </section>
-        </div>
-        {% endblock %}
-    </main>
-
+<body class="bg-gray-50 text-black font-serif leading-normal tracking-normal">
+<div class="container mx-auto">
+    <section class="flex items-center justify-center h-screen">
+        <h1 class="text-5xl">Django + Tailwind = ❤️</h1>
+    </section>
+</div>
 </body>
 </html>
