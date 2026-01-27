@@ -1,5 +1,22 @@
 from django.db import models
+from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import User
+
+from gis_database.models import File
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, "profile"):
+        instance.profile.save()
 
 
 def user_upload_path(instance, filename):
@@ -20,16 +37,17 @@ class Profile(models.Model):
         default=50, help_text="Maximum allowed storage for this user in MB"
     )
 
-    used_storage_mb = models.FloatField(
-        default=0.0, help_text="Storage used by the user in MB"
-    )
-
     def __str__(self):
         return f"{self.user.username}"
 
-    @property
-    def remaining_storage_mb(self):
-        return max(self.storage_limit_mb - self.used_storage_mb, 0)
+    def used_storage_bytes(self):
+        return sum(f.file.size for f in File.objects.filter(owner=self.user) if f.file)
 
-    def has_space_for(self, size_mb):
-        return self.remaining_storage_mb >= size_mb
+    def remaining_storage_bytes(self):
+        return max(
+            (self.storage_limit_mb * 1024 * 1024) - self.used_storage_bytes(),
+            0,
+        )
+
+    def can_store(self, file_size):
+        return file_size <= self.remaining_storage_bytes()

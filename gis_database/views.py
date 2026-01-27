@@ -10,6 +10,7 @@ from django.db.models import Sum
 from django.db import transaction
 
 from .models import Project, File, FileActivity
+from accounts.models import Profile
 from .forms import ProjectForm
 from .utils import compute_hash
 
@@ -18,29 +19,36 @@ from .utils import compute_hash
 # Utilities
 # -------------------------------
 def get_user_storage_context(user):
-    """
-    Calculate total storage usage for a user and return context for templates.
-    """
     uploads = Project.objects.filter(owner=user, is_deleted=False).order_by(
         "-created_at"
     )
 
-    total_bytes = (
-        File.objects.filter(project__owner=user).aggregate(total=Sum("file__size"))[
-            "total"
-        ]
-        or 0
+    total_bytes = sum(
+        f.file.size for f in File.objects.filter(project__owner=user) if f.file
     )
 
-    total_mb = total_bytes / (1024 * 1024)
-    remaining_mb = max(Project.MAX_STORAGE_MB - total_mb, 0)
-    used_percent = min(round((total_mb / Project.MAX_STORAGE_MB) * 100, 1), 100)
+    try:
+        profile = user.profile
+    except Profile.DoesNotExist:
+        profile = None
+
+    if profile:
+        remaining_mb = round(profile.remaining_storage_bytes() / (1024 * 1024), 1)
+        max_storage = profile.storage_limit_mb
+    else:
+        remaining_mb = 0
+        max_storage = 0
+
+    used_percent = min(
+        round((total_bytes / (profile.storage_limit_mb * 1024 * 1024)) * 100, 1),
+        100,
+    )
 
     return {
         "uploads": uploads,
         "storage_percentage": used_percent,
-        "remaining_mb": round(remaining_mb, 1),
-        "max_storage": Project.MAX_STORAGE_MB,
+        "remaining_mb": remaining_mb,
+        "max_storage": max_storage,
     }
 
 
@@ -97,9 +105,23 @@ def project_detail(request, pk):
 def upload_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, owner=request.user)
+
         if form.is_valid():
-            form.save()
-            return redirect("file:dashboard")
+            uploaded_file = request.FILES["uploaded_file"]
+
+            if uploaded_file.size > File.MAX_FILE_SIZE:
+                form.add_error("uploaded_file", "File exceeds maximum size (100MB)")
+                return render(request, "pages/uploaded.html", {"form": form})
+
+            with transaction.atomic():
+                if not request.user.profile.can_store(uploaded_file.size):
+                    form.add_error(
+                        "uploaded_file", "Storage limit exceeded during upload."
+                    )
+                    return render(request, "pages/upload.html", {"form": form})
+
+                form.save()
+                return redirect("file:dashboard")
     else:
         form = ProjectForm(owner=request.user)
 
@@ -139,6 +161,11 @@ def update_file(request, pk):
         uploaded_file = request.FILES.get("uploaded_file")
         if not uploaded_file:
             raise Http404("No file uploaded")
+
+        profile = request.user.profile
+
+        if not profile.can_store(uploaded_file.size):
+            return HttpResponse("Storage quota exceeded", status=400)
 
         with transaction.atomic():
 

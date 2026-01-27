@@ -58,6 +58,28 @@ class ProjectForm(forms.ModelForm):
         )
         return file_obj
 
+    def clean_file(self):
+        file = self.cleaned_data["file"]
+
+        if file.size > File.MAX_FILE_SIZE:
+            raise forms.ValidationError(
+                "File exceeds 50MB Limit"
+            )
+        return file
+
+    def clean_uploaded_file(self):
+        file = self.cleaned_data["uploaded_file"]
+
+        if file.size > File.MAX_FILE_SIZE:
+            raise forms.ValidationError("File exceeds 50MB limit")
+        
+        if not self.owner.profile.can_store(file.size):
+            raise forms.ValidationError(
+                "You have exceeded your storage quota"
+            )
+        
+        return file
+
     def __init__(self, *args, owner=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.owner = owner
