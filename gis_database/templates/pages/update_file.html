@@ -21,8 +21,8 @@
                         <h3 class="text-2xl font-black text-base-content uppercase">
                             Push Changes
                         </h3>
-                        <div class="text-sm opacity-70 mt-1">
-                            Updating project: <span class="font-semibold">{{ project.name }}</span>
+                        <div class="text-sm mt-1">
+                            Updating project: <span class="font-black">{{ project.name }}</span>
                         </div>
                     </div>
                 </div>
@@ -40,12 +40,9 @@
                         </span>
                     </label>
 
-                    <input
-                        type="file"
-                        name="uploaded_file"
-                        required
-                        class="file-input file-input-bordered file-input-primary w-full"
-                    />
+                    <div class="[&_input]:file-input [&_input]:file-input-bordered [&_input]:file-input-primary [&_input]:w-full">
+                        {{ form.uploaded_file }}
+                    </div>
 
                     <p class="text-xs opacity-60 mt-2">
                         This will create a new version of the existing file.
