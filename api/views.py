@@ -60,7 +60,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Only return projects for the authenticated user."""
-        return Project.objects.filter(user=self.request.user)
+        return Project.objects.filter(owner=self.request.user)
 
     # -------------------- Version Upload --------------------
     @action(
