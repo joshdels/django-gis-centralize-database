@@ -36,7 +36,7 @@ load_env()
 env_status = str(os.getenv("DJANGO_ENV", "dev")).strip().lower()
 IS_PROD = env_status == "prod"
 
-DEBUG = os.getenv("DEBUG")
+DEBUG = not IS_PROD
 
 WINDOWS = os.getenv("WINDOWS")
 
@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "allauth",
     "allauth.account",
-    "drf_spectacular"
+    "drf_spectacular",
 ]
 
 if IS_PROD:
@@ -101,6 +101,9 @@ LOCAL_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload"]
 
 SITE_ID = 1
 
@@ -204,7 +207,7 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
- 
+
 # ----------------------------
 # PASSWORD VALIDATION
 # ----------------------------
@@ -233,8 +236,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    # BASE_DIR / "theme" / "static",
-    BASE_DIR / "theme2" / "static",
+    BASE_DIR / "theme" / "static",
+    # BASE_DIR / "theme2" / "static",
 ]
 
 
@@ -296,8 +299,6 @@ if not IS_PROD:
 else:
     NPM_BIN_PATH = None
 
-if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
 
 # ----------------------------
 # DEFAULT AUTO FIELD
@@ -312,18 +313,17 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication", 
-        "rest_framework.authentication.BasicAuthentication",    
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",          
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "10/min", 
+        "user": "10/min",
     },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
-
