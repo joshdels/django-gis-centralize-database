@@ -1,33 +1,61 @@
 <script>
-    new Chart(document.getElementById('pieChart'), {
-        type: 'doughnut', // change to 'pie' if you prefer
-        data: {
-            labels: ['Project 1', 'Project 2', 'Project 3'],
-            datasets: [{
-                data: [30, 50, 20],
-                backgroundColor: [
-                    '#419400',  
-                    '#E1E6D9',  
-                    '#343300' 
-                ],
-                borderWidth: 0,
-                hoverOffset: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '50%', // remove this line if using `type: 'pie'`
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        font: { size: 11, weight: 'bold' },
-                        padding: 16,
-                        usePointStyle: true
+const labels = JSON.parse(document.getElementById('chart-labels').textContent);
+const data = JSON.parse(document.getElementById('chart-data').textContent);
+
+// Define a fixed palette of colors
+const palette = [
+    '#419400',  // green
+    '#E1E6D9',  // light beige
+    '#343300',  // dark brown
+    '#FF6384',  // pink
+    '#36A2EB',  // blue
+    '#FFCE56',  // yellow
+    '#FFA500',  // orange
+    '#800080',  // purple
+    '#008080',  // teal
+    '#A52A2A',  // brown
+];
+
+// Assign colors from palette, cycling if needed
+const backgroundColors = labels.map((_, i) => palette[i % palette.length]);
+
+// Calculate total for percentage
+const total = data.reduce((sum, value) => sum + value, 0);
+
+new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: backgroundColors,
+            borderWidth: 0,
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '50%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { size: 11, weight: 'bold' },
+                    padding: 16,
+                    usePointStyle: true
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const mb = context.parsed.toFixed(2);
+                        const percent = ((context.parsed / total) * 100).toFixed(2);
+                        return ` ${mb} MB (${percent}%)`;
                     }
                 }
             }
         }
-    });
+    }
+});
 </script>

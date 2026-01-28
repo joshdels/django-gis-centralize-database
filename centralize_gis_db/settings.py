@@ -86,6 +86,7 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "allauth",
     "allauth.account",
+    "drf_spectacular"
 ]
 
 if IS_PROD:
@@ -232,7 +233,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "theme" / "static",
+    # BASE_DIR / "theme" / "static",
+    BASE_DIR / "theme2" / "static",
 ]
 
 
@@ -322,5 +324,6 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "user": "10/min", 
     },
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 

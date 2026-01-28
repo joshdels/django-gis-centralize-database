@@ -1,35 +1,32 @@
 {% extends "_base.html" %}
 {% block content %}
-    <div class="max-w-7xl mx-auto px-4 py-6 lg:py-8 space-y-8">
+<div class="max-w-7xl mx-auto px-4 py-6 lg:py-8 space-y-8">
 
     {# 1. Navigation #}
-        {% include "components/navbar.html" %}
+    {% include "components/navbar.html" %}
 
-    {# 2. Top Stats Section #}
-        <div class="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {% include "components/dashboard/upload_card.html" %}
-            {% include "components/dashboard/storage_card.html" %}
-        </div>
+    {# 2. Top Stats Section (stack on mobile, grid on large screens) #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {% include "components/dashboard/upload_card.html" %}
+        {% include "components/dashboard/storage_card.html" %}
+        {# Optional third card can go here if needed #}
+    </div>
 
     {# 3. Project Registry Section #}
-        {% include "components/project/projects-table.html" %}
+    {% include "components/project/projects-table.html" %}
 
-        <div class="block lg:hidden grid-cols-1 gap-6">
-            {% include "components/dashboard/upload_card.html" %}
+    {# 4. Analytics Section (stack on mobile) #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="col-span-1 lg:col-span-2">
+            {% include "components/charts/analytics_section.html" %}
         </div>
-
-    {# 4. Analytics Section #}
-        <div class="card hidden lg:grid grid-cols-3 gap-5">
-            <div class="col-span-2">
-                {% include "components/charts/analytics_section.html" %}
-            </div>
-            <div class="col-span-1">
-                {% include "components/dashboard/activity_logs.html" %}
-
-            </div>
+        <div class="col-span-1">
+            {% include "components/dashboard/activity_logs.html" %}
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {% include "components/charts/_chart_logic.js.html" %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% include "components/charts/_chart_logic.js.html" %}
 {% endblock %}
