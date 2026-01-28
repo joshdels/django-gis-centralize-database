@@ -95,7 +95,7 @@ if IS_PROD:
 LOCAL_APPS = [
     "gis_database",
     "accounts",
-    "theme",
+    "theme2",
     "api",
     "customer_service",
 ]
@@ -236,8 +236,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "theme" / "static",
-    # BASE_DIR / "theme2" / "static",
+    # BASE_DIR / "theme" / "static",
+    BASE_DIR / "theme2" / "static",
 ]
 
 
@@ -258,11 +258,11 @@ if IS_PROD:
             "OPTIONS": {"default_acl": None, "file_overwrite": True},
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         },
     }
-
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
 else:
     # Local filesystem
     MEDIA_URL = "/media/"
@@ -287,7 +287,7 @@ else:
 # ----------------------------
 # TAILWIND
 # ----------------------------
-TAILWIND_APP_NAME = "theme"
+TAILWIND_APP_NAME = "theme2"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
