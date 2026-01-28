@@ -99,7 +99,7 @@ if IS_PROD:
 LOCAL_APPS = [
     "gis_database",
     "accounts",
-    "theme2",
+    "theme",
     "api",
     "customer_service",
 ]
@@ -240,8 +240,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    # BASE_DIR / "theme" / "static",
-    BASE_DIR / "theme2" / "static",
+    BASE_DIR / "theme" / "static",
+    # BASE_DIR / "theme2" / "static",
 ]
 
 
@@ -291,7 +291,7 @@ else:
 # ----------------------------
 # TAILWIND
 # ----------------------------
-TAILWIND_APP_NAME = "theme2"
+TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
 # Get-Command npm => powershell
