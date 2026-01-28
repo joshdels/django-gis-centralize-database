@@ -46,7 +46,7 @@ class Project(models.Model):
         self.save(update_fields=["is_deleted", "deleted_at"])
 
     def used_storage_bytes(self):
-        return self.files.aggregate(total=Sum("file__size"))["total"] or 0
+        return sum(f.file.size for f in self.files.all() if f.file)
 
     def has_storage_for(self, new_file_size):
         max_bytes = self.MAX_STORAGE_MB * 1024 * 1024

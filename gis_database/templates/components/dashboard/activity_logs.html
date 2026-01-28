@@ -1,28 +1,28 @@
-<div class="card grid grid-cols-1 gap-6 bg-neutral shadow-sm">
-  <div class="card p-5">
-    <h3 class="text-lg text-neutral-content font-black mb-5 uppercase">
-      Recent Activity
-    </h3>
+<div class="card bg-neutral shadow-sm p-4 w-full"> <!-- small fixed width card -->
+  <h3 class="text-sm text-neutral-content font-black mb-3 uppercase">
+    Recent Activity
+  </h3>
 
-    <div class="grid grid-cols-1 gap-5 text-sm">
-      {% for activity in file_activities|slice:"5" %} <!-- fixed typo -->
-
-      <!-- CARD 1 -->
-      <div class="card p-3 bg-base-100">
-        <h4 class="text-sm font-black tracking-widest mb-1">{{ activity.file.project.name }}</h4>
-        <h4 class="text-sm mb-1">{{ activity.file.name|truncatechars:30 }}</h4>
-        <div class="text-xs">
-          <span class="font-semibold">{{ activity.action }}</span>
-          <span class="ml-1 text-gray-500">{{ activity.created_at|date:"M d, Y H:i" }}</span>
-        </div>
+  <div class="grid grid-cols-1 gap-2 text-xs"> <!-- smaller text -->
+    {% for activity in file_activities|slice:"5" %}
+    
+    <div class="card bg-base-100 p-2 shadow-inner">
+      <div class="flex justify-between items-center mb-1">
+        <h4 class="text-xs font-bold text-gray-700">{{ activity.file.project.name}}</h4>
+        <span class="text-gray-400">{{ activity.created_at|date:"M d, H:i" }}</span>
       </div>
-
-      {% empty %}
-      <!-- Empty state -->
-      <div class="card p-3 bg-base-100 text-center ">
-        No recent activity found.
+      <div class="text-xs text-gray-600 mb-1">
+        {{ activity.action }}
       </div>
-      {% endfor %}
+      <div class="text-xs font-semibold text-gray-800">
+        {{ activity.file.name|truncatechars:30 }}
+      </div>
     </div>
+
+    {% empty %}
+    <div class="card bg-base-100 p-2 text-center text-gray-500 text-xs shadow-inner">
+      No recent activity found.
+    </div>
+    {% endfor %}
   </div>
 </div>

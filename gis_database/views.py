@@ -1,4 +1,5 @@
 import os
+import json
 import zipfile
 from io import BytesIO
 
@@ -83,9 +84,20 @@ def test(request):
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
+    projects = Project.objects.filter(owner=request.user, is_deleted=False)
+
+    chart_labels = [p.name for p in projects]
+    chart_data = [round(p.used_storage_bytes() / (1024 * 1024), 2) for p in projects]
+
     context = get_user_storage_context(request.user)
     file_activities = FileActivity.objects.filter(owner=request.user)
-    context.update({"file_activities": file_activities})
+    context.update(
+        {
+            "file_activities": file_activities,
+            "chart_labels": chart_labels,
+            "chart_data": chart_data,
+        }
+    )
     return render(request, "pages/dashboard.html", context)
 
 
@@ -125,7 +137,7 @@ def upload_project(request):
                 FileActivity.objects.create(
                     file=file_obj,
                     owner=request.user,
-                    action="uploaded",
+                    action="uploaded new file",
                 )
 
                 return redirect("file:dashboard")
@@ -204,14 +216,14 @@ def update_file(request, pk):
                     unset_latest(request.user, project, latest_file_same_name.name)
                     version = latest_file_same_name.version + 1
                     file_folder = latest_file_same_name.file_folder
-                    action = "new file added"
+                    action = "added new file"
                 else:
                     # Completely new file
                     version = 1
                     file_folder = os.path.splitext(uploaded_file.name)[0].replace(
                         " ", "_"
                     )
-                    action = "new file version"
+                    action = "create new file version"
 
                 # Create new File
                 new_file = File.objects.create(
@@ -256,7 +268,7 @@ def delete_file(request, pk):
     project_file = get_object_or_404(File, pk=pk, project__owner=request.user)
     if request.method == "POST":
         FileActivity.objects.create(
-            file=project_file, owner=request.user, action="deleted"
+            file=project_file, owner=request.user, action="deleted file"
         )
 
         project_file.delete()
