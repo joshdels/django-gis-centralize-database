@@ -57,12 +57,16 @@ if IS_PROD:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
-
-raw_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 if IS_PROD:
-    ALLOWED_HOSTS = [host.strip() for host in raw_hosts.split(",") if host.strip()]
+    ALLOWED_HOSTS = [
+        "topmapsolutions.com",
+        "www.topmapsolutions.com",
+    ]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
