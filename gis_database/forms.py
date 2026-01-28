@@ -30,7 +30,7 @@ class ProjectForm(forms.ModelForm):
         widget=forms.Textarea(
             attrs={
                 "rows": 5,  # taller
-                "class": "textarea textarea-bordered w-full border-base-100 text-base-200",  # DaisyUI styling
+                "class": "textarea textarea-bordered border border-gray-200 w-full",
             }
         ),
         help_text="Optional description for the new project.",

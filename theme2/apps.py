@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ThemeConfig(AppConfig):
-    name = 'theme'
+class Theme2Config(AppConfig):
+    name = 'theme2'

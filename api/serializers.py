@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from gis_database.models import Project
-from django.contrib.auth.models import User
 from accounts.models import Profile
+from gis_database.models import Project, File
+from django.contrib.auth.models import User
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -48,3 +48,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         request = self.context["request"]
         validated_data["owner"] = request.user
         return super().create(validated_data)
+
+
+class FileSerializer(serializers.ModelSerializer):
+    download_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = File
+        fields = "__all__"
+
+    def get_download_url(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(f"/api/files/{obj.id}/download/")

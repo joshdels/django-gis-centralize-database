@@ -84,6 +84,8 @@ def test(request):
 @ensure_csrf_cookie
 def dashboard(request):
     context = get_user_storage_context(request.user)
+    file_activities = FileActivity.objects.filter(owner=request.user)
+    context.update({"file_activities": file_activities})
     return render(request, "pages/dashboard.html", context)
 
 
@@ -113,14 +115,19 @@ def upload_project(request):
                 form.add_error("uploaded_file", "File exceeds maximum size (100MB)")
                 return render(request, "pages/uploaded.html", {"form": form})
 
-            with transaction.atomic():
-                if not request.user.profile.can_store(uploaded_file.size):
-                    form.add_error(
-                        "uploaded_file", "Storage limit exceeded during upload."
-                    )
-                    return render(request, "pages/upload.html", {"form": form})
+            if not request.user.profile.can_store(uploaded_file.size):
+                form.add_error("uploaded_file", "Storage limit exceeded during upload.")
+                return render(request, "pages/upload.html", {"form": form})
 
-                form.save()
+            with transaction.atomic():
+                file_obj = form.save()
+
+                FileActivity.objects.create(
+                    file=file_obj,
+                    owner=request.user,
+                    action="uploaded",
+                )
+
                 return redirect("file:dashboard")
     else:
         form = ProjectForm(owner=request.user)
@@ -160,18 +167,6 @@ def download_project(request, pk):
     return response
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.http import HttpResponse, Http404
-import os
-
-from .models import Project, File, FileActivity
-from .forms import ProjectForm
-from .utils import compute_hash
-from .views import unset_latest
-
-
 @login_required
 def update_file(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
@@ -209,14 +204,14 @@ def update_file(request, pk):
                     unset_latest(request.user, project, latest_file_same_name.name)
                     version = latest_file_same_name.version + 1
                     file_folder = latest_file_same_name.file_folder
-                    action = "upload_new_version"
+                    action = "new file added"
                 else:
                     # Completely new file
                     version = 1
                     file_folder = os.path.splitext(uploaded_file.name)[0].replace(
                         " ", "_"
                     )
-                    action = "upload_new_file"
+                    action = "new file version"
 
                 # Create new File
                 new_file = File.objects.create(
@@ -260,6 +255,10 @@ def delete_file(request, pk):
     """
     project_file = get_object_or_404(File, pk=pk, project__owner=request.user)
     if request.method == "POST":
+        FileActivity.objects.create(
+            file=project_file, owner=request.user, action="deleted"
+        )
+
         project_file.delete()
         return redirect("file:project-detail", pk=project_file.project.pk)
 

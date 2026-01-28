@@ -5,31 +5,24 @@
     </h3>
 
     <div class="grid grid-cols-1 gap-5 text-sm">
+      {% for activity in file_activities|slice:"5" %} <!-- fixed typo -->
 
       <!-- CARD 1 -->
       <div class="card p-3 bg-base-100">
-        <h4 class="font-bold mb-1">ndvi.tiff</h4>
+        <h4 class="text-sm font-black tracking-widest mb-1">{{ activity.file.project.name }}</h4>
+        <h4 class="text-sm mb-1">{{ activity.file.name|truncatechars:30 }}</h4>
         <div class="text-xs">
-          <span>Updated: 2026-01-22 14:02</span>
+          <span class="font-semibold">{{ activity.action }}</span>
+          <span class="ml-1 text-gray-500">{{ activity.created_at|date:"M d, Y H:i" }}</span>
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div class="card p-3 bg-base-100">
-        <h4 class="font-bold mb-1">GeoJSON</h4>
-        <div class="text-xs">
-          <span>Created: 2026-01-18 11:20</span>
-        </div>
+      {% empty %}
+      <!-- Empty state -->
+      <div class="card p-3 bg-base-100 text-center ">
+        No recent activity found.
       </div>
-
-      <!-- CARD 3 -->
-      <div class="card p-3 bg-base-100">
-        <h4 class="font-bold mb-1">Tree.shp</h4>
-        <div class="text-xs">
-          <span>Created: 2026-01-15 16:30</span>
-        </div>
-      </div>
-
+      {% endfor %}
     </div>
   </div>
 </div>
