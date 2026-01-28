@@ -119,9 +119,8 @@ MIDDLEWARE = [
 ]
 
 if IS_PROD:
-    MIDDLEWARE += [
-        "whitenoise.middleware.WhiteNoiseMiddleware",
-    ]
+    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+        MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -133,7 +132,7 @@ MIDDLEWARE += [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-if not IS_PROD:
+if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 
@@ -236,6 +235,8 @@ USE_TZ = True
 # STATIC & MEDIA
 # ----------------------------
 STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
@@ -244,6 +245,7 @@ STATICFILES_DIRS = [
     # BASE_DIR / "theme2" / "static",
 ]
 
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Dev vs Prod storage
 if IS_PROD:
@@ -256,17 +258,19 @@ if IS_PROD:
     AWS_S3_REGION_NAME = "us-east-005"
     AWS_S3_ENDPOINT_URL = f"https://s3.{AWS_S3_REGION_NAME}.backblazeb2.com"
 
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
+    STATIC_URL = "/static/"
+
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {"default_acl": None, "file_overwrite": True},
         },
         "staticfiles": {
-            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
-    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
+
 else:
     # Local filesystem
     MEDIA_URL = "/media/"
