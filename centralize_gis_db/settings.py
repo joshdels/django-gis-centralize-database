@@ -241,8 +241,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "static" / "theme",
-    BASE_DIR / "theme" / "static" / "dist",
+    BASE_DIR / "theme" / "static",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"
