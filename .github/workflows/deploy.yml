@@ -30,14 +30,8 @@ jobs:
 
             export DOCKER_BUILDKIT=0
 
-            echo "--- Stopping containers ---"
-            docker-compose down
-
-            echo "--- Building Docker images (no cache) ---"
-            docker-compose build --no-cache
-
-            echo "--- Starting containers ---"
-            docker-compose up -d
+            echo "--- Building Docker images (cached) ---"
+            docker-compose up -d --build
 
             echo "--- Waiting for Django container to be ready ---"
             timeout=60
