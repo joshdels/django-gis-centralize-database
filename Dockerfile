@@ -43,12 +43,15 @@ RUN apt-get update && apt-get install -y \
 COPY --from=python-builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy compiled Tailwind CSS
+# Copy Django app FIRST
+COPY . .
+
+# Create static directory
+RUN mkdir -p /app/static
+
+# Copy compiled Tailwind CSS LAST (prevents overwriting)
 COPY --from=frontend-builder /app/theme/static/css/dist \
     /app/theme/static/css/dist
-
-# Copy Django app
-COPY . .
 
 ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
 ENV GEOS_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/libgeos_c.so
@@ -56,10 +59,11 @@ ENV GEOS_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/libgeos_c.so
 EXPOSE 8000
 
 CMD ["sh", "-c", "\
+    mkdir -p /app/staticfiles && \
+    python manage.py collectstatic --noinput --clear && \
     python manage.py migrate --noinput && \
-    python manage.py collectstatic --noinput && \
     gunicorn centralize_gis_db.wsgi:application \
     --bind 0.0.0.0:8000 \
     --workers 2 \
     --timeout 60 \
-"]
+    "]

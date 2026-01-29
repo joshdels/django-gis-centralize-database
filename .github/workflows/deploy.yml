@@ -3,14 +3,14 @@ name: Deploy to Server Vultr
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -19,8 +19,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          timeout: 60m  
-          command_timeout: 60m  
+          timeout: 60m
+          command_timeout: 60m
           script: |
             set -e
 
@@ -30,8 +30,14 @@ jobs:
 
             export DOCKER_BUILDKIT=0
 
-            echo "--- Starting Docker Rebuild ---"
-            docker-compose up -d --build
+            echo "--- Stopping containers ---"
+            docker-compose down
+
+            echo "--- Building Docker images (no cache) ---"
+            docker-compose build --no-cache
+
+            echo "--- Starting containers ---"
+            docker-compose up -d
 
             echo "--- Waiting for Django container to be ready ---"
             timeout=60

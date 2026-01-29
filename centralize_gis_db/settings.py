@@ -240,15 +240,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "theme" / "static",
+    BASE_DIR / "theme" / "static" / "css" / "dist",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Dev vs Prod storage
 if IS_PROD:
     # AWS / Backblaze B2
-    STATIC_ROOT = BASE_DIR / "staticfiles"
 
     AWS_ACCESS_KEY_ID = os.getenv("B2_APP_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("B2_APP_KEY")
