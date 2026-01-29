@@ -93,7 +93,9 @@ THIRD_PARTY_APPS = [
 ]
 
 if IS_PROD:
-    THIRD_PARTY_APPS += ["storages",]
+    THIRD_PARTY_APPS += [
+        "storages",
+    ]
 
 LOCAL_APPS = [
     "gis_database",
@@ -116,11 +118,6 @@ SITE_ID = 1
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
 ]
-
-if IS_PROD:
-    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
-        MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-
 MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -254,16 +251,25 @@ if IS_PROD:
     AWS_S3_REGION_NAME = "us-east-005"
     AWS_S3_ENDPOINT_URL = f"https://s3.{AWS_S3_REGION_NAME}.backblazeb2.com"
 
+    # Update these URLs
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
-    STATIC_URL = "/static/"
+    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
 
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-            "OPTIONS": {"default_acl": None, "file_overwrite": True},
+            "OPTIONS": {
+                "default_acl": None,
+                "file_overwrite": True,
+                "location": "media",
+            },
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "OPTIONS": {
+                "default_acl": None,
+                "location": "static",
+            },
         },
     }
 
@@ -335,28 +341,28 @@ REST_FRAMEWORK = {
 # LOGGING (Add this to the end)
 # ----------------------------
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
         },
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'ERROR', 
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": True,
         },
     },
 }
