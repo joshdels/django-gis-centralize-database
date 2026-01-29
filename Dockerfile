@@ -2,20 +2,19 @@
 # Stage 1: Build Tailwind frontend
 # ==============================
 FROM node:20-slim AS frontend-builder
-WORKDIR /app/theme/static_src
+WORKDIR /app
 
 # 1. Copy package files first for caching
-# COPY theme/static_src/package*.json ./theme/static_src/
-# RUN cd theme/static_src && npm install
-COPY theme/static_src/package*.json ./
-RUN npm install
+COPY theme/static_src/package*.json ./theme/static_src/
+RUN cd theme/static_src && npm install
 
 # 2. Copy templates & frontend source (Tailwind needs HTML to scan)
-COPY src ./src
+COPY theme/static_src/src ./theme/static_src/
+COPY theme/templates ./theme/templates
 COPY gis_database ./gis_database
-COPY theme ./theme
 
 # 3. Build Tailwind CSS
+WORKDIR /app/theme/static_src
 RUN npm run build
 
 # ==============================
@@ -54,8 +53,7 @@ COPY --from=python-builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy built Tailwind static files
-# COPY --from=frontend-builder /app/theme/static /app/theme/static
-COPY --from=frontend-builder /app/theme/static_src/static/css/dist /app/theme/static
+COPY --from=frontend-builder /app/theme/static_src/static /app/theme/static
 
 # Copy Django code
 COPY . .
