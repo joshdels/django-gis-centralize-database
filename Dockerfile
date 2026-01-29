@@ -11,6 +11,8 @@ COPY theme/static_src/src ./src
 COPY theme/templates ../templates
 COPY gis_database ../gis_database
 
+RUN mkdir -p /app/theme/static/css/dist
+
 RUN npm run build
 
 
@@ -43,13 +45,10 @@ RUN apt-get update && apt-get install -y \
 COPY --from=python-builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy Django app FIRST
 COPY . .
 
-# Create static directory
-RUN mkdir -p /app/static
+RUN mkdir -p /app/static /app/staticfiles
 
-# Copy compiled Tailwind CSS LAST (prevents overwriting)
 COPY --from=frontend-builder /app/theme/static/css/dist \
     /app/theme/static/css/dist
 
