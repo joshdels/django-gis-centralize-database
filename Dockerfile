@@ -1,59 +1,76 @@
-# --- Stage 1: Build Frontend (Tailwind v4) ---
+# ==============================
+# Stage 1: Build Tailwind frontend
+# ==============================
 FROM node:20-slim AS frontend-builder
 WORKDIR /app
 
-# 1. Copy package files first for better caching
+# 1. Copy package files first for caching
 COPY theme/static_src/package*.json ./theme/static_src/
 RUN cd theme/static_src && npm install
 
-# 2. !!! FIX FOR TAILWIND v4 !!!
-# Copy the folders containing your HTML templates. 
-# Without these, Tailwind v4 scans "nothing" and deletes all your CSS classes.
+# 2. Copy templates & frontend source (Tailwind needs HTML to scan)
 COPY gis_database/ ./gis_database/
 COPY theme/ ./theme/
 
-# 3. Run the build from the static_src directory
+# 3. Build Tailwind CSS
 WORKDIR /app/theme/static_src
 RUN npm run build
 
-# --- Stage 2: Build Python Virtual Env (No Changes) ---
+# ==============================
+# Stage 2: Build Python virtual environment
+# ==============================
 FROM python:3.12-slim-bookworm AS python-builder
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
+
+# Install dependencies for building Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# --- Stage 3: Final Runtime ---
+# ==============================
+# Stage 3: Final Runtime
+# ==============================
 FROM python:3.12-slim-bookworm
 WORKDIR /app
 
-# 1. Install GIS Libraries
+# Install GIS libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gdal-bin libgdal-dev libgeos-dev libproj-dev libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Copy the Python environment
+# Copy Python virtual environment
 COPY --from=python-builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# 3. !!! FIX FOR MISSING CSS !!!
-# Copy the built static folder. 
-# Tailwind v4 usually outputs to theme/static/dist/styles.css
+# Copy built Tailwind static files
 COPY --from=frontend-builder /app/theme/static /app/theme/static
 
-# 4. Copy your actual code
+# Copy Django code
 COPY . .
 
-ENV PATH="/opt/venv/bin:$PATH"
+# Environment variables
+ENV PYTHONUNBUFFERED=1
 ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
 ENV GEOS_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/libgeos_c.so
-ENV PYTHONUNBUFFERED=1
 
+# Expose port
 EXPOSE 8000
 
-# CMD stays the same
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn centralize_gis_db.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 60"]
+# CMD: migrate, collectstatic, run gunicorn
+CMD ["sh", "-c", "\
+    python manage.py migrate --noinput && \
+    python manage.py collectstatic --noinput --clear && \
+    gunicorn centralize_gis_db.wsgi:application \
+    --bind 0.0.0.0:8000 \
+    --workers 2 \
+    --timeout 60 \
+    "]

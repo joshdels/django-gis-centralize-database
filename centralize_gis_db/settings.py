@@ -241,6 +241,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+    BASE_DIR / "static" / "theme",
+    BASE_DIR / "theme" / "static" / "dist",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"
@@ -265,7 +267,7 @@ if IS_PROD:
             "OPTIONS": {"default_acl": None, "file_overwrite": True},
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
 
