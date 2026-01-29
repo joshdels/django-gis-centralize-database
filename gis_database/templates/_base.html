@@ -1,8 +1,5 @@
 {% load tailwind_tags %}
 {% load widget_tweaks %}
-{% if debug %}
-  {% load django_browser_reload %}
-{% endif %}
 
 <!DOCTYPE html>
 <html lang="en" data-theme="greeny">
@@ -40,9 +37,6 @@
 
   <body class="bg-base-200 min-h-screen" >
     {% block content %}{% endblock %}
-    {% if debug %}
-      {% django_browser_reload_script %}
-    {% endif %}
     {% block extra_js %}{% endblock %}
     <!-- Leaflet for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
