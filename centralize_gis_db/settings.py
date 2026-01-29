@@ -86,7 +86,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
-    "tailwind",
     "widget_tweaks",
     "allauth",
     "allauth.account",
@@ -94,7 +93,7 @@ THIRD_PARTY_APPS = [
 ]
 
 if IS_PROD:
-    THIRD_PARTY_APPS += ["storages"]
+    THIRD_PARTY_APPS += ["storages",]
 
 LOCAL_APPS = [
     "gis_database",
@@ -107,7 +106,7 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
+    INSTALLED_APPS += ["tailwind", "django_browser_reload"]
 
 SITE_ID = 1
 
@@ -294,17 +293,15 @@ else:
 # ----------------------------
 # TAILWIND
 # ----------------------------
-TAILWIND_APP_NAME = "theme"
+if not IS_PROD:
+    TAILWIND_APP_NAME = "theme"
 
 # THIS IS FOR WINDOWS SETUP
-# Get-Command npm => powershell
 if not IS_PROD:
     if WINDOWS:
         NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
     else:
         NPM_BIN_PATH = "/usr/local/bin/npm"
-else:
-    NPM_BIN_PATH = None
 
 
 # ----------------------------
