@@ -237,7 +237,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "theme" / "static" / "css" / "dist",
+    BASE_DIR / "theme" / "static",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"
@@ -268,6 +268,7 @@ if IS_PROD:
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
                 "default_acl": None,
+                "file_overwrite": True,
                 "location": "static",
             },
         },
