@@ -297,6 +297,38 @@ class ProjectViewSet(viewsets.ModelViewSet):
         ]
         return Response(data)
 
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="load",
+        permission_classes=[permissions.IsAuthenticated],
+    )
+    def load_project(self, request, pk=None):
+        """
+        Load a project with its latest files.
+        Returns project metadata + latest file download URLS.
+        """
+
+        project = self.get_queryset().filter(pk=pk).first()
+        if not project:
+            return Response({"detail": "Project not foud"}, status=404)
+
+        latest_files = project.files.filter(is_latest=True)
+        files_data = FileSerializer(
+            latest_files, many=True, context={"request": request}
+        ).data
+
+        return Response(
+            {
+                "id": project.id,
+                "name": project.name,
+                "description": project.description,
+                "created_at": project.created_at,
+                "uploaded_at": project.updated_at,
+                "files": files_data,
+            }
+        )
+
 
 class FileDownloadView(APIView):
     """

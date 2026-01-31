@@ -12,7 +12,7 @@ class FileInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "is_deleted", "is_private", "created_at")
+    list_display = ("id", "name", "owner", "is_deleted", "is_private", "created_at")
     search_fields = ("name", "owner__username")
     list_filter = ("is_deleted", "is_private", "created_at")
     inlines = [FileInline]
