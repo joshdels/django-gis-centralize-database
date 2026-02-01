@@ -36,6 +36,7 @@ class Project(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        unique_together = ("owner", "name")
 
     def __str__(self):
         return self.name

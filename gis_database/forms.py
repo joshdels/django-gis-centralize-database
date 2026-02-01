@@ -98,3 +98,22 @@ class ProjectForm(forms.ModelForm):
         self.fields["project"].queryset = Project.objects.filter(
             owner=owner, is_deleted=False
         )
+
+
+class CreateProjectForm(forms.ModelForm):
+    description = forms.CharField(
+        max_length=500,
+        required=False,
+        label="Project",
+        widget=forms.Textarea(
+            attrs={
+                "rows": 5,
+                "class": "textarea textarea-bordered border border-gray-100 w-full",
+            }
+        ),
+        help_text="Optional description for the new project.",
+    )
+
+    class Meta:
+        model = Project
+        fields = ["name", "description"]

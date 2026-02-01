@@ -60,3 +60,10 @@ class FileSerializer(serializers.ModelSerializer):
     def get_download_url(self, obj):
         request = self.context.get("request")
         return request.build_absolute_uri(f"/api/files/{obj.id}/download/")
+
+
+class ProjectWithFilesSerializer(ProjectSerializer):
+    files = FileSerializer(many=True, read_only=True)
+
+    class Meta(ProjectSerializer.Meta):
+        fields = ProjectSerializer.Meta.fields + ["files"]

@@ -4,14 +4,17 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth import authenticate
 from django.http import FileResponse, Http404
 from django.db import transaction
 
 from gis_database.models import Project, File
-from .serializers import ProjectSerializer, UserSerializer, FileSerializer
+from .serializers import (
+    ProjectSerializer,
+    UserSerializer,
+    ProjectWithFilesSerializer,
+)
 
 from gis_database.utils import compute_hash
 
@@ -144,6 +147,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         """Only return projects for the authenticated user."""
         return Project.objects.filter(owner=self.request.user)
 
+    def get_serializer_class(self):
+        """Use ProjectWithFilesSerializers for list/retrieve to include latest files"""
+        if self.action in ["list", "retrieve"]:
+            return ProjectWithFilesSerializer
+        return super().get_serializer_class()
+
     # -------------------- Version Upload --------------------
     @action(
         detail=True,
@@ -224,143 +233,3 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 },
                 status=201,
             )
-
-    # -------------------- List Versions --------------------
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="files",
-        permission_classes=[permissions.IsAuthenticated],
-    )
-    def list_files(self, request, pk=None):
-        """
-        List the latest files for a project.
-
-        **Response:**
-        ```json
-        [
-            {
-                "id": int,
-                "name": "string",
-                "version": int,
-                "hash": "string",
-                "created_at": "datetime",
-                "is_latest": bool,
-                "download_url": "string"
-            },
-            ...
-        ]
-        ```
-        """
-        project = self.get_object()
-        files = project.files.filter(is_latest=True)
-
-        serializer = FileSerializer(files, many=True, context={"request": request})
-        return Response(serializer.data)
-
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="versions",
-        permission_classes=[permissions.IsAuthenticated],
-    )
-    def list_versions(self, request, pk=None):
-        """
-        List all file versions in a project.
-
-        **Response:**
-        ```json
-        [
-            {
-                "file": "string",
-                "version": int,
-                "hash": "string",
-                "created_at": "datetime",
-                "is_latest": bool
-            },
-            ...
-        ]
-        ```
-        """
-        project = self.get_object()
-
-        files = project.files.order_by("name", "-version")
-        data = [
-            {
-                "file": f.name,
-                "version": f.version,
-                "hash": f.hash,
-                "created_at": f.created_at,
-                "is_latest": f.is_latest,
-            }
-            for f in files
-        ]
-        return Response(data)
-
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="load",
-        permission_classes=[permissions.IsAuthenticated],
-    )
-    def load_project(self, request, pk=None):
-        """
-        Load a project with its latest files.
-        Returns project metadata + latest file download URLS.
-        """
-
-        project = self.get_queryset().filter(pk=pk).first()
-        if not project:
-            return Response({"detail": "Project not foud"}, status=404)
-
-        latest_files = project.files.filter(is_latest=True)
-        files_data = FileSerializer(
-            latest_files, many=True, context={"request": request}
-        ).data
-
-        return Response(
-            {
-                "id": project.id,
-                "name": project.name,
-                "description": project.description,
-                "created_at": project.created_at,
-                "uploaded_at": project.updated_at,
-                "files": files_data,
-            }
-        )
-
-
-class FileDownloadView(APIView):
-    """
-    ## GET /api/v1/files/<pk>/download/
-
-    Download a file from a project.
-
-    **Permissions:**
-    - Only the project owner can download.
-
-    **Responses:**
-    - `200 OK` - Returns file attachment
-    - `403 Forbidden` - User is not project owner
-      ```json
-      { "detail": "Forbidden" }
-      ```
-    - `404 Not Found` - File does not exist
-    """
-
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        try:
-            file_obj = File.objects.select_related("project").get(pk=pk)
-        except File.DoesNotExist:
-            raise Http404
-
-        if file_obj.project.owner != request.user:
-            return Response({"detail": "Forbidden"}, status=403)
-
-        return FileResponse(
-            file_obj.file.open("rb"),
-            as_attachment=True,
-            filename=file_obj.name or file_obj.file.name,
-        )

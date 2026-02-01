@@ -1,5 +1,4 @@
 import os
-import json
 import zipfile
 from io import BytesIO
 
@@ -12,8 +11,9 @@ from django.db import transaction
 
 from .models import Project, File, FileActivity
 from accounts.models import Profile
-from .forms import ProjectForm
-from .utils import compute_hash
+from .forms import ProjectForm, CreateProjectForm
+
+from .utils import compute_hash, create_empty_qgz
 
 
 # -------------------------------
@@ -123,16 +123,35 @@ def upload_project(request):
         if form.is_valid():
             uploaded_file = request.FILES["uploaded_file"]
 
+            # size per file validation
             if uploaded_file.size > File.MAX_FILE_SIZE:
                 form.add_error("uploaded_file", "File exceeds maximum size (100MB)")
-                return render(request, "pages/uploaded.html", {"form": form})
+                return render(request, "pages/upload.html", {"form": form})
 
+            # storage quota of the user
             if not request.user.profile.can_store(uploaded_file.size):
                 form.add_error("uploaded_file", "Storage limit exceeded during upload.")
                 return render(request, "pages/upload.html", {"form": form})
 
+            new_hash = compute_hash(uploaded_file)
+
             with transaction.atomic():
-                file_obj = form.save()
+                project = form.save(commit=False)
+                project.owner = request.user
+                project.save()
+
+                file_folder = os.path.splitext(uploaded_file.name)[0].replace(" ", "_")
+
+                file_obj = File.objects.create(
+                    project=project,
+                    owner=request.user,
+                    name=uploaded_file.name,
+                    file_folder=file_folder,
+                    file=uploaded_file,
+                    hash=new_hash,
+                    version=1,
+                    is_latest=True,
+                )
 
                 FileActivity.objects.create(
                     file=file_obj,
@@ -145,6 +164,34 @@ def upload_project(request):
         form = ProjectForm(owner=request.user)
 
     return render(request, "pages/upload.html", {"form": form})
+
+
+@transaction.atomic
+def create_project(request):
+    form = CreateProjectForm(request.POST or None)
+
+    if form.is_valid():
+        project = form.save(commit=False)
+        project.owner = request.user
+        project.save()
+
+        qgz_file = create_empty_qgz(project.name)
+
+        file_obj = File(
+            project=project,
+            owner=request.user,
+            name=f"{project.name}.gqz",
+            version=1,
+            is_latest=True,
+        )
+
+        file_obj.file.save(qgz_file.name, qgz_file, save=False)
+        file_obj.hash = compute_hash(file_obj.file)
+        file_obj.save()
+
+        return redirect("file:dashboard")
+
+    return render(request, "components/project/create.html", {"form": form})
 
 
 @login_required

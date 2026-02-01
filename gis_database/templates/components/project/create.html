@@ -43,7 +43,7 @@
                         <span class="label-text font-bold">Project Name</span>
                     </label>
                     <div class="[&_input]:input [&_input]:input-bordered [&_input]:w-full">
-                        {{ form.new_project_name }}
+                        {{ form.name }}
                     </div>
                 </div>
 
@@ -53,22 +53,9 @@
                         <span class="label-text font-bold">Description</span>
                     </label>
                     <div class="[&_textarea]:textarea [&_textarea]:textarea-bordered [&_textarea]:w-full">
-                        {{ form.new_project_description }}
+                        {{ form.description }}
                     </div>
                 </div>
-
-                <!-- File Upload -->
-                <!-- <div class="form-control w-full">
-                    <label class="label">
-                        <span class="label-text font-bold">Select File</span>
-                    </label>
-                    <div class="[&_input]:file-input [&_input]:file-input-bordered [&_input]:file-input-primary [&_input]:w-full">
-                        {{ form.uploaded_file }}
-                    </div>
-                    <label class="label mt-2">
-                        <span class="label-text-alt">Maximum file size: 50MB</span>
-                    </label>
-                </div> -->
 
                 <!-- Actions -->
                 <div class="card-actions justify-end items-center gap-4 mt-6">
