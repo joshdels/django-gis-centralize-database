@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from accounts.models import Profile
-from gis_database.models import Project, File
 from django.contrib.auth.models import User
+from gis_database.models import Project, File
+from accounts.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -47,7 +47,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context["request"]
         validated_data["owner"] = request.user
-        return super().create(validated_data)
+        project = super().create(validated_data)
+        project.create_initial_qgz(owner=request.user)
+
+        return project
 
 
 class FileSerializer(serializers.ModelSerializer):

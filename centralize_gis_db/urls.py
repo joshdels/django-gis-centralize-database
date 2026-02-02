@@ -27,7 +27,7 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     # ADMIN
-    path("admin/", admin.site.urls),
+    path("not-admin/", admin.site.urls),
     # APPS
     path("", include("gis_database.urls")),
     path("customer-service/", include("customer_service.urls")),

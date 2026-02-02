@@ -174,20 +174,7 @@ def create_project(request):
         project = form.save(commit=False)
         project.owner = request.user
         project.save()
-
-        qgz_file = create_empty_qgz(project.name)
-
-        file_obj = File(
-            project=project,
-            owner=request.user,
-            name=f"{project.name}.gqz",
-            version=1,
-            is_latest=True,
-        )
-
-        file_obj.file.save(qgz_file.name, qgz_file, save=False)
-        file_obj.hash = compute_hash(file_obj.file)
-        file_obj.save()
+        project.create_initial_qgz(owner=request.user)
 
         return redirect("file:dashboard")
 

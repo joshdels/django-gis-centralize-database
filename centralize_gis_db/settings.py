@@ -100,7 +100,6 @@ if IS_PROD:
 LOCAL_APPS = [
     "gis_database",
     "accounts",
-    "theme",
     "api",
     "customer_service",
 ]
@@ -108,7 +107,7 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 if DEBUG:
-    INSTALLED_APPS += ["tailwind", "django_browser_reload"]
+    INSTALLED_APPS += ["tailwind", "django_browser_reload", "theme"]
 
 SITE_ID = 1
 

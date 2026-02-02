@@ -1,10 +1,12 @@
 import os
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q, UniqueConstraint, Sum
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils import timezone
+
+from .utils import create_project_file
 
 
 def file_upload_path(instance, filename):
@@ -52,6 +54,14 @@ class Project(models.Model):
     def has_storage_for(self, new_file_size):
         max_bytes = self.MAX_STORAGE_MB * 1024 * 1024
         return self.used_storage_bytes() + new_file_size <= max_bytes
+
+    @transaction.atomic
+    def create_initial_qgz(self, owner=None):
+        """Create the initial .qgz file for this project"""
+        if self.files.exists():
+            return None
+
+        return create_project_file(project=self, owner=owner)
 
 
 class File(models.Model):
