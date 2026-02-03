@@ -161,37 +161,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         url_path="files/upload",
     )
     def upload_file(self, request, pk=None):
-        """
-        Upload a new file to a project with automatic versioning.
-
-        **Behavior:**
-        - If a file with the same hash exists → skip (200) and return existing file ID.
-        - Otherwise → increments version number, marks as latest, stores hash.
-
-        **Request Body:**
-        - `file` (multipart file) – file to upload
-
-        **Responses:**
-        - `201 Created` – New file uploaded
-        ```json
-        {
-            "id": int,
-            "version": int,
-            "hash": "string"
-        }
-        ```
-        - `200 OK` – Duplicate file
-        ```json
-        {
-            "detail": "File already exists",
-            "file_id": int
-        }
-        ```
-        - `400 Bad Request` – File not provided
-        ```json
-        { "error": "file required" }
-        ```
-        """
         project = self.get_object()
         uploaded_file = request.FILES.get("file")
 
@@ -199,6 +168,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response({"error": "file required"}, status=400)
 
         file_hash = compute_hash(uploaded_file)
+        
+        uploaded_file.seek(0)
         existing = project.files.filter(hash=file_hash).first()
 
         if existing:

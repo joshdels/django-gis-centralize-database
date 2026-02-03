@@ -26,6 +26,9 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         fields = ["username"]
 
 
+# ------------------ Projects -------------------
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     """Project's served in the api"""
 

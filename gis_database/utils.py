@@ -16,7 +16,7 @@ def compute_hash(uploaded_file):
 
 def create_empty_qgz(project_name):
     """Return a BytesIO object of a valid empty QGIS project as .qgz"""
-    qgs_content = f"""<qgis projectname="{project_name}" version="3.34"><title>{project_name}</title></qgis>"""
+    qgs_content = f"""<qgis projectname="{project_name}" version="3.40"><title>{project_name}</title></qgis>"""
 
     qgz_bytes = io.BytesIO()
     with zipfile.ZipFile(qgz_bytes, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
