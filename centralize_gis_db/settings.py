@@ -257,7 +257,8 @@ if IS_PROD:
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "default_acl": None,
+                "querystring_auth": False,
+                "default_acl": "public-read",
                 "file_overwrite": True,
                 "location": "media",
             },
@@ -265,7 +266,8 @@ if IS_PROD:
         "staticfiles": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "default_acl": None,
+                "querystring_auth": False,
+                "default_acl": "public-read",
                 "file_overwrite": True,
                 "location": "static",
             },
