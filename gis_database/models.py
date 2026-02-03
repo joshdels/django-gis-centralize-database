@@ -2,6 +2,8 @@ import os
 
 from django.db import models, transaction
 from django.db.models import Q, UniqueConstraint, Sum
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils import timezone
@@ -104,21 +106,21 @@ class File(models.Model):
             if self.owner and not self.owner.profile.can_store(self.file.size):
                 raise ValidationError("User storage quota exceeded")
 
-    def delete(self, *args, **kwargs):
-        if self.file:
-            storage = self.file.storage
-            try:
-                path = self.file.path
-            except NotImplementedError:
-                path = None
-        else:
-            storage = None
-            path = None
+    # def delete(self, *args, **kwargs):
+    #     if self.file:
+    #         storage = self.file.storage
+    #         try:
+    #             path = self.file.path
+    #         except NotImplementedError:
+    #             path = None
+    #     else:
+    #         storage = None
+    #         path = None
 
-        super().delete(*args, **kwargs)
+    #     super().delete(*args, **kwargs)
 
-        if storage and path and storage.exists(path):
-            storage.delete(path)
+    #     if storage and path and storage.exists(path):
+    #         storage.delete(path)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -139,3 +141,21 @@ class FileActivity(models.Model):
     class Meta:
         ordering = ["-created_at"]
         indexes = [models.Index(fields=["action", "created_at"])]
+
+
+@receiver(post_delete, sender=File)
+def cleanup_backblaze_on_delete(sender, instance, **kwargs):
+    """
+    Triggers whenever a File record is deleted from the DB.
+    Works for individual file deletes AND project-level cascading deletes.
+    """
+    if instance.file and instance.file.name:
+        storage = instance.file.storage
+        file_key = instance.file.name
+
+        try:
+            if storage.exists(file_key):
+                storage.delete(file_key)
+                print(f"B2: Successfully deleted cloud file: {file_key}")
+        except Exception as e:
+            print(f"B2: Failed to delete cloud file {file_key}. Error: {e}")
