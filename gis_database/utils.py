@@ -14,6 +14,7 @@ def compute_hash(uploaded_file):
     return hasher.hexdigest()
 
 
+# Accessory might removed this once the local qgis file creation is okay
 def create_empty_qgz(project_name):
     """Return a BytesIO object of a valid empty QGIS project as .qgz"""
     qgs_content = f"""<qgis projectname="{project_name}" version="3.40"><title>{project_name}</title></qgis>"""

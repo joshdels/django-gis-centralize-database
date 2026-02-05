@@ -51,7 +51,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         request = self.context["request"]
         validated_data["owner"] = request.user
         project = super().create(validated_data)
-        project.create_initial_qgz(owner=request.user)
 
         return project
 

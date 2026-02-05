@@ -13,7 +13,7 @@ from .models import Project, File, FileActivity
 from accounts.models import Profile
 from .forms import ProjectForm, CreateProjectForm
 
-from .utils import compute_hash, create_empty_qgz
+from .utils import compute_hash
 
 
 # -------------------------------
@@ -174,8 +174,6 @@ def create_project(request):
         project = form.save(commit=False)
         project.owner = request.user
         project.save()
-        project.create_initial_qgz(owner=request.user)
-
         return redirect("file:dashboard")
 
     return render(request, "components/project/create.html", {"form": form})

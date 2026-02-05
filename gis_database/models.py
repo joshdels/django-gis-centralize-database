@@ -57,14 +57,6 @@ class Project(models.Model):
         max_bytes = self.MAX_STORAGE_MB * 1024 * 1024
         return self.used_storage_bytes() + new_file_size <= max_bytes
 
-    @transaction.atomic
-    def create_initial_qgz(self, owner=None):
-        """Create the initial .qgz file for this project"""
-        if self.files.exists():
-            return None
-
-        return create_project_file(project=self, owner=owner)
-
 
 class File(models.Model):
 
@@ -105,22 +97,6 @@ class File(models.Model):
                 )
             if self.owner and not self.owner.profile.can_store(self.file.size):
                 raise ValidationError("User storage quota exceeded")
-
-    # def delete(self, *args, **kwargs):
-    #     if self.file:
-    #         storage = self.file.storage
-    #         try:
-    #             path = self.file.path
-    #         except NotImplementedError:
-    #             path = None
-    #     else:
-    #         storage = None
-    #         path = None
-
-    #     super().delete(*args, **kwargs)
-
-    #     if storage and path and storage.exists(path):
-    #         storage.delete(path)
 
     def save(self, *args, **kwargs):
         self.full_clean()
