@@ -2,15 +2,20 @@
 {% load static %}
 
 {% block content %}
-<div class="grid grid-cols-12 min-h-screen w-full">
-  
-   <aside class="col-span-3 bg-primary shadow-sm">
-        {% include 'components/sidebar/_sidebar.html' %}
-    </aside>
+<div class="grid grid-cols-12 w-full min-h-screen border border-black">
+    <div class="col-span-3 bg-red-500 border">
 
+     
+        {% include 'components/sidebar/_sidebar.html' %}
  
-    <main class="col-span-9 p-5 lg:p-10 space-y-8">
-        {% include 'components/dashboard/header.html' %}
+
+    </div>
+    <div class="col-span-9 bg-blue-500 border">
+      
+      
+      
+      
+      {% include 'components/dashboard/header.html' %}
 
      
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -35,10 +40,10 @@
                 {% include 'components/dashboard/activity_logs.html' %}
             </div>
         </div>
-    </main> 
+    
+    
+    
+    </div>
 </div>
-
-<script src="{% static 'chart.umd.min.js' %}"></script>
-{% include 'components/charts/_chart_logic.js.html' %}
 
 {% endblock %}

@@ -1,10 +1,10 @@
 <div class="h-full py-8 px-8 lg:px-10 flex flex-col min-h-screen">
     <div class="flex flex-col text-white mb-10">
-        <h1 class="text-2xl sm:text-3xl font-black tracking-tight leading-none">
+        <h1 class="text-3xl sm:text-4xl font-black tracking-widest leading-none mb-2">
             <a href="/" class="hover:opacity-80 transition-opacity">TopMap Solutions</a>
         </h1>
-        <p class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-50">
-            Making spatial easy to use
+        <p class="text-[8px] sm:text-[10px] font-black tracking-[0.2em] mt-2">
+            Making GIS Projects/Teams Easy to Organize
         </p>
     </div>
     
@@ -16,8 +16,13 @@
         </a>
         <a href="#"
            class="group flex items-center gap-5 py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-sm tracking-widest">
-            <i data-lucide="database" class="w-10 h-10"></i>
-            <span>Storage</span>
+            <i data-lucide="chart-pie" class="w-10 h-10"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="#"
+           class="group flex items-center gap-5 py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-sm tracking-widest">
+            <i data-lucide="notebook-text" class="w-10 h-10"></i>
+            <span>Guides</span>
         </a>
     </nav>
     
@@ -26,7 +31,7 @@
         <div class="p-2 border border-secondary bg-secondary/50 shadow-sm rounded-xl flex items-center justify-between">
             <div class="flex items-center gap-4 overflow-hidden">
                 <div class="h-10 w-10 bg-white flex items-center justify-center border-2 border-black rounded-xl">
-                    <span class="font-black text-secondary text-lg">{{ user.username|first|upper }}</span>
+                    <span class="font-black text-neutral text-lg">{{ user.username|first|upper }}</span>
                 </div>
                 <div class="flex flex-col truncate">
                     <span class="text-sm font-black text-white truncate mb-1 tracking-widest">{{ user.username }}</span>
@@ -43,6 +48,4 @@
         </div>
     </div>
 </div>
-
-
 

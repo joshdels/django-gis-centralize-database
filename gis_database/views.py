@@ -71,7 +71,7 @@ def home(request):
 
 
 def test_files(request):
-    return render(request, "components/map/map-project.html")
+    return render(request, "pages/dash.html")
 
 
 def test(request):
