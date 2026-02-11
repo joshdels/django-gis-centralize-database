@@ -1,6 +1,6 @@
 <div class="card bg-base-100 shadow-sm h-full">
     <div class="card-body justify-center p-6 h-full flex flex-col">
-        <span class="text-sm font-black uppercase">Storage Capacity</span>
+        <span class="text-lg sm:text-xl font-black uppercase">Storage Capacity</span>
         <div class="flex-1 flex flex-col justify-center">
             <div class="flex items-end gap-2 mt-1">
                 <span class="text-5xl font-black tracking-tighter">{{ storage_percentage }}%</span>
@@ -9,7 +9,7 @@
             <progress class="progress progress-primary w-full mt-4 h-4"
                       value="{{ storage_percentage }}"
                       max="100"></progress>
-            <p class="text-sm font-black mt-4 text-center text-primary">{{ remaining_mb }}MB / {{ max_storage }}MB Available</p>
+            <p class="text-sm font-black mt-4 text-primary">{{ remaining_mb }}MB / {{ max_storage }}MB Available</p>
         </div>
     </div>
 </div>

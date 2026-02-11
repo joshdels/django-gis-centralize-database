@@ -1,56 +1,48 @@
-<div class="p-2">
-    <div class="flex flex-col text-white bg-primary">
-        <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-none">
+<div class="h-full py-8 px-8 lg:px-10 flex flex-col min-h-screen">
+    <div class="flex flex-col text-white mb-10">
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight leading-none">
             <a href="/" class="hover:opacity-80 transition-opacity">TopMap Solutions</a>
         </h1>
         <p class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-50">
             Making spatial easy to use
         </p>
     </div>
+    
     <nav class="flex-1 flex flex-col gap-1">
         <a href="#"
-           class="group flex items-center justify-between py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
+           class="group flex items-center gap-5 py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-sm tracking-widest">
+            <i data-lucide="database" class="w-10 h-10"></i>
             <span>Storage</span>
-            <span class="opacity-0 group-hover:opacity-100">→</span>
         </a>
         <a href="#"
-           class="group flex items-center justify-between py-3 px-4 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
-            <span>Analytics</span>
-            <span class="opacity-0 group-hover:opacity-100">→</span>
-        </a>
-        <a href="#"
-           class="group flex items-center justify-between py-3 px-4 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
-            <span>Projects</span>
-            <span class="opacity-0 group-hover:opacity-100">→</span>
+           class="group flex items-center gap-5 py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-sm tracking-widest">
+            <i data-lucide="database" class="w-10 h-10"></i>
+            <span>Storage</span>
         </a>
     </nav>
-    <div>
-        <div class="flex items-center gap-3">
-            <span class="hidden md:block text-sm font-black tracking-tight opacity-70">{{ user.username }}</span>
-            <div class="dropdown dropdown-end">
-                <div tabindex="0"
-                     role="button"
-                     class="btn btn-ghost h-10 w-10 border border-base-300 bg-base-100">
-                    <div class="w-full h-full flex items-center justify-center">
-                        <span class="font-black">{{ user.username|first|upper }}</span>
-                    </div>
+    
+    <!-- footer -->
+    <div class="mt-auto pt-6">
+        <div class="p-2 border border-secondary bg-secondary/50 shadow-sm rounded-xl flex items-center justify-between">
+            <div class="flex items-center gap-4 overflow-hidden">
+                <div class="h-10 w-10 bg-white flex items-center justify-center border-2 border-black rounded-xl">
+                    <span class="font-black text-secondary text-lg">{{ user.username|first|upper }}</span>
                 </div>
-                <ul tabindex="0"
-                    class="card mt-4 p-2 menu menu-sm dropdown-content bg-base-100 w-52 z-100 shadow-sm border border-base-300">
-                    <li class="menu-title text-sm uppercase font-black">Account</li>
-                    <div class="divider my-0"></div>
-                    <li>
-                        <a href="#" class="font-black uppercase w-full text-xs py-3">Profile</a>
-                    </li>
-                    <li>
-                        <form method="post" action="{% url 'account_logout' %}">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="text-error font-black uppercase w-full text-xs py-3">Logout</button>
-                        </form>
-                    </li>
-                </ul>
+                <div class="flex flex-col truncate">
+                    <span class="text-sm font-black text-white truncate mb-1 tracking-widest">{{ user.username }}</span>
+                    <span class="text-[8px] font-black uppercase mb-1">Project Manager</span>
+                </div>
+            </div>
+            <div class="dropdown dropdown-top dropdown-end">
+                <button tabindex="0"
+                        role="button"
+                        class="p-2 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300">
+                    <i data-lucide="settings" class="w-5 h-5 stroke-[3px] text-white"></i>
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+
+

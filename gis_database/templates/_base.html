@@ -4,10 +4,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>
-            {% block title %}TopMap Solutions – GIS & Spatial Analytics{% endblock %}
+            {% block title %}TopMap Solutions - GIS Projects, Teams & Spatial Analytics{% endblock %}
         </title>
-        <link rel="stylesheet"
-              href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
         <!-- Primary SEO meta -->
         <meta name="description"
               content="{% block meta_description %}Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently. Discover, visualize, and analyze your geospatial data with TopMap Solutions.{% endblock %}" />
@@ -34,7 +33,8 @@
     <body class="bg-base-200 min-h-screen">
         {% block content %}{% endblock %}
         {% block extra_js %}{% endblock %}
-        <!-- Leaflet for maps -->
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="{% static 'leaflet/leaflet.js' %}"></script>
+        <script src="{% static 'lucide.min.js' %}"></script>
+        <script>lucide.createIcons();</script>
     </body>
 </html>

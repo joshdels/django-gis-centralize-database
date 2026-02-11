@@ -1,26 +1,50 @@
 {% extends '_base.html' %}
+{% load static %}
+
 {% block content %}
-    <div class="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
-        <div class="lg:col-span-3 bg-primary p-6 shadow-sm">{% include 'components/sidebar/_sidebar.html' %}</div>
-        <!-- Dashboard Content -->
-        <div class="lg:col-span-9 p-5 lg:p-10 space-y-8">
-            <!-- Title -->
-            {% include 'components/dashboard/header.html' %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                <div class="lg:col-span-1 flex flex-col gap-6">
-                    <div class="flex-1 flex flex-col">{% include 'components/dashboard/upload_card.html' %}</div>
-                    <div class="flex-1 flex flex-col">{% include 'components/dashboard/storage_card.html' %}</div>
+<div class="grid grid-cols-12  min-h-screen">
+    <!-- Sidebar -->
+    <div class="col-span-3 bg-primary shadow-sm">
+        {% include 'components/sidebar/_sidebar.html' %}
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="col-span-9 p-5 lg:p-10 space-y-8">
+        <!-- Header / Title -->
+        {% include 'components/dashboard/header.html' %}
+
+        <!-- Top Cards Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            <!-- Left Column Cards -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <div class="flex-1 flex flex-col min-h-0">
+                    {% include 'components/dashboard/upload_card.html' %}
                 </div>
-                <div class="lg:col-span-2 flex flex-col">
-                    <div class="flex-1 h-full">{% include 'components/charts/analytics_section.html' %}</div>
+                <div class="flex-1 flex flex-col min-h-0">
+                    {% include 'components/dashboard/storage_card.html' %}
                 </div>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="lg:col-span-2">{% include 'components/project/projects-table.html' %}</div>
-                <div class="col-span-1">{% include 'components/dashboard/activity_logs.html' %}</div>
+
+            <!-- Right Column Charts -->
+            <div class="lg:col-span-2 flex flex-col min-h-0">
+                <div class="flex-1 h-full">
+                    {% include 'components/charts/analytics_section.html' %}
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {% include 'components/charts/_chart_logic.js.html' %}
+
+        <!-- Project Table and Activity Logs -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-2">
+                {% include 'components/project/projects-table.html' %}
+            </div>
+            <div class="col-span-1">
+                {% include 'components/dashboard/activity_logs.html' %}
+            </div>
+        </div>
+
+
+<!-- Chart JS -->
+<script src="{% static 'chart.min.js' %}"></script>
+{% include 'components/charts/_chart_logic.js.html' %}
 {% endblock %}
