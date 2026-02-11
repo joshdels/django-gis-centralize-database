@@ -16,4 +16,5 @@ urlpatterns = [
     
     path("test", views.test, name="test"),
     path("test-file", views.test_files, name="test-file"),
+    path("guides", views.guides, name="guides"),
 ]

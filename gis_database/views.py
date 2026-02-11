@@ -69,6 +69,9 @@ def unset_latest(user, project, file_name):
 def home(request):
     return render(request, "pages/home.html")
 
+def guides(request):
+    return render(request, "pages/guides.html")
+
 
 def test_files(request):
     return render(request, "pages/dash.html")
