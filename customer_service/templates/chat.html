@@ -1,48 +1,43 @@
 <h1>Customer Service</h1>
 <hr>
-
 <h3>Messages</h3>
-
 {% for msg in messages %}
-<div style="margin-bottom:20px; border-bottom:1px solid #ccc; padding:10px;">
-
-    {% if reply.sender == "STAFF" %}
-        <strong>Staff: {{ reply.staff.username }}</strong>
-    {% else %}
-        <strong>User: {{ reply.user.username }}</strong>
-    {% endif %}
-    <p>{{ reply.message }}</p>
-
-    <strong>{{ msg.get_category_display }}</strong> - <em>Status: {{ msg.status }}</em><br>
-    <p>{{ msg.message }}</p>
-    
-    {% for reply in msg.replies.all %}
-    <div style="margin-left:20px; background:#f5f5f5; padding:10px;">
-        <strong>{{ reply.get_sender_display }}:</strong>
+    <div style="margin-bottom:20px;
+                border-bottom:1px solid #ccc;
+                padding:10px">
+        {% if reply.sender == "STAFF" %}
+            <strong>Staff: {{ reply.staff.username }}</strong>
+        {% else %}
+            <strong>User: {{ reply.user.username }}</strong>
+        {% endif %}
         <p>{{ reply.message }}</p>
+        <strong>{{ msg.get_category_display }}</strong> - <em>Status: {{ msg.status }}</em>
+        <br>
+        <p>{{ msg.message }}</p>
+        {% for reply in msg.replies.all %}
+            <div style="margin-left:20px; background:#f5f5f5; padding:10px;">
+                <strong>{{ reply.get_sender_display }}:</strong>
+                <p>{{ reply.message }}</p>
+            </div>
+        {% endfor %}
+        {% if msg.status != "CLOSED" %}
+            <form method="post" style="margin-top:10px;">
+                {% csrf_token %}
+                {{ reply_form.message }}
+                <input type="hidden" name="parent_id" value="{{ msg.id }}">
+                <button type="submit">Reply</button>
+                <a href="{% url 'customer_service:close_ticket' msg.id %}">Close Ticket</a>
+            </form>
+        {% else %}
+            <small>Ticket closed</small>
+        {% endif %}
     </div>
-    {% endfor %}
-        
-    {% if msg.status != "CLOSED" %}
-    <form method="post" style="margin-top:10px;">
-        {% csrf_token %}
-        {{ reply_form.message }}
-        <input type="hidden" name="parent_id" value="{{ msg.id }}">
-        <button type="submit">Reply</button>
-        <a href="{% url 'customer_service:close_ticket' msg.id %}">Close Ticket</a>
-    </form>
-
-    {% else %}
-        <small>Ticket closed</small>
-    {% endif %}
-</div>
 {% empty %}
-<p>No messages yet.</p>
+    <p>No messages yet.</p>
 {% endfor %}
-
 <h2>Create New Ticket</h2>
 <form method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<button type="submit">Send</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
 </form>

@@ -1,0 +1,56 @@
+<div class="p-2">
+    <div class="flex flex-col text-white bg-primary">
+        <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-none">
+            <a href="/" class="hover:opacity-80 transition-opacity">TopMap Solutions</a>
+        </h1>
+        <p class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-50">
+            Making spatial easy to use
+        </p>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1">
+        <a href="#"
+           class="group flex items-center justify-between py-3 px-4 bg-white/10 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
+            <span>Storage</span>
+            <span class="opacity-0 group-hover:opacity-100">→</span>
+        </a>
+        <a href="#"
+           class="group flex items-center justify-between py-3 px-4 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
+            <span>Analytics</span>
+            <span class="opacity-0 group-hover:opacity-100">→</span>
+        </a>
+        <a href="#"
+           class="group flex items-center justify-between py-3 px-4 hover:bg-white text-white hover:text-primary transition-all rounded-none border-l-4 border-transparent hover:border-black font-black uppercase text-sm tracking-widest">
+            <span>Projects</span>
+            <span class="opacity-0 group-hover:opacity-100">→</span>
+        </a>
+    </nav>
+    <div>
+        <div class="flex items-center gap-3">
+            <span class="hidden md:block text-sm font-black tracking-tight opacity-70">{{ user.username }}</span>
+            <div class="dropdown dropdown-end">
+                <div tabindex="0"
+                     role="button"
+                     class="btn btn-ghost h-10 w-10 border border-base-300 bg-base-100">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="font-black">{{ user.username|first|upper }}</span>
+                    </div>
+                </div>
+                <ul tabindex="0"
+                    class="card mt-4 p-2 menu menu-sm dropdown-content bg-base-100 w-52 z-100 shadow-sm border border-base-300">
+                    <li class="menu-title text-sm uppercase font-black">Account</li>
+                    <div class="divider my-0"></div>
+                    <li>
+                        <a href="#" class="font-black uppercase w-full text-xs py-3">Profile</a>
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="text-error font-black uppercase w-full text-xs py-3">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

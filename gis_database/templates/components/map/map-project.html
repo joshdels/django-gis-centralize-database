@@ -1,12 +1,11 @@
 {% extends "_base.html" %}
 {% block content %}
-  <div class="card border-2 h-[50vh]">
-      <div id="projectMap" class="w-full h-full"></div>
-  </div>
+    <div class="card border-2 h-[50vh]">
+        <div id="projectMap" class="w-full h-full"></div>
+    </div>
 {% endblock %}
-
 {% block extra_js %}
-<script>
+    <script>
 document.addEventListener("DOMContentLoaded", function () {
 
     const map = L.map("projectMap").setView([12.8797, 121.7740], 6);
@@ -37,5 +36,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 100);
 
 });
-</script>
+    </script>
 {% endblock %}

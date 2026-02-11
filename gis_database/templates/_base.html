@@ -1,43 +1,40 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en" data-theme="greeny">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}TopMap Solutions – GIS & Spatial Analytics{% endblock %}</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-    <!-- Primary SEO meta -->
-    <meta
-      name="description"
-      content="{% block meta_description %}Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently. Discover, visualize, and analyze your geospatial data with TopMap Solutions.{% endblock %}"
-    />
-    <meta
-      name="keywords"
-      content="GIS, geospatial, spatial database, GeoDjango, PostGIS, mapping, geospatial analytics, spatial data visualization"
-    />
-    <meta name="author" content="TopMap Solutions" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Open Graph / Social Sharing (no image yet) -->
-    <meta property="og:title" content="TopMap Solutions - GIS & Spatial Analytics" />
-    <meta property="og:description" content="Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://topmapsolutions.com" />
-
-    <!-- Twitter Card (no image yet) -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="TopMap Solutions – GIS & Spatial Analytics" />
-    <meta name="twitter:description" content="Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently." />
-
-    <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="{% static 'tailwind/styles.css' %}">
-  </head>
-
-  <body class="bg-base-200 min-h-screen" >
-    {% block content %}{% endblock %}
-    {% block extra_js %}{% endblock %}
-    <!-- Leaflet for maps -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>
+            {% block title %}TopMap Solutions – GIS & Spatial Analytics{% endblock %}
+        </title>
+        <link rel="stylesheet"
+              href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <!-- Primary SEO meta -->
+        <meta name="description"
+              content="{% block meta_description %}Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently. Discover, visualize, and analyze your geospatial data with TopMap Solutions.{% endblock %}" />
+        <meta name="keywords"
+              content="GIS, geospatial, spatial database, GeoDjango, PostGIS, mapping, geospatial analytics, spatial data visualization" />
+        <meta name="author" content="TopMap Solutions" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Open Graph / Social Sharing (no image yet) -->
+        <meta property="og:title"
+              content="TopMap Solutions - GIS & Spatial Analytics" />
+        <meta property="og:description"
+              content="Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://topmapsolutions.com" />
+        <!-- Twitter Card (no image yet) -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title"
+              content="TopMap Solutions – GIS & Spatial Analytics" />
+        <meta name="twitter:description"
+              content="Centralized GIS database for managing spatial datasets, maps, and geospatial analytics efficiently." />
+        <!-- Tailwind CSS -->
+        <link rel="stylesheet" href="{% static 'tailwind/styles.css' %}">
+    </head>
+    <body class="bg-base-200 min-h-screen">
+        {% block content %}{% endblock %}
+        {% block extra_js %}{% endblock %}
+        <!-- Leaflet for maps -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    </body>
 </html>

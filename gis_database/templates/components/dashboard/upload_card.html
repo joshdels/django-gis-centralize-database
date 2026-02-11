@@ -1,20 +1,17 @@
-<div class="lg:col-span-2 card bg-primary text-primary-content shadow-sm">
-    <div class="card-body p-5 lg:p-8">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div class="max-w-md">
+<div class="card bg-primary text-primary-content shadow-sm h-full">
+    <div class="card-body p-5 lg:p-8 flex-1">
+        <div class="flex flex-col h-full justify-between gap-4">
+            <div>
                 <h2 class="text-2xl lg:text-3xl font-black uppercase mb-2">Create a new project</h2>
-                <p class="font-bold text-xs tracking-wide">Please prepare the files for your project.</p>
-                <div class="mt-10">
-                    {% if remaining_mb > 0 %}
-                        <a href="{% url 'file:create-project' %}" class="btn btn-neutral px-6 font-black uppercase tracking-widest">
-                            Create New
-                        </a>
-                    {% else %}
-                        <span class="badge badge-warning p-4 text-xs font-black text-error">
-                            Insufficient Storage
-                        </span>
-                    {% endif %}
-                </div>
+                <p class="font-bold text-xs tracking-wide opacity-90">Please prepare the files for your project.</p>
+            </div>
+            <div class="mt-auto pt-6">
+                {% if remaining_mb > 0 %}
+                    <a href="{% url 'file:create-project' %}"
+                       class="btn btn-neutral px-6 font-black uppercase tracking-widest">Create New</a>
+                {% else %}
+                    <span class="badge badge-warning p-4 text-xs font-black text-error">Insufficient Storage</span>
+                {% endif %}
             </div>
         </div>
     </div>
