@@ -70,11 +70,14 @@ def home(request):
     return render(request, "pages/home.html")
 
 def guides(request):
-    return render(request, "pages/guides.html")
+    return render(request, "components/guides/_guides.html")
+
+def guides_qgis(request):
+    return render(request, "components/guides/qgis.html")
 
 
 def test_files(request):
-    return render(request, "pages/dash.html")
+    return render(request, "pages/test.html")
 
 
 def test(request):

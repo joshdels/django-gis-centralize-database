@@ -17,4 +17,5 @@ urlpatterns = [
     path("test", views.test, name="test"),
     path("test-file", views.test_files, name="test-file"),
     path("guides", views.guides, name="guides"),
+    path("guides/qgis", views.guides_qgis, name="qgis")
 ]

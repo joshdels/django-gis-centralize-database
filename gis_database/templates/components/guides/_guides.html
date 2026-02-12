@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+{% block content %}
+    <div class="grid grid-cols-12 min-h-screen w-full">
+        <aside class="col-span-2 lg:col-span-3 xl:col-span-2 bg-primary shadow-md">
+            {% include 'components/sidebar/_sidebar.html' %}
+        </aside>
+        <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 xl:p-10 space-y-8">
+            {% include 'components/dashboard/header.html' %}
+            <div class="p-5 lg:p-20">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <a href="#">
+                        <div class="card bg-base-100 shadow-sm p-10 w-full hover:shadow-xl transition duration-300">
+                            <div class="card-body items-center text-center">
+                                <i data-lucide="aperture" class="w-20 h-20"></i>
+                                <h2 class="card-title">Web Platform</h2>
+                                <span class="badge badge-primary">available</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'file:qgis' %}">
+                        <div class="card bg-base-100 shadow-sm p-10 w-full hover:shadow-xl transition duration-300">
+                            <div class="card-body items-center text-center">
+                                <i data-lucide="monitor-dot" class="w-20 h-20"></i>
+                                <h2 class="card-title">QGIS</h2>
+                                <span class="badge badge-primary">available</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="card bg-base-100 shadow-sm p-10 w-full hover:shadow-xl transition duration-300">
+                            <div class="card-body items-center text-center">
+                                <i data-lucide="smartphone" class="w-20 h-20"></i>
+                                <h2 class="card-title">Mobile</h2>
+                                <span class="badge badge-accent">comming soon</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
