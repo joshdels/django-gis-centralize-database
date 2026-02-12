@@ -1,7 +1,7 @@
 <div class="h-full w-full">
     <div class="card shadow-sm p-6 bg-base-100 h-full flex flex-col">
         <h3 class="text-lg font-black uppercase mb-6">Project Storage Consumption</h3>
-        {% if chart_data %}
+        {% if chart_data and chart_labels %}
         <div class="relative w-full flex-1 flex items-center justify-center min-h-0">
             <canvas id="pieChart"></canvas>
         </div>

@@ -15,7 +15,6 @@ class ProjectForm(forms.ModelForm):
         empty_label="-- None --",
     )
 
-    # Optional: create new project
     new_project_name = forms.CharField(
         max_length=255,
         required=False,
@@ -30,7 +29,7 @@ class ProjectForm(forms.ModelForm):
         widget=forms.Textarea(
             attrs={
                 "rows": 5,  # taller
-                "class": "textarea textarea-bordered border border-gray-200 w-full",
+                "class": "textarea textarea-bordered border border-gray-100 w-full",
             }
         ),
         help_text="Optional description for the new project.",
