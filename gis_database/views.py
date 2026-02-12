@@ -69,9 +69,15 @@ def unset_latest(user, project, file_name):
 def home(request):
     return render(request, "pages/home.html")
 
+def guides(request):
+    return render(request, "components/guides/_guides.html")
+
+def guides_qgis(request):
+    return render(request, "components/guides/qgis.html")
+
 
 def test_files(request):
-    return render(request, "components/map/map-project.html")
+    return render(request, "pages/test.html")
 
 
 def test(request):
@@ -104,14 +110,14 @@ def dashboard(request):
 @login_required
 def project_sync(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    return render(request, "components/project/project-sync.html", {"project": project})
+    return render(request, "components/project/_detail-layout.html", {"project": project})
 
 
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     return render(
-        request, "components/project/project-detail.html", {"project": project}
+        request, "components/analytic/detail.html", {"project": project}
     )
 
 
@@ -176,7 +182,7 @@ def create_project(request):
         project.save()
         return redirect("file:dashboard")
 
-    return render(request, "components/project/create.html", {"form": form})
+    return render(request, "components/project/create-layout.html", {"form": form})
 
 
 @login_required
@@ -236,7 +242,7 @@ def update_file(request, pk):
                     unset_latest(request.user, project, existing_file_with_hash.name)
                     existing_file_with_hash.is_latest = True
                     existing_file_with_hash.save(update_fields=["is_latest"])
-                    return redirect("file:project-sync", pk=project.id)
+                    return redirect("file:project-detail", pk=project.id)
 
                 # Case 2: Same name, different hash -> version increment
                 latest_file_same_name = (

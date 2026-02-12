@@ -1,32 +1,28 @@
 {% extends "_base.html" %}
 {% block content %}
+
+{% include "components/navbar.html" %}
     <div class="max-w-7xl mx-auto px-4 py-6">
-
-    {# --- HEADER SECTION --- #}
-        {% include "components/navbar.html" %}
-
-    {# --- HERO SECTION --- #}
+        {# --- HEADER SECTION --- #}
+        {# --- HERO SECTION --- #}
         <div class="card bg-base-100 shadow-sm mt-4 border border-base-300">
             <div class="card-body py-5 sm:py-24 items-center text-center">
-
                 <div class="p-5">
                     <h2 class="text-5xl md:text-8xl font-black mb-6 uppercase leading-none">
-                        Spatial <br>
+                        Spatial
+                        <br>
                         <span class="text-primary">Solutions</span>
                     </h2>
-
                     <p class="text-sm sm:text-2xl font-black uppercase opacity-70 text-center tracking-widest">
-                        GIS everywhere, Team Sync. Share. Map. On any device.
+                        Making GIS Teams/Projects Easy to Organize
                     </p>
-
                     <div class="flex justify-center mt-10">
-                        <a href="{% url 'account_signup' %}" class="btn sm:btn-lg  btn-primary rounded-xl font-black text-lg sm:text-2xl h-20 px-12 uppercase">
+                        <a href="{% url 'account_signup' %}"
+                           class="btn sm:btn-lg  btn-primary rounded-xl font-black text-lg sm:text-2xl h-20 px-12 uppercase">
                             Get Started
                         </a>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>

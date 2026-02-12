@@ -80,7 +80,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.egg-info/
-dist/
+# dist/
 build/
 .eggs/
 
