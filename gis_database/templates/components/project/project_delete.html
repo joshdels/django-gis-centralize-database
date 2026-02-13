@@ -1,8 +1,8 @@
 {% extends "_base.html" %}
 {% block content %}
+    {% include "components/navbar.html" %}
     <div class="max-w-4xl mx-auto px-4 py-8 space-y-8">
         {# --- NAVBAR --- #}
-        {% include "components/navbar.html" %}
         <div class="card bg-base-100 shadow-sm">
             <div class="card-body items-center text-center">
                 <h2 class="card-title text-2xl font-black uppercase text-error">Danger Zone</h2>
@@ -15,8 +15,7 @@
         </div>
         {# --- BACK BUTTON --- #}
         <div class="text-center">
-            <a href="{% url 'file:dashboard' %}"
-               class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
         </div>
         {# --- DELETE CONFIRMATION MODAL --- #}
         <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
@@ -27,7 +26,7 @@
                     This will permanently remove the file from the cloud.
                 </p>
                 <form method="post"
-                      action="{% url 'file:project-delete' project.pk %}"
+                      action="{% url 'project-delete' project.pk %}"
                       class="flex gap-2 w-full justify-end">
                     {% csrf_token %}
                     <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Cancel</button>

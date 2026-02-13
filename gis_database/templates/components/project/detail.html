@@ -49,7 +49,7 @@
                     <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
                         <div class="text-xs font-mono">Download the project's latest saved on the cloud</div>
                         {% if project.files.exists %}
-                            <a href="{% url 'file:download-file' project.pk %}"
+                            <a href="{% url 'download-file' project.pk %}"
                                class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">
                                 Download Project
                             </a>
@@ -61,15 +61,14 @@
                     </div>
                     <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
                         <div class="text-xs font-mono">Updates from your device to the cloud</div>
-                        <a href="{% url 'file:update-file' project.pk %}"
+                        <a href="{% url 'update-file' project.pk %}"
                            class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">Push Changes</a>
                         <div class="text-xs font-mono opacity-70">Last Updated on {{ project.updated_at|date:"M d, Y h:i A" }} PH Time</div>
                     </div>
                 </div>
                 {# --- Back Button --- #}
                 <div class="card-actions mt-10">
-                    <a href="{% url 'file:dashboard' %}"
-                       class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
                 </div>
             </div>
         </div>

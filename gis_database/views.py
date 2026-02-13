@@ -8,12 +8,19 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Sum
 from django.db import transaction
+from django.urls import reverse_lazy
 
 from .models import Project, File, FileActivity
 from accounts.models import Profile
 from .forms import ProjectForm, CreateProjectForm
 
 from .utils import compute_hash
+
+sidebar_menu = [
+    {"label": "Storage", "icon": "database", "url": "/dashboard/"},
+    {"label": "Analytics", "icon": "chart-pie", "url": reverse_lazy("analytics")},
+    {"label": "Guides", "icon": "notebook-text", "url": reverse_lazy("guides")},
+]
 
 
 # -------------------------------
@@ -69,8 +76,13 @@ def unset_latest(user, project, file_name):
 def home(request):
     return render(request, "pages/home.html")
 
+
 def guides(request):
-    return render(request, "components/guides/_guides.html")
+    return render(request, "pages/guides.html", {"sidebar_menu": sidebar_menu})
+
+def analytics(request):
+    return render(request, "pages/analytics.html", {"sidebar_menu": sidebar_menu})
+
 
 def guides_qgis(request):
     return render(request, "components/guides/qgis.html")
@@ -87,9 +99,12 @@ def test(request):
 # -------------------------------
 # Authenticated Views
 # -------------------------------
+
+
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
+
     projects = Project.objects.filter(owner=request.user, is_deleted=False)
 
     chart_labels = [p.name for p in projects]
@@ -102,6 +117,7 @@ def dashboard(request):
             "file_activities": file_activities,
             "chart_labels": chart_labels,
             "chart_data": chart_data,
+            "sidebar_menu": sidebar_menu,
         }
     )
     return render(request, "pages/dashboard.html", context)
@@ -110,15 +126,15 @@ def dashboard(request):
 @login_required
 def project_sync(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    return render(request, "components/project/_detail-layout.html", {"project": project})
+    return render(
+        request, "components/project/_detail-layout.html", {"project": project}
+    )
 
 
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    return render(
-        request, "components/analytic/detail.html", {"project": project}
-    )
+    return render(request, "components/analytic/detail.html", {"project": project})
 
 
 @login_required
@@ -165,7 +181,7 @@ def upload_project(request):
                     action="uploaded new file",
                 )
 
-                return redirect("file:dashboard")
+                return redirect("dashboard")
     else:
         form = ProjectForm(owner=request.user)
 
@@ -180,7 +196,7 @@ def create_project(request):
         project = form.save(commit=False)
         project.owner = request.user
         project.save()
-        return redirect("file:dashboard")
+        return redirect("dashboard")
 
     return render(request, "components/project/create-layout.html", {"form": form})
 
@@ -242,7 +258,7 @@ def update_file(request, pk):
                     unset_latest(request.user, project, existing_file_with_hash.name)
                     existing_file_with_hash.is_latest = True
                     existing_file_with_hash.save(update_fields=["is_latest"])
-                    return redirect("file:project-detail", pk=project.id)
+                    return redirect("project-detail", pk=project.id)
 
                 # Case 2: Same name, different hash -> version increment
                 latest_file_same_name = (
@@ -282,7 +298,7 @@ def update_file(request, pk):
                     action=action,
                 )
 
-            return redirect("file:project-sync", pk=project.id)
+            return redirect("project-sync", pk=project.id)
 
     else:
         form = ProjectForm(owner=request.user)
@@ -310,7 +326,7 @@ def delete_file(request, pk):
         )
 
         project_file.delete()
-        return redirect("file:project-detail", pk=project_file.project.pk)
+        return redirect("project-detail", pk=project_file.project.pk)
 
     return render(request, "components/file/file_delete.html", {"file": project_file})
 
@@ -323,7 +339,7 @@ def delete_project(request, pk):
     project_file = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == "POST":
         project_file.delete()
-        return redirect("file:dashboard")
+        return redirect("dashboard")
     return render(
         request, "components/project/project_delete.html", {"project": project_file}
     )
@@ -334,4 +350,4 @@ def delete_project_soft(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == "POST":
         project.soft_delete()
-    return redirect("file:dashboard")
+    return redirect("dashboard")

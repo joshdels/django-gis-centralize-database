@@ -7,7 +7,7 @@
             </div>
             <div class="pt-6">
                 {% if remaining_mb > 0 %}
-                    <a href="{% url 'file:create-project' %}"
+                    <a href="{% url 'create-project' %}"
                        class="btn btn-neutral px-6 font-black uppercase tracking-widest">Create New</a>
                 {% else %}
                     <span class="badge badge-warning p-4 text-xs font-black text-error">Insufficient Storage</span>

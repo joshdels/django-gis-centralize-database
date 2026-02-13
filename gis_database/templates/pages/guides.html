@@ -5,7 +5,7 @@
             {% include 'components/sidebar/_sidebar.html' %}
         </aside>
         <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 xl:p-10 space-y-8">
-            {% include 'components/dashboard/header.html' %}
+            {% include 'components/dashboard/header.html' with title="Guides" subtitle="Available on Web, QGIS and Mobile" %}
             <div class="p-5 lg:p-20">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     <a href="#">
@@ -17,7 +17,7 @@
                             </div>
                         </div>
                     </a>
-                    <a href="{% url 'file:qgis' %}">
+                    <a href="{% url 'qgis' %}">
                         <div class="card bg-base-100 shadow-sm p-10 w-full hover:shadow-xl transition duration-300">
                             <div class="card-body items-center text-center">
                                 <i data-lucide="monitor-dot" class="w-20 h-20"></i>

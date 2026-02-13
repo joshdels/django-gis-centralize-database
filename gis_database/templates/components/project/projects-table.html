@@ -38,7 +38,7 @@
                         <div class="text-right">
                             <span class="text-[8px] sm:text-[10px] font-black opacity-40 uppercase tracking-tighter sm:tracking-widest">{{ file.created_at|date:"M d, Y" }}</span>
                         </div>
-                        <a href="{% url 'file:project-delete' file.pk %}"
+                        <a href="{% url 'project-delete' file.pk %}"
                            class="btn btn-error btn-outline btn-square">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
@@ -49,7 +49,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </a>
-                        <a href="{% url 'file:project-sync' file.pk %}"
+                        <a href="{% url 'project-sync' file.pk %}"
                            class="btn btn-square btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"

@@ -9,22 +9,15 @@
         </h1>
         <p class="hidden xl:block text-xs tracking-[0.2em]">Making GIS Teams/Projects Easy to Organize</p>
     </div>
+    <!-- Navigation -->
     <nav class="flex-1 flex flex-col gap-3">
-        <a href="{% url 'file:dashboard' %}"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="database" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Storage</span>
-        </a>
-        <a href="#"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="chart-pie" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Analytics</span>
-        </a>
-        <a href="{% url 'file:guides' %}"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="notebook-text" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Guides</span>
-        </a>
+        {% for item in sidebar_menu %}
+            <a href="{{ item.url }}"
+               class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
+                <i data-lucide="{{ item.icon }}" class="w-6 h-6 xl:w-8 xl:h-8"></i>
+                <span class="hidden xl:block">{{ item.label }}</span>
+            </a>
+        {% endfor %}
     </nav>
     {% include "components/sidebar/footer.html" %}
 </div>

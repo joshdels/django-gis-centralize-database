@@ -1,11 +1,12 @@
 from django.urls import path
 from . import views
 
-app_name = "file"
-
 urlpatterns = [
     path("", views.home, name="home"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("guides/", views.guides, name="guides"),
+    path("analytics/", views.analytics, name="analytics"),
+    
     path("upload/", views.upload_project, name="upload-project"),
     path("create/", views.create_project, name="create-project"),
     path("project/<int:pk>/sync", views.project_sync, name="project-sync"),
@@ -15,7 +16,6 @@ urlpatterns = [
     path("project/<int:pk>/update", views.update_file, name="update-file"),
     
     path("test", views.test, name="test"),
-    path("test-file", views.test_files, name="test-file"),
-    path("guides", views.guides, name="guides"),
+    path("test-file/", views.test_files, name="test-file"),
     path("guides/qgis", views.guides_qgis, name="qgis")
 ]
