@@ -1,53 +1,51 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-        {% include "components/navbar.html" %}
-        
-        <div class="max-w-7xl mx-auto px-4 space-y-8 pb-5">
-            <a href="{% url 'file:guides'%}" class="btn btn-neutral">back to guides</a>
-            <!-- Page Header -->
-            <div class="text-start space-y-4">
-                <h1 class="text-4xl font-bold">QGIS Plugin Installation Guide</h1>
-                <p class="text-lg opacity-70">Follow these simple steps to install and use the TopMap QGIS Plugin.</p>
+    {% include "components/navbar.html" %}
+    <div class="max-w-7xl mx-auto px-4 space-y-8 pb-5">
+        <a href="{% url 'file:guides' %}" class="btn btn-neutral">back to guides</a>
+        <!-- Page Header -->
+        <div class="text-start space-y-4">
+            <h1 class="text-4xl font-bold">QGIS Plugin Installation Guide</h1>
+            <p class="text-lg opacity-70">Follow these simple steps to install and use the TopMap QGIS Plugin.</p>
+        </div>
+        <!-- Step 1 -->
+        <div class="card bg-base-100 shadow-sm">
+            <div class="card-body space-y-4">
+                <h2 class="card-title text-2xl">Step 1: Download the Plugin</h2>
+                <p>Download the plugin ZIP file below:</p>
+                <a href="{% static 'guides/qgis/pyqgis-plugin-topmap-main.zip' %}"
+                   class="btn btn-primary w-fit">Download Plugin</a>
             </div>
-            <!-- Step 1 -->
-            <div class="card bg-base-100 shadow-sm">
-                <div class="card-body space-y-4">
-                    <h2 class="card-title text-2xl">Step 1: Download the Plugin</h2>
-                    <p>Download the plugin ZIP file below:</p>
-                    <a href="{% static 'guides/qgis/pyqgis-plugin-topmap-main.zip' %}"
-                       class="btn btn-primary w-fit">Download Plugin</a>
-                </div>
-            </div>
-            <!-- Step 2 -->
-            <div class="card bg-base-100 shadow-sm">
-                <div class="card-body space-y-8">
-                    <h2 class="card-title text-2xl">Step 2: Install in QGIS</h2>
-                    <div class="space-y-6">
-                        <div class="space-y-2">
-                            <p class="font-medium">1. Open QGIS and go to Plugins → Manage and Install Plugins</p>
-                            <img width="800"
-                                 height="800"
-                                 src="{% static 'guides/qgis/installation/01_file.PNG' %}"
-                                 alt="Open plugin manager">
-                        </div>
-                        <div class="space-y-2">
-                            <p class="font-medium">2. Select “Install from ZIP” and choose the downloaded file</p>
-                            <img width="800"
-                                 height="800"
-                                 src="{% static 'guides/qgis/installation/02_check.PNG' %}"
-                                 alt="Install from ZIP">
-                        </div>
-                        <div class="space-y-2">
-                            <p class="font-medium">3. Login using your credentials</p>
-                            <img width="400"
-                                 height="400"
-                                 src="{% static 'guides/qgis/installation/03_login.PNG' %}"
-                                 alt="Login screen">
-                        </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="card bg-base-100 shadow-sm">
+            <div class="card-body space-y-8">
+                <h2 class="card-title text-2xl">Step 2: Install in QGIS</h2>
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <p class="font-medium">1. Open QGIS and go to Plugins → Manage and Install Plugins</p>
+                        <img width="800"
+                             height="800"
+                             src="{% static 'guides/qgis/installation/01_file.PNG' %}"
+                             alt="Open plugin manager">
+                    </div>
+                    <div class="space-y-2">
+                        <p class="font-medium">2. Select “Install from ZIP” and choose the downloaded file</p>
+                        <img width="800"
+                             height="800"
+                             src="{% static 'guides/qgis/installation/02_check.PNG' %}"
+                             alt="Install from ZIP">
+                    </div>
+                    <div class="space-y-2">
+                        <p class="font-medium">3. Login using your credentials</p>
+                        <img width="400"
+                             height="400"
+                             src="{% static 'guides/qgis/installation/03_login.PNG' %}"
+                             alt="Login screen">
                     </div>
                 </div>
             </div>
         </div>
- 
+    </div>
 {% endblock %}
