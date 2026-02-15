@@ -90,6 +90,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "drf_spectacular",
+    "corsheaders"
 ]
 
 if IS_PROD:
@@ -119,6 +120,7 @@ MIDDLEWARE = [
 ]
 MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -126,6 +128,8 @@ MIDDLEWARE += [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")

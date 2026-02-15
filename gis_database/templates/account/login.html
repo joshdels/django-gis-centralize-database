@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load widget_tweaks %}
+{% load static %}
 {% block content %}
     <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
         <div class="w-full max-w-md">
@@ -52,8 +53,18 @@
                         <label class="label">
                             <span class="label-text font-black uppercase text-[10px] opacity-50 tracking-widest">Password</span>
                         </label>
-                        {# Added js-input class #}
-                        {{ form.password|add_class:"input input-bordered focus:outline-primary w-full font-medium js-input" }}
+                        <div class="relative w-full flex items-center">
+                            {{ form.password|add_class:"password-field input input-bordered focus:outline-primary w-full pr-12 h-12 font-medium js-input" }}
+                            {# djlint: ignore H021 #}
+                            <button type="button"
+                                    id="toggle-password"
+                                    class="absolute flex items-center justify-center text-base-content/60 hover:text-primary transition-colors z-20"
+                                    style="top: 50%;
+                                           right: 15px;
+                                           transform: translateY(-50%)">
+                                <i data-lucide="eye" class="w-6 h-6 m-0 p-0"></i>
+                            </button>
+                        </div>
                         {% if form.password.errors %}
                             <label class="label js-field-error">
                                 <span class="label-text-alt text-error font-bold">{{ form.password.errors.0 }}</span>
@@ -89,27 +100,51 @@
     {# --- JAVASCRIPT TO HIDE ERRORS ON TYPE --- #}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('login-form');
-            const nonFieldErrors = document.getElementById('non-field-errors');
-
-            loginForm.addEventListener('input', (e) => {
-                if (e.target.classList.contains('js-input')) {
-                // 1. Hide the specific field error (the red text below input)
-                    const fieldContainer = e.target.closest('.form-control');
-                    const errorLabel = fieldContainer.querySelector('.js-field-error');
-                    if (errorLabel) {
-                        errorLabel.style.display = 'none';
+            function handleErrors() {
+                const loginForm = document.getElementById('login-form');
+                const nonFieldErrors = document.getElementById('non-field-errors');
+    
+                loginForm.addEventListener('input', (e) => {
+                    if (e.target.classList.contains('js-input')) {
+                    // 1. Hide the specific field error (the red text below input)
+                        const fieldContainer = e.target.closest('.form-control');
+                        const errorLabel = fieldContainer.querySelector('.js-field-error');
+                        if (errorLabel) {
+                            errorLabel.style.display = 'none';
+                        }
+    
+                    // 2. Hide the top "Non-field" alert (the red box)
+                        if (nonFieldErrors) {
+                            nonFieldErrors.style.opacity = '0';
+                            setTimeout(() => {
+                                nonFieldErrors.style.display = 'none';
+                            }, 300); // Wait for fade transition
+                        }
                     }
-
-                // 2. Hide the top "Non-field" alert (the red box)
-                    if (nonFieldErrors) {
-                        nonFieldErrors.style.opacity = '0';
-                        setTimeout(() => {
-                            nonFieldErrors.style.display = 'none';
-                        }, 300); // Wait for fade transition
-                    }
+                });
+            }
+                
+            function handlePasswordToggle() {
+                const toggleBtn = document.getElementById('toggle-password')
+                const passwordInput = document.querySelector(".password-field");
+        
+                if (toggleBtn && passwordInput) {
+                    toggleBtn.addEventListener('click', () => {
+                        const isPassword = passwordInput.type === 'password';
+                        passwordInput.type = isPassword ? 'text' : 'password';
+        
+                        toggleBtn.innerHTML = isPassword
+                        ? `<i data-lucide="eye-off" class="w-6 h-6 m-0 p-0"></i>`
+                        : `<i data-lucide="eye" class="w-6 h-6 m-0 p-0"></i>`;
+        
+                        lucide.createIcons();
+                    });
                 }
-            });
+            };
+            
+            handleErrors();
+            handlePasswordToggle();
         });
+
     </script>
 {% endblock %}

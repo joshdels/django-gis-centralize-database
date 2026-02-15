@@ -1,5 +1,5 @@
-<div class="max-w-7xl mx-auto px-4 py-6">
-    <div class="navbar bg-base-200 px-0 flex flex-row items-end justify-between border-b border-base-300 pb-6 mb-8">
+<div class="max-w-7xl mx-auto px-4 py-2">
+    <div class="navbar bg-base-200 px-0 flex flex-row items-end justify-between">
         <div class="flex flex-col items-start">
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-primary leading-none">
                 <a href="/" class="hover:opacity-80 transition-opacity">TopMap Solutions</a>
@@ -14,8 +14,8 @@
                     <span class="hidden md:block text-sm font-black tracking-tight opacity-70">{{ user.username }}</span>
                     <div class="dropdown dropdown-end">
                         <div tabindex="0"
-                            role="button"
-                            class="btn btn-ghost h-10 w-10 border border-base-300 bg-base-100">
+                             role="button"
+                             class="btn btn-ghost h-10 w-10 border border-base-300 bg-base-100">
                             <div class="w-full h-full flex items-center justify-center">
                                 <span class="font-black">{{ user.username|first|upper }}</span>
                             </div>
@@ -40,12 +40,13 @@
             {% else %}
                 <div class="flex items-center">
                     <a href="{% url 'account_login' %}"
-                    class="btn btn-ghost btn-sm font-black uppercase">Log In</a>
+                       class="btn btn-ghost btn-sm font-black uppercase">Log In</a>
                     <div class="h-4 bg-base-300 mx-2"></div>
                     <a href="{% url 'account_signup' %}"
-                    class="btn btn-primary btn-sm font-black uppercase">Sign Up</a>
+                       class="btn btn-primary btn-sm font-black uppercase">Sign Up</a>
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
+<div class="border-b border-base-300 mb-5"></div>

@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="grid grid-cols-12 min-h-screen w-full">
+        <aside class="col-span-2 lg:col-span-3 xl:col-span-2 bg-primary shadow-md">
+            {% include 'components/sidebar/_sidebar.html' %}
+        </aside>
+        <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 h-screen flex flex-col gap-8">
+            {% include 'components/dashboard/header.html' with title="Project Analytics" subtitle="Check a quick glance of whats happening in you data" %}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
+                <div class="lg:col-span-6 h-full">{% include "components/project/projects-table.html" %}</div>
+                <div class="lg:col-span-6 h-full">{% include "components/analytics/map.html" %}</div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-0">
+                <div class="lg:col-span-4 h-full">{% include "components/analytics/team.html" %}</div>
+                <div class="lg:col-span-4 h-full">{% include "components/analytics/chart1.html" %}</div>
+                <div class="lg:col-span-4 h-full">{% include "components/analytics/chart2.html" %}</div>
+            </div>
+        </main>
+    </div>
+    <script src="{% static 'chart.umd.min.js' %}"></script>
+    {% include 'components/charts/_chart_logic.js.html' %}
+{% endblock %}

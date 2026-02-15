@@ -1,13 +1,13 @@
 <div class="card bg-primary text-primary-content shadow-sm h-full">
-    <div class="card-body p-3 lg:p-6 flex-1">
+    <div class="card-body p-5 flex-1">
         <div class="flex flex-col h-full justify-between gap-4">
             <div>
                 <h2 class="text-xl lg:text-xl text-white font-black uppercase mb-2">Create a new project</h2>
                 <p class="font-bold text-xs text-white tracking-wide opacity-90">Please prepare the files for your project.</p>
             </div>
-            <div class="pt-6">
+            <div class="pt-3">
                 {% if remaining_mb > 0 %}
-                    <a href="{% url 'file:create-project' %}"
+                    <a href="{% url 'create-project' %}"
                        class="btn btn-neutral px-6 font-black uppercase tracking-widest">Create New</a>
                 {% else %}
                     <span class="badge badge-warning p-4 text-xs font-black text-error">Insufficient Storage</span>

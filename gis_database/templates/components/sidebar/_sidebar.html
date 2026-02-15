@@ -1,30 +1,23 @@
-<div class="fixed lg:static top-0 h-screen py-10 sm:py-12 px-4 lg:px-6 xl:px-8 flex flex-col">
+<div class="sticky top-0 h-screen py-5 px-5 flex flex-col">
     <!-- Brand -->
     <div class="flex flex-col text-white mb-10">
         <h1 class="font-black tracking-widest leading-none mb-3">
             <a href="/" class="hover:opacity-80 transition-opacity">
-                <span class="lg:hidden text-xl">TMS</span>
-                <span class="hidden lg:inline xl:text-2xl">TopMap Solutions</span>
+                <span class="block sm:hidden text-4xl text-center items-center justify-center">T</span>
+                <span class="hidden sm:block sm:text-xl lg:text-4xl tracking-widest">TopMap</span>
             </a>
         </h1>
-        <p class="hidden xl:block text-xs tracking-[0.2em]">Making GIS Teams/Projects Easy to Organize</p>
+        <p class="hidden sm:block text-xs sm:text-sm tracking-widest">Making GIS Projects and Teams Easy to Organize</p>
     </div>
+    <!-- Navigation -->
     <nav class="flex-1 flex flex-col gap-3">
-        <a href="{% url 'file:dashboard' %}"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="database" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Storage</span>
-        </a>
-        <a href="#"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="chart-pie" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Analytics</span>
-        </a>
-        <a href="{% url 'file:guides' %}"
-           class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
-            <i data-lucide="notebook-text" class="w-6 h-6 xl:w-8 xl:h-8"></i>
-            <span class="hidden xl:block">Guides</span>
-        </a>
+        {% for item in sidebar_menu %}
+            <a href="{{ item.url }}"
+               class="group flex items-center lg:justify-center xl:justify-start gap-4 p-3 bg-white/10 hover:bg-white text-white hover:text-primary transition-all font-black uppercase text-xs xl:text-sm tracking-widest rounded-lg">
+                <i data-lucide="{{ item.icon }}" class="w-6 h-6 xl:w-8 xl:h-8"></i>
+                <span class="hidden xl:block">{{ item.label }}</span>
+            </a>
+        {% endfor %}
     </nav>
     {% include "components/sidebar/footer.html" %}
 </div>

@@ -1,25 +1,23 @@
-<div class="mt-auto pt-6 px-2 sm:px-4 lg:px-0">
-    <div class="p-2 border border-secondary bg-secondary/50 shadow-sm rounded-xl flex items-center justify-between">
-        <!-- User Info -->
-        <div class="flex items-center gap-2 sm:gap-3 md:gap-4 overflow-hidden">
-            <!-- Avatar -->
-            <div class="h-10 w-10 sm:h-10 sm:w-10 bg-white flex items-center justify-center border-2 border-black rounded-full flex-shrink-0">
-                <span class="font-black text-neutral text-lg">{{ user.username|first|upper }}</span>
-            </div>
-            <!-- Name + Role -->
-            <div class="flex-col truncate hidden md:flex">
-                <span class="text-sm md:text-sm font-black text-white truncate mb-1 tracking-widest">{{ user.username }}</span>
-                <span class="text-[8px] md:text-[10px] font-black uppercase mb-1">Project Manager</span>
-            </div>
+<div class="p-2 border border-secondary bg-secondary/20 shadow-sm rounded-xl flex items-center justify-between">
+    <!-- User Info -->
+    <div class="hidden sm:flex items-center gap-2 sm:gap-2 md:gap-4 overflow-hidden">
+        <!-- Avatar -->
+        <div class="hidden sm:flex h-10 w-10 sm:h-10 sm:w-10 bg-white items-center justify-center border-2 border-black rounded-full shrink-0">
+            <span class="font-black text-neutral text-lg">{{ user.username|first|upper }}</span>
         </div>
-        <!-- Dropdown -->
-        <div class="dropdown dropdown-top dropdown-end hidden md:block">
-            <button tabindex="0"
-                    role="button"
-                    class="p-2 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300">
-                <i data-lucide="settings"
-                   class="w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-white"></i>
-            </button>
+        <!-- Name + Role -->
+        <div class="flex-col truncate hidden md:flex">
+            <span class="text-sm md:text-sm font-black text-white truncate mb-1 tracking-widest">{{ user.username }}</span>
+            <span class="text-[8px] md:text-[10px] font-black uppercase mb-1">Project Manager</span>
         </div>
+    </div>
+    <!-- Dropdown -->
+    <div class="dropdown dropdown-top dropdown-end">
+        <button tabindex="0"
+                role="button"
+                class="p-2 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300">
+            <i data-lucide="settings"
+               class="w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-white"></i>
+        </button>
     </div>
 </div>

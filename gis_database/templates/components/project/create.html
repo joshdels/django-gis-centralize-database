@@ -1,57 +1,57 @@
 {% extends "_base.html" %}
 {% block content %}
-        {# --- ERROR ALERT --- #}
-        {% if error %}
-            <div class="alert alert-error shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="stroke-current shrink-0 h-6 w-6"
-                     fill="none"
-                     viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{{ error }}</span>
-            </div>
-        {% endif %}
-        {# --- FORM CARD --- #}
-        <div class="card bg-base-100 shadow-sm border border-base-200">
-            <div class="card-body">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-14 h-14 shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="h-8 w-8"
-                             fill="none"
-                             viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-black uppercase">Create a New Project</h2>
-                        <p class="text-sm opacity-60 mt-1">This will upload a new project repository to your cloud</p>
-                    </div>
-                </div>
-                <form method="post" enctype="multipart/form-data" class="space-y-6">
-                    {% csrf_token %}
-                    <!-- Project Name -->
-                    <div class="form-control w-full">
-                        <label class="label">
-                            <span class="label-text font-bold">Project Name</span>
-                        </label>
-                        <div class="[&_input]:input [&_input]:input-bordered [&_input]:w-full">{{ form.name }}</div>
-                    </div>
-                    <!-- Project Description -->
-                    <div class="form-control w-full">
-                        <label class="label">
-                            <span class="label-text font-bold">Description</span>
-                        </label>
-                        <div class="[&_textarea]:textarea [&_textarea]:textarea-bordered [&_textarea]:w-full">{{ form.description }}</div>
-                    </div>
-                    <!-- Actions -->
-                    <div class="card-actions justify-end items-center gap-4 mt-6">
-                        <a href="{% url 'file:dashboard' %}" class="btn btn-ghost">Cancel</a>
-                        <button type="submit" class="btn btn-primary px-8">Create New</button>
-                    </div>
-                </form>
-            </div>
+    {# --- ERROR ALERT --- #}
+    {% if error %}
+        <div class="alert alert-error shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="stroke-current shrink-0 h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ error }}</span>
         </div>
+    {% endif %}
+    {# --- FORM CARD --- #}
+    <div class="card bg-base-100 shadow-sm border border-base-200">
+        <div class="card-body">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-14 h-14 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-8 w-8"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black uppercase">Create a New Project</h2>
+                    <p class="text-sm opacity-60 mt-1">This will upload a new project repository to your cloud</p>
+                </div>
+            </div>
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                <!-- Project Name -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">Project Name</span>
+                    </label>
+                    <div class="[&_input]:input [&_input]:input-bordered [&_input]:w-full">{{ form.name }}</div>
+                </div>
+                <!-- Project Description -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">Description</span>
+                    </label>
+                    <div class="[&_textarea]:textarea [&_textarea]:textarea-bordered [&_textarea]:w-full">{{ form.description }}</div>
+                </div>
+                <!-- Actions -->
+                <div class="card-actions justify-end items-center gap-4 mt-6">
+                    <a href="{% url 'dashboard' %}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-8">Create New</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

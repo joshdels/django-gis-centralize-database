@@ -1,80 +1,76 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-
-  
-        {# --- HEADER SECTION --- #}
-        <div class="lg:col-span-2">
-            <div class="card bg-base-100 shadow-sm w-full">
-                <div class="card-body gap-5">
-                    {# --- HEADER SECTION: ICON + NAME LEFT, OWNER/CREATED RIGHT --- #}
-                    <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-4 gap-4">
-                        {# Left: Icon + Project Name + Badge #}
-                        <div class="flex flex-col items-center sm:flex-row sm:items-center gap-3 w-full sm:w-auto pb-5 text-center sm:text-left">
-                            <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0">
-                                <svg class="w-10 h-10"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <div class="min-w-0">
-                                <h3 class="text-3xl font-black text-base-content">{{ project.name }}</h3>
-                                <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter text-sm">Active Project</div>
-                            </div>
+    {# --- HEADER SECTION --- #}
+    <div class="lg:col-span-2">
+        <div class="card bg-base-100 shadow-sm w-full">
+            <div class="card-body gap-5">
+                {# --- HEADER SECTION: ICON + NAME LEFT, OWNER/CREATED RIGHT --- #}
+                <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-4 gap-4">
+                    {# Left: Icon + Project Name + Badge #}
+                    <div class="flex flex-col items-center sm:flex-row sm:items-center gap-3 w-full sm:w-auto pb-5 text-center sm:text-left">
+                        <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl w-20 h-20 shrink-0">
+                            <svg class="w-10 h-10"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
                         </div>
-                        {# Right: Owner + Created On Stats #}
-                        <div class="flex flex-row sm:flex-col justify-center sm:justify-start w-full sm:w-auto text-center sm:text-right gap-6 sm:gap-3">
-                            <div>
-                                <div class="font-bold uppercase text-sm">Owner</div>
-                                <div class="text-xs font-mono">{{ project.user.username }}</div>
-                            </div>
-                            <div>
-                                <div class="font-bold uppercase text-sm">Created on</div>
-                                <div class="text-xs font-mono">{{ project.created_at|date:"M d, Y" }}</div>
-                            </div>
+                        <div class="min-w-0">
+                            <h3 class="text-3xl font-black text-base-content">{{ project.name }}</h3>
+                            <div class="badge badge-accent badge-outline font-bold mt-1 uppercase tracking-tighter text-sm">Active Project</div>
                         </div>
                     </div>
-                    <!-- file description -->
-                    <div class="grid grid-cols-1 mb-3 mt-6 text-center">
-                        <div class="card bg-base-200 p-5 flex flex-col items-center gap-5">
-                            <div class="text-sm font-black uppercase tracking-wide">Project's Description</div>
-                            <div class="flex items-center">
-                                <div class="text-xs font-mono">{{ project.description | default:"No Description yet" }}</div>
-                            </div>
+                    {# Right: Owner + Created On Stats #}
+                    <div class="flex flex-row sm:flex-col justify-center sm:justify-start w-full sm:w-auto text-center sm:text-right gap-6 sm:gap-3">
+                        <div>
+                            <div class="font-bold uppercase text-sm">Owner</div>
+                            <div class="text-xs font-mono">{{ project.user.username }}</div>
+                        </div>
+                        <div>
+                            <div class="font-bold uppercase text-sm">Created on</div>
+                            <div class="text-xs font-mono">{{ project.created_at|date:"M d, Y" }}</div>
                         </div>
                     </div>
-                    {# --- ACTIONS: Download + Push Changes --- #}
-                    <div class="grid grid-cols-1 gap-5 mb-6 text-center">
-                        <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
-                            <div class="text-xs font-mono">Download the project's latest saved on the cloud</div>
-                            {% if project.files.exists %}
-                                <a href="{% url 'file:download-file' project.pk %}"
-                                   class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">
-                                    Download Project
-                                </a>
-                            {% else %}
-                                <button class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold"
-                                        disabled>Download Project</button>
-                                <div class="text-error mt-1 text-sm">No files available</div>
-                            {% endif %}
-                        </div>
-                        <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
-                            <div class="text-xs font-mono">Updates from your device to the cloud</div>
-                            <a href="{% url 'file:update-file' project.pk %}"
-                               class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">Push Changes</a>
-                            <div class="text-xs font-mono opacity-70">Last Updated on {{ project.updated_at|date:"M d, Y h:i A" }} PH Time</div>
+                </div>
+                <!-- file description -->
+                <div class="grid grid-cols-1 mb-3 mt-6 text-center">
+                    <div class="card bg-base-200 p-5 flex flex-col items-center gap-5">
+                        <div class="text-sm font-black uppercase tracking-wide">Project's Description</div>
+                        <div class="flex items-center">
+                            <div class="text-xs font-mono">{{ project.description | default:"No Description yet" }}</div>
                         </div>
                     </div>
-                    {# --- Back Button --- #}
-                    <div class="card-actions mt-10">
-                        <a href="{% url 'file:dashboard' %}"
-                           class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
+                </div>
+                {# --- ACTIONS: Download + Push Changes --- #}
+                <div class="grid grid-cols-1 gap-5 mb-6 text-center">
+                    <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
+                        <div class="text-xs font-mono">Download the project's latest saved on the cloud</div>
+                        {% if project.files.exists %}
+                            <a href="{% url 'download-file' project.pk %}"
+                               class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">
+                                Download Project
+                            </a>
+                        {% else %}
+                            <button class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold"
+                                    disabled>Download Project</button>
+                            <div class="text-error mt-1 text-sm">No files available</div>
+                        {% endif %}
                     </div>
+                    <div class="card bg-base-200 p-6 flex items-center justify-between gap-4">
+                        <div class="text-xs font-mono">Updates from your device to the cloud</div>
+                        <a href="{% url 'update-file' project.pk %}"
+                           class="btn btn-primary btn-lg py-5 shadow-sm w-full text-lg font-bold">Push Changes</a>
+                        <div class="text-xs font-mono opacity-70">Last Updated on {{ project.updated_at|date:"M d, Y h:i A" }} PH Time</div>
+                    </div>
+                </div>
+                {# --- Back Button --- #}
+                <div class="card-actions mt-10">
+                    <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
                 </div>
             </div>
         </div>
-
+    </div>
 {% endblock %}
