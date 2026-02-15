@@ -5,8 +5,7 @@
         <aside class="col-span-2 lg:col-span-3 xl:col-span-2 bg-primary shadow-md">
             {% include 'components/sidebar/_sidebar.html' %}
         </aside>
-        <!-- Main Content -->
-        <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 xl:p-10 h-screen flex flex-col gap-8">
+        <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 h-screen flex flex-col gap-8">
             {% include 'components/dashboard/header.html' with title="Project Analytics" subtitle="Check a quick glance of whats happening in you data" %}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
                 <div class="lg:col-span-6 h-full">{% include "components/project/projects-table.html" %}</div>
