@@ -14,6 +14,7 @@ cssbeautifier==1.15.4
 Django==6.0.1
 django-allauth==65.13.1
 django-browser-reload==1.21.0
+django-cors-headers==4.9.0
 django-storages==1.14.6
 django-tailwind==4.4.2
 django-widget-tweaks==1.5.1
