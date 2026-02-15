@@ -1,21 +1,21 @@
-<div class="card bg-base-100 shadow-sm space-y-4 p-5 h-full">
-    <div class="flex justify-between items-end px-1 mb-6">
+<div class="card bg-base-100 shadow-sm space-y-4 p-5 h-full flex flex-col">
+    <div class="flex justify-between items-end px-1 mb-3">
         <div>
             <h3 class="font-black text-2xl tracking-tighter uppercase">Projects</h3>
-            {% if uploads|length > 0 %}
+            {% if page_obj.paginator.count > 0 %}
                 <span class="badge badge-outline badge-primary text-xs font-black uppercase">Now Available</span>
             {% else %}
                 <span class="badge badge-outline badge-error text-xs font-black uppercase">Empty</span>
             {% endif %}
         </div>
         <div class="badge badge-neutral font-black border-none h-8 px-4 text-[10px] tracking-widest uppercase">
-            {{ uploads|length }} Item/s
+            {{ page_obj.paginator.count }} Item/s
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4">
-        {% for file in uploads %}
+    <div class="grid grid-cols-1 gap-2">
+        {% for file in page_obj %}
             <div class="card bg-base-200 active:bg-base-100 transition-colors">
-                <div class="p-4 flex items-center justify-between gap-10">
+                <div class="py-2 px-4 flex items-center justify-between gap-10">
                     <div class="flex items-center gap-2 sm:gap-4">
                         <div class="card bg-base-100 p-2 shrink-0">
                             <i data-lucide="map" class="w-6 h-6"></i>
@@ -45,24 +45,37 @@
                 <span class="font-black uppercase text-xs tracking-widest">No uploaded project</span>
             </div>
         {% endfor %}
+
+   {% if page_obj.paginator.num_pages > 1 %}
+    <div class="flex justify-center mt-5">
         <div class="join">
-            <input class="join-item btn btn-square"
-                   type="radio"
-                   name="options"
-                   aria-label="1"
-                   checked="checked" />
-            <input class="join-item btn btn-square"
-                   type="radio"
-                   name="options"
-                   aria-label="2" />
-            <input class="join-item btn btn-square"
-                   type="radio"
-                   name="options"
-                   aria-label="3" />
-            <input class="join-item btn btn-square"
-                   type="radio"
-                   name="options"
-                   aria-label="4" />
+
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="join-item btn btn-square"><<</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn btn-square"><</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <button class="join-item btn btn-square btn-active">
+                        {{ num }}
+                    </button>
+                {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                    <a href="?page={{ num }}" class="join-item btn btn-square">
+                        {{ num }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="join-item btn btn-square">></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="join-item btn btn-square">>></a>
+            {% endif %}
+
         </div>
+    </div>
+    {% endif %}
+
+
     </div>
 </div>

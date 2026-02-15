@@ -9,6 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Sum
 from django.db import transaction
 from django.urls import reverse_lazy
+from django.core.paginator import Paginator
 
 from .models import Project, File, FileActivity
 from accounts.models import Profile
@@ -26,17 +27,20 @@ sidebar_menu = [
 # -------------------------------
 # Utilities
 # -------------------------------
-def get_user_storage_context(user):
-    uploads = Project.objects.filter(owner=user, is_deleted=False).order_by(
+def get_user_storage_context(request):
+    uploads = Project.objects.filter(owner=request.user, is_deleted=False).order_by(
         "-created_at"
     )
+    paginator = Paginator(uploads, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     total_bytes = sum(
-        f.file.size for f in File.objects.filter(project__owner=user) if f.file
+        f.file.size for f in File.objects.filter(project__owner=request.user) if f.file
     )
 
     try:
-        profile = user.profile
+        profile = request.user.profile
     except Profile.DoesNotExist:
         profile = None
 
@@ -53,7 +57,8 @@ def get_user_storage_context(user):
     )
 
     return {
-        "uploads": uploads,
+        "page_obj": page_obj,
+        "uploads": page_obj,
         "storage_percentage": used_percent,
         "remaining_mb": remaining_mb,
         "max_storage": max_storage,
@@ -110,7 +115,7 @@ def dashboard(request):
     chart_labels = [p.name for p in projects]
     chart_data = [round(p.used_storage_bytes() / (1024 * 1024), 2) for p in projects]
 
-    context = get_user_storage_context(request.user)
+    context = get_user_storage_context(request)
     file_activities = FileActivity.objects.filter(owner=request.user)
     context.update(
         {
