@@ -1,32 +1,69 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-sm h-full w-full p-5">
-        <h3 class="font-black text-2xl tracking-tighter uppercase">Teams</h3>
-        <main>
-            <ul class="list bg-base-100">
-                <li class="pb-2 text-xs opacity-60 tracking-wide">Most played songs this week</li>
-                <li class="list-row">
-                    <div class="text-2xl font-thin opacity-40 tabular-nums">01</div>
-                    <div>
-                        <img class="size-10 rounded-box"
-                             src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
-                    </div>
-                    <div class="list-col-grow">
-                        <div>Dio Lupa</div>
-                        <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
-                    </div>
-                    <button class="btn btn-square btn-ghost">
-                        <svg class="size-[1.2em]"
-                             xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24">
-                            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor">
-                            <path d="M6 3L20 12 6 21 6 3z"></path>
-                            </g>
-                        </svg>
-                    </button>
-                </li>
-            </ul>
-        </main>
+<div class="card bg-base-100 shadow-lg h-full w-full p-4">
+    <h3 class="font-black text-xl tracking-tighter uppercase mb-3">Teams</h3>
+
+    <div class="overflow-x-auto w-full">
+        <table class="table table-compact w-full text-sm">
+            <thead>
+                <tr class="bg-base-200 text-[10px]">
+                    <th>#</th>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Project</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Team 1 -->
+                <tr class="hover:bg-base-200 transition-colors text-[9px]">
+                    <th>1</th>
+                    <td>
+                        <div class="avatar">
+                            <div class="w-8 h-8 rounded-full">
+                                <img src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
+                            </div>
+                        </div>
+                    </td>
+                    <td class="font-semibold">Joshua De Leon</td>
+                    <td class="opacity-70">Developer</td>
+                    <td class="opacity-70 text-sm">Marinduque</td>
+                    <td class="flex gap-1">
+                        <button class="btn btn-ghost btn-xs tooltip" data-tip="Play">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 4l15 8-15 8V4z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Team 2 -->
+                <tr class="hover:bg-base-200 transition-colors text-[9px]">
+                    <th>2</th>
+                    <td>
+                        <div class="avatar">
+                            <div class="w-8 h-8 rounded-full">
+                                <img src="https://img.daisyui.com/images/profile/demo/2@94.webp" />
+                            </div>
+                        </div>
+                    </td>
+                    <td class="font-semibold">Joseph</td>
+                    <td class="opacity-70">Designer</td>
+                    <td class="opacity-70">Samal</td>
+                    <td class="flex gap-1">
+                        <button class="btn btn-ghost btn-xs tooltip" data-tip="Play">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 4l15 8-15 8V4z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Add more teams here -->
+            </tbody>
+        </table>
     </div>
+</div>
 {% endblock %}

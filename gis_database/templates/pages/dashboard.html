@@ -15,7 +15,7 @@
                 <div class="lg:col-span-2">{% include 'components/charts/analytics_section.html' %}</div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-2">
-                <div class="lg:col-span-2">{% include 'components/project/projects-table.html' %}</div>
+                <div class="lg:col-span-2">{% include 'components/project/projects-table.html' with url_name="project-sync" icon="arrow-big-right-dash" button=True %}</div>
                 <div>{% include 'components/dashboard/activity_logs.html' %}</div>
             </div>
         </main>

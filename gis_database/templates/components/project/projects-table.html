@@ -31,10 +31,13 @@
                            class="btn btn-error btn-outline btn-square">
                             <i data-lucide="trash-2" class="w-6 h-6"></i>
                         </a>
-                        <a href="{% url 'project-sync' file.pk %}"
-                           class="btn btn-square btn-primary">
-                            <i data-lucide="arrow-big-right-dash" class="w-6 h-6"></i>
+                        <!-- target button -->
+                        {% if button %}
+                        <a href="{% url url_name file.pk %}"
+                            class="btn btn-square btn-primary">
+                            <i data-lucide="{{ icon }}" class="w-6 h-6"></i>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -31,7 +31,7 @@ def get_user_storage_context(request):
     uploads = Project.objects.filter(owner=request.user, is_deleted=False).order_by(
         "-created_at"
     )
-    paginator = Paginator(uploads, 5)
+    paginator = Paginator(uploads, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -86,7 +86,17 @@ def guides(request):
     return render(request, "pages/guides.html", {"sidebar_menu": sidebar_menu})
 
 def analytics(request):
-    return render(request, "pages/analytics.html", {"sidebar_menu": sidebar_menu})
+    projects = Project.objects.filter(owner=request.user, is_deleted=False)
+
+    context = get_user_storage_context(request)
+    file_activities = FileActivity.objects.filter(owner=request.user)
+    context.update(
+        {
+            "file_activities": file_activities,
+            "sidebar_menu": sidebar_menu,
+        }
+    )
+    return render(request, "pages/analytics.html", context)
 
 
 def guides_qgis(request):
