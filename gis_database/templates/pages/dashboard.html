@@ -7,14 +7,14 @@
         </aside>
         <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 flex flex-col gap-4">
             {% include 'components/dashboard/header.html' with title="Project Storage" subtitle="Here is your project management and data comsumption." %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-                <div class="lg:col-span-1 flex flex-col gap-6 lg:gap-2">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1">
+                <div class="lg:col-span-1 flex flex-col gap-4 lg:gap-2">
                     {% include 'components/dashboard/upload_card.html' %}
                     {% include 'components/dashboard/storage_card.html' %}
                 </div>
                 <div class="lg:col-span-2">{% include 'components/charts/analytics_section.html' %}</div>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-2">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-2">
                 <div class="lg:col-span-2">{% include 'components/project/projects-table.html' %}</div>
                 <div>{% include 'components/dashboard/activity_logs.html' %}</div>
             </div>

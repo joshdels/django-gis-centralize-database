@@ -2,6 +2,56 @@
 {% load static %}
 {% block content %}
     <div class="card bg-base-100 shadow-sm h-full w-full p-5">
-        <h3 class="font-black text-2xl tracking-tighter uppercase">Feature Map</h3>
+        <h3 class="font-black text-2xl tracking-tighter uppercase mb-1">Feature Map</h3>
+        <div class="h-full rounded-lg" id="map"></div>
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            var map = L.map("map", {
+                attributionControl: false
+            }).setView([0, 0], 0);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+
+            fetch("{% static 'data/samal.geojson' %}")
+                .then(response => response.json())
+                .then(data => {
+
+
+                    var geoLayer = L.geoJSON(data, {
+                        style: function(feature) {
+                            let fillColor;
+                            switch (feature.properties.type) {
+                                default:
+                                    fillColor =  '#60a5fa'
+                            }
+
+                            return {
+                                color: "#1f2937",
+                                weight: 0.5,
+                                fillColor: fillColor,
+                                fillOpacity: 0.5
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            if (feature.properties) {
+                                layer.bindPopup(`<b>${feature.properties.ADM4_EN}</b>`)
+                            }
+                        }
+                    }).addTo(map);
+                    map.fitBounds(geoLayer.getBounds(), {
+                        padding: [-3, -3]
+                    });
+                })
+                .catch(error => console.error("GeoJSON load error", error))
+
+
+            L.control.scale().addTo(map);
+
+        });
+    </script>
 {% endblock %}

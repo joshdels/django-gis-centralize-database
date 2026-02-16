@@ -1,1 +1,4 @@
-python manage.py tailwind build && python manage.py collectstatic --no-input --clear && python manage.py runserver
+python manage.py tailwind build &&  \
+python manage.py collectstatic --no-input --clear &&  \
+cp staticfiles/css/dist/styles.css static/css/dist/styles.css && \
+python manage.py runserver 
