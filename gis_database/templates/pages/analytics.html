@@ -12,9 +12,7 @@
                 <div class="lg:col-span-6 h-full">
                     {% include "components/project/projects-table.html" with url_name="project-sync" icon="chart-area" button=True %}
                 </div>
-                <div class="lg:col-span-6 h-full">
-                    {% include "components/analytics/map.html" %}
-                </div>
+                <div class="lg:col-span-6 h-full">{% include "components/analytics/map.html" %}</div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1">
                 <div class="lg:col-span-4 h-full">{% include "components/analytics/team.html" %}</div>
@@ -24,5 +22,5 @@
         </main>
     </div>
     <script src="{% static 'chart.umd.min.js' %}"></script>
-    {% include 'components/charts/_chart_logic.js.html' %}
+    {% include 'components/analytics/_chart_logic.js.html' %}
 {% endblock %}

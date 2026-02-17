@@ -11,8 +11,9 @@
         document.addEventListener("DOMContentLoaded", function () {
 
             var map = L.map("map", {
-                attributionControl: false
-            }).setView([0, 0], 0);
+                attributionControl: false,
+                minZoom: 6
+            }).setView([0, 0], 5);
 
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
@@ -43,9 +44,12 @@
                             }
                         }
                     }).addTo(map);
+
                     map.fitBounds(geoLayer.getBounds(), {
                         padding: [-3, -3]
                     });
+
+                    map.setMaxBounds(geoLayer.getBounds());
                 })
                 .catch(error => console.error("GeoJSON load error", error))
 
