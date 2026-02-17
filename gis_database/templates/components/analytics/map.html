@@ -3,7 +3,7 @@
 {% block content %}
     <div class="card bg-base-100 shadow-sm h-full w-full p-5">
         <h3 class="font-black text-2xl tracking-tighter uppercase mb-1">Feature Map</h3>
-        <div class="h-full w-full h-96 rounded-lg" id="map"></div>
+        <div class="h-full w-full rounded-lg" id="map"></div>
     </div>
 {% endblock %}
 {% block extra_js %}
@@ -39,8 +39,27 @@
                             };
                         },
                         onEachFeature: function(feature, layer) {
+                            
+
                             if (feature.properties) {
-                                layer.bindPopup(`<b>${feature.properties.ADM4_EN}</b>`)
+                                layer.bindPopup(`<b>${feature.properties}</b>` , {
+                                    closeButton: false,
+                                    autoClose: false
+                                });
+
+                                layer.on({
+                                    mouseover: function(e) {
+                                        layer.setStyle({
+                                            weight: 2,
+                                            fillOpacity: 0.8
+                                        })
+                                        layer.openPopup();
+                                    },
+                                    mouseout: function(e) {
+                                        geoLayer.resetStyle(layer);
+                                        layer.closePopup();
+                                    }
+                                })
                             }
                         }
                     }).addTo(map);
@@ -50,6 +69,7 @@
                     });
 
                     map.setMaxBounds(geoLayer.getBounds());
+
                 })
                 .catch(error => console.error("GeoJSON load error", error))
 

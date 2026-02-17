@@ -1,70 +1,55 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-lg h-full w-full p-4">
-        <h3 class="font-black text-xl tracking-tighter uppercase mb-3">Teams</h3>
-        <div class="overflow-x-auto w-full">
-            <table class="table table-compact w-full text-sm">
-                <thead>
-                    <tr class="bg-base-200 text-[10px]">
+    <div class="card bg-base-100 shadow-sm h-full w-full p-4">
+        <h3 class="font-black text-lg tracking-tight uppercase mb-3">Teams</h3>
+        <div class="overflow-x-auto">
+            <table class="table table-xs w-full">
+                <thead class="bg-base-200 text-[11px] uppercase tracking-wide">
+                    <tr>
                         <th>#</th>
                         <th>Avatar</th>
                         <th>Name</th>
-                        <th>Role</th>
-                        <th>Project</th>
-                        <th>Actions</th>
+                        <th class="hidden sm:table-cell">Role</th>
+                        <th class="hidden md:table-cell">Project</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-[12px]">
                     <!-- Team 1 -->
-                    <tr class="hover:bg-base-200 transition-colors text-[9px]">
+                    <tr class="hover:bg-base-200 transition">
                         <th>1</th>
                         <td>
                             <div class="avatar">
-                                <div class="w-8 h-8 rounded-full">
-                                    <img src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
-                                </div>
+                                <img class="h-10 w-10 rounded-full" src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
                             </div>
                         </td>
-                        <td class="font-semibold">Joshua De Leon</td>
-                        <td class="opacity-70">Developer</td>
-                        <td class="opacity-70 text-sm">Marinduque</td>
-                        <td class="flex gap-1">
-                            <button class="btn btn-ghost btn-xs tooltip" data-tip="Play">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="h-4 w-4"
-                                     fill="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path d="M6 4l15 8-15 8V4z" />
-                                </svg>
+                        <td class="font-semibold whitespace-nowrap">Jeanne</td>
+                        <td class="hidden sm:table-cell opacity-70">Developer</td>
+                        <td class="hidden md:table-cell opacity-70">Marinduque</td>
+                        <td>
+                            <button class="btn btn-ghost btn-xs">
+                                <i data-lucide="user-search" class="w-6 h-6 lg:w-8 lg:h-8"></i>
                             </button>
                         </td>
                     </tr>
                     <!-- Team 2 -->
-                    <tr class="hover:bg-base-200 transition-colors text-[9px]">
+                    <tr class="hover:bg-base-200 transition">
                         <th>2</th>
                         <td>
                             <div class="avatar">
-                                <div class="w-8 h-8 rounded-full">
-                                    <img src="https://img.daisyui.com/images/profile/demo/2@94.webp" />
-                                </div>
+                                <img class="h-10 w-10 rounded-full" src="https://img.daisyui.com/images/profile/demo/2@94.webp" />
                             </div>
                         </td>
-                        <td class="font-semibold">Joseph</td>
-                        <td class="opacity-70">Designer</td>
-                        <td class="opacity-70">Samal</td>
-                        <td class="flex gap-1">
-                            <button class="btn btn-ghost btn-xs tooltip" data-tip="Play">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="h-4 w-4"
-                                     fill="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path d="M6 4l15 8-15 8V4z" />
-                                </svg>
+                        <td class="font-semibold whitespace-nowrap">Joshua De Leon</td>
+                        <td class="hidden sm:table-cell opacity-70">GIS Developer</td>
+                        <td class="hidden md:table-cell opacity-70">Samal</td>
+                        <td>
+                            <button class="btn btn-ghost btn-xs">
+                                <i data-lucide="user-search" class="w-6 h-6 lg:w-8 lg:h-8"></i>
                             </button>
                         </td>
                     </tr>
-                    <!-- Add more teams here -->
                 </tbody>
             </table>
         </div>
