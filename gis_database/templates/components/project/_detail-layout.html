@@ -2,9 +2,8 @@
 {% load static %}
 {% block content %}
     {% include "components/navbar.html" %}
-    <div class="px-10 py-2 gap-5 grid grid-cols-1 lg:grid-cols-3">
-        <div class="col-span-1 lg:col-span-2">{% include "components/project/detail.html" %}</div>
-
+    <div class="px-10 py-2 gap-5 grid grid-cols-1 lg:grid-cols-2">
+        <div class="col-span-1 lg:col-span-1">{% include "components/project/detail.html" %}</div>
         <div class="col-span-1 lg:col-span-1 gap-5 flex flex-col">
             <div class="flex-1">{% include "components/dashboard/file_versions.html" %}</div>
             <div class="flex-1">{% include "components/project/members.html" %}</div>

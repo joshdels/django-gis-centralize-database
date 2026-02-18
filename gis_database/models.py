@@ -60,7 +60,7 @@ class Project(models.Model):
 
     # ------ Participants ------
     def get_user_role(self, user):
-        membership = self.memberships.filter(user=user).first()
+        membership = self.membership.filter(user=user).first()
         return membership.role if membership else None
 
     def can_view(self, user):
@@ -177,3 +177,5 @@ def cleanup_backblaze_on_delete(sender, instance, **kwargs):
                 print(f"B2: Successfully deleted cloud file: {file_key}")
         except Exception as e:
             print(f"B2: Failed to delete cloud file {file_key}. Error: {e}")
+
+
