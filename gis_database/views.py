@@ -44,7 +44,7 @@ def get_user_storage_context(request):
     except Profile.DoesNotExist:
         profile = None
 
-    if profile:
+    if profile and profile.storage_limit_mb > 0:
         remaining_mb = round(profile.remaining_storage_bytes() / (1024 * 1024), 1)
         max_storage = profile.storage_limit_mb
     else:
@@ -84,6 +84,7 @@ def home(request):
 
 def guides(request):
     return render(request, "pages/guides.html", {"sidebar_menu": sidebar_menu})
+
 
 def analytics(request):
     projects = Project.objects.filter(owner=request.user, is_deleted=False)
@@ -149,7 +150,14 @@ def project_sync(request, pk):
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    return render(request, "components/analytic/detail.html", {"project": project})
+    role = project.get_user_role(request.user)
+
+    context = {
+        "project": project,
+        "role": role,
+    }
+
+    return render(request, "components/analytic/detail.html", context)
 
 
 @login_required

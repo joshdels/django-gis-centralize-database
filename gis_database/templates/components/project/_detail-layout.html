@@ -2,9 +2,12 @@
 {% load static %}
 {% block content %}
     {% include "components/navbar.html" %}
-    <div class="max-w-7xl mx-auto px-4 py-2 gap-5 grid grid-cols-1 lg:grid-cols-6">
-        <div class="col-span-1 lg:col-span-4">{% include "components/project/detail.html" %}</div>
-        <div class="col-spand-1 lg:col-span-2">{% include "components/dashboard/file_versions.html" %}</div>
-        <!-- To finish -->
+    <div class="px-10 py-2 gap-5 grid grid-cols-1 lg:grid-cols-3">
+        <div class="col-span-1 lg:col-span-2">{% include "components/project/detail.html" %}</div>
+
+        <div class="col-span-1 lg:col-span-1 gap-5 flex flex-col">
+            <div class="flex-1">{% include "components/dashboard/file_versions.html" %}</div>
+            <div class="flex-1">{% include "components/project/members.html" %}</div>
+        </div>
     </div>
 {% endblock %}

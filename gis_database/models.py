@@ -1,12 +1,13 @@
 import os
 
-from django.db import models, transaction
-from django.db.models import Q, UniqueConstraint, Sum
+from django.db import models
+from django.db.models import UniqueConstraint
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 from .utils import create_project_file
 
@@ -56,6 +57,47 @@ class Project(models.Model):
     def has_storage_for(self, new_file_size):
         max_bytes = self.MAX_STORAGE_MB * 1024 * 1024
         return self.used_storage_bytes() + new_file_size <= max_bytes
+
+    # ------ Participants ------
+    def get_user_role(self, user):
+        membership = self.memberships.filter(user=user).first()
+        return membership.role if membership else None
+
+    def can_view(self, user):
+        if not self.is_private:
+            return True
+        return self.memberships.filter(user=user).exists()
+
+    def can_edit(self, user):
+        role = self.get_user_role(user)
+        return role in ["admin", "editor"]
+
+    def can_manage(self, user):
+        role = self.get_user_role(user)
+        return role == "admin"
+
+
+class ProjectMembership(models.Model):
+    ROLE_CHOICES = [("vewer", "Viewer"), ("editor", "Editor"), ("admin", "Admin")]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="membership")
+    role = models.CharField(max_length=30, choices=ROLE_CHOICES)
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="sent_project_invites"
+    )
+
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "project")
+        ordering = ["-joined_at"]
+
+    def __str__(self):
+        return f"{self.user} - {self.project} ({self.role})"
 
 
 class File(models.Model):

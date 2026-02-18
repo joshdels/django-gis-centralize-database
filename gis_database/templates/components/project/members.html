@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block content %}
+    <div class="card bg-base-100 shadow-sm h-full w-full p-4">
+        <h3 class="font-black text-lg tracking-tight uppercase mb-3">Teams</h3>
+        <div class="overflow-x-auto">
+            <table class="table table-xs w-full">
+                <thead class="bg-base-200 text-[11px] uppercase tracking-wide">
+                    <tr>
+                        <th>#</th>
+                        <th>Profile</th>
+                        <th>Name</th>
+                        <th class="table-cell">Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-[12px]">
+                    <!-- Team 1 -->
+                    <tr class="hover:bg-base-200 transition">
+                        <th>1</th>
+                        <td>
+                            <div class="avatar">
+                                <img class="h-10 w-10 rounded-full" src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
+                            </div>
+                        </td>
+                        <td class="font-semibold whitespace-nowrap">Jeanne</td>
+                        <td class="table-cell opacity-70">Developer</td>
+                        <td>
+                            <button class="btn btn-error btn-outline btn-square">
+                                <i data-lucide="circle-minus" class="w-6 h-6 lg:w-8 lg:h-8"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
