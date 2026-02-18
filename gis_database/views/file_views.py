@@ -1,27 +1,16 @@
 import os
-from io import BytesIO
 
-from django.http import HttpResponse, Http404
-import zipfile
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.db.models import Sum
 from django.db import transaction
-from django.urls import reverse_lazy
-from django.core.paginator import Paginator
-from django.views.decorators.http import require_POST
-from django.contrib import messages
-from django.contrib.auth.models import User
 
-from ..models import Project, File, FileActivity, ProjectMembership
-from accounts.models import Profile
-from ..forms import ProjectForm, CreateProjectForm
+from ..models import Project, File, FileActivity
+from ..forms import ProjectForm
 
 from ..utils import compute_hash
 
 
-@login_required
 def update_file(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     latest_file = project.files.filter(is_latest=True).order_by("-version").first()
@@ -128,7 +117,7 @@ def unset_latest(user, project, file_name):
         is_latest=True,
     ).update(is_latest=False)
 
-@login_required
+
 def upload_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, owner=request.user)
@@ -177,4 +166,3 @@ def upload_project(request):
         form = ProjectForm(owner=request.user)
 
     return render(request, "pages/upload.html", {"form": form})
-

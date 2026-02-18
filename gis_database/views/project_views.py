@@ -32,7 +32,6 @@ def create_project(request):
     return render(request, "components/project/create-layout.html", {"form": form})
 
 
-@login_required
 def download_project(request, pk):
     """
     Download all latest ProjectFiles of a project as a ZIP.

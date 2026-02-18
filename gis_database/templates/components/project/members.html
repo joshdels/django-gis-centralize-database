@@ -13,12 +13,10 @@
                             class="btn btn-outline flex items-center gap-2">
                         <i data-lucide="share-2" class="w-5 h-5 lg:w-6 lg:h-6"></i>
                         Share
-                    </button>
-                    <a href="{% url 'add_member' project.id %}"
-                       class="btn btn-primary flex items-center gap-2">
+                    <button onclick="addMemberModal.showModal()" class="btn btn-primary flex items-center gap-2">
                         <i data-lucide="user-plus" class="w-5 h-5 lg:w-6 lg:h-6"></i>
                         Add Member
-                    </a>
+                    </button>
                 </div>
             {% endif %}
         </div>
@@ -75,4 +73,10 @@
             </table>
         </div>
     </div>
+
+    {% include "components/project/add-member-modal.html" %}
+
+
+    
+
 {% endblock %}

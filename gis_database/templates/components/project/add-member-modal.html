@@ -1,0 +1,33 @@
+<dialog id="addMemberModal" class="modal">
+  <div class="modal-box">
+
+    <h3 class="font-bold text-lg mb-4">Add Member</h3>
+
+    <!-- Search Input -->
+    <div class="relative">
+        <input type="text"
+               id="user-search"
+               placeholder="Search username or email..."
+               class="input input-bordered w-full">
+
+        <div id="search-results"
+             class="absolute bg-base-100 shadow-lg rounded-lg w-full mt-1 hidden max-h-60 overflow-y-auto z-50">
+        </div>
+    </div>
+
+    <!-- Hidden Form -->
+    <form method="POST"
+          action="{% url 'add_member' project.id %}"
+          id="add-member-form">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="selected-username">
+    </form>
+
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn">Close</button>
+      </form>
+    </div>
+
+  </div>
+</dialog>

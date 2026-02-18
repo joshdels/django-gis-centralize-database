@@ -1,10 +1,14 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from ..models import Project, ProjectMembership
+
+User = get_user_model()
 
 
 @login_required
@@ -12,23 +16,27 @@ from ..models import Project, ProjectMembership
 def add_member(request, project_id):
     project = get_object_or_404(Project, pk=project_id, owner=request.user)
 
-    username_or_email = request.POST.get("username")
-    try:
-        user = User.objects.get(username=username_or_email)
-    except User.DoesNotExist:
-        messages.error(request, "User not found.")
-        return redirect("project-detail", pk=project.id)
+    username = request.POST.get("username")
+    user = get_object_or_404(User, username=username)
 
-    membership, created = ProjectMembership.objects.get_or_create(
+    ProjectMembership.objects.get_or_create(
         user=user,
         project=project,
-        defaults={"role": "viewer", "invited_by": request.user},
+        defaults={"role": "editor", "invited_by": request.user},
     )
 
-    if not created:
-        messages.info(request, f"{user.username} is already a member.")
-    else:
-        messages.success(request, f"{user.username} added as a member.")
+    members = ProjectMembership.objects.filter(project=project)
+
+    context = {
+        "members": members,
+        "project": project,
+        "can_manage": True,
+    }
+
+    # what is this??? 
+    if request.headers.get("HX-Request"):
+        return render(request, "components/project/members/html", context)
+
 
     return redirect("project-detail", pk=project.id)
 
@@ -59,3 +67,27 @@ def remove_member(request, project_id, user_id):
         messages.success(request, "Member removed successfully.")
 
     return redirect("project-detail", pk=project.id)
+
+
+User = get_user_model()
+
+
+@login_required
+def search_users(request, project_id):
+    query = request.GET.get("q", "")
+
+    users = []
+
+    existing_member_ids = ProjectMembership.objects.filter(
+        project_id=project_id
+    ).values_list("user_id", flat=True)
+
+    users = (
+        User.objects.fiter(Q(username__icontains=query) | Q(email__icontains=query))
+        .exclued(id__in=existing_member_ids)
+        .exclude(id=request.user.id)[:10]
+    )
+
+    context = {"users": users, "project_id": project_id}
+
+    return render(request, "components/project/user_search_result.html", context)
