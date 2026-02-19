@@ -54,7 +54,6 @@ def update_file(request, pk):
                     file_folder = os.path.splitext(uploaded_file.name)[0].replace(
                         " ", "_"
                     )
-                    action = "create new file version"
 
                 # Create new File
                 new_file = File.objects.create(
@@ -72,7 +71,7 @@ def update_file(request, pk):
                 FileActivity.objects.create(
                     file=new_file,
                     owner=request.user,
-                    action=action,
+                    action="new file version created",
                 )
 
             return redirect("project-details", pk=project.id)
@@ -96,15 +95,16 @@ def delete_file(request, pk):
     Delete a single file of file (hard delete)
     """
     reference_file = get_object_or_404(File, pk=pk, project__owner=request.user)
-
     project = reference_file.project
     file_name = reference_file.name
+
     if request.method == "POST":
         all_versions = File.objects.filter(project=project, name=file_name)
         version_count = all_versions.count()
 
         FileActivity.objects.create(
             owner=request.user,
+            file_name_snapshot=file_name,
             action=f"Permanently deleted all {version_count} version of: {file_name}",
         )
 
@@ -166,7 +166,7 @@ def upload_project(request):
                 FileActivity.objects.create(
                     file=file_obj,
                     owner=request.user,
-                    action="uploaded new file",
+                    action="new file uploaded",
                 )
 
                 return redirect("dashboard")

@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
-from ..models import Project, ProjectMembership, File
+from ..models import Project, ProjectMembership, FileActivity
 from ..forms import CreateProjectForm
 
 
@@ -21,10 +21,16 @@ def create_project(request):
         project.save()
 
         ProjectMembership.objects.get_or_create(
-            user=request.user,
             project=project,
             role="admin",
             invited_by=request.user,
+        )
+
+        FileActivity.objects.create(
+            project=project,
+            project_name_snapshot=project.name,
+            action="new project created",
+            owner=request.user,
         )
 
         return redirect("dashboard")
@@ -67,12 +73,21 @@ def delete_project(request, pk):
     """
     Delete a project and all associated files and versions.
     """
-    project_file = get_object_or_404(Project, pk=pk, owner=request.user)
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
+
     if request.method == "POST":
-        project_file.delete()
+        FileActivity.objects.create(
+            project=project,
+            project_name_snapshot=project.name,
+            action="project deleted",
+            owner=request.user,
+        )
+
+        project.delete()
+
         return redirect("dashboard")
     return render(
-        request, "components/project/project_delete.html", {"project": project_file}
+        request, "components/project/project_delete.html", {"project": project}
     )
 
 
@@ -80,6 +95,13 @@ def delete_project_soft(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == "POST":
         project.soft_delete()
+
+        FileActivity.objects.create(
+            project=project,
+            project_name_snapshot=project.name,
+            action="project deleted",
+            owner=request.user,
+        )
     return redirect("dashboard")
 
 

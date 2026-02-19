@@ -157,7 +157,12 @@ class File(models.Model):
 
 
 class FileActivity(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    project_name_snapshot = models.CharField(max_length=255, null=True, blank=True)
+
     file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)
+    file_name_snapshot = models.CharField(max_length=255, null=True, blank=True)
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
     )

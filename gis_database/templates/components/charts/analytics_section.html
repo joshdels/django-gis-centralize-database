@@ -1,14 +1,13 @@
-<div class="">
-    <div class="card shadow-sm p-5 bg-base-100">
-        <h3 class="text-lg font-black uppercase">Project Storage Consumption</h3>
-        {% if chart_data and chart_labels %}
-            <div class="relative w-full h-full items-center justify-center">
-                <canvas id="pieChart"></canvas>
-            </div>
-        {% else %}
-            <div class="items-center justify-center text-base-content/60 font-semibold">Empty Data Chart</div>
-        {% endif %}
-    </div>
+<div class="card shadow-sm p-5 bg-base-100 h-full">
+    <h3 class="text-lg font-black uppercase">Project Storage Consumption</h3>
+    {% if chart_data and chart_labels %}
+        <div class="relative w-full h-full items-center justify-center">
+            <canvas id="pieChart"></canvas>
+        </div>
+    {% else %}
+        <div class="card bg-base-200 p-10 mt-3 text-center font-semibold">Empty Data Chart</div>
+    {% endif %}
 </div>
+
 {{ chart_labels|json_script:"chart-labels" }}
 {{ chart_data|json_script:"chart-data" }}
