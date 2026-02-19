@@ -91,7 +91,6 @@ def update_file(request, pk):
     )
 
 
-@login_required
 def delete_file(request, pk):
     """
     Delete a single file of file (hard delete)

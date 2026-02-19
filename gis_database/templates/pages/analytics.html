@@ -9,7 +9,7 @@
             {% include 'components/dashboard/header.html' with title="Project Analytics" subtitle="Check a quick glance of whats happening in you data" %}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1">
                 <div class="lg:col-span-6 h-full">
-                    {% include "components/project/projects-table.html" with url_name="project-analytics" icon="chart-area" button=True showDelete=False%}
+                    {% include "components/project/projects-table.html" with url_name="project-analytics" icon="chart-area" button=True showDelete=False %}
                 </div>
                 <div class="lg:col-span-6 h-full">{% include "components/analytics/map.html" %}</div>
             </div>

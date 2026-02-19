@@ -47,7 +47,6 @@ def get_user_storage_context(request):
     }
 
 
-@login_required
 @ensure_csrf_cookie
 def dashboard(request):
 

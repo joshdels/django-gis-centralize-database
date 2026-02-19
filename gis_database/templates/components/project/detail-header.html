@@ -1,0 +1,41 @@
+<div class="flex flex-row justify-between items-start gap-4 flex-wrap">
+    
+    <!-- Left Section -->
+    <div class="flex items-center gap-3 min-w-0">
+        <div class="flex items-center justify-center bg-primary text-primary-content rounded-2xl p-2 shrink-0">
+            <i data-lucide="package-open" class="w-10 h-10 sm:w-15 sm:h-15"></i>
+        </div>
+
+        <div class="min-w-0">
+            <h3 class="text-2xl sm:text-3xl font-black tracking-wide">
+                {{ project.name }}
+            </h3>
+
+            {% if project.is_private %}
+                <div class="badge badge-error badge-outline font-bold mt-1 uppercase tracking-tighter text-xs sm:text-sm">
+                    Private Project
+                </div>
+            {% else %}
+                <div class="badge badge-primary badge-outline font-bold mt-1 uppercase tracking-tighter text-xs sm:text-sm">
+                    Public Project
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="flex gap-5 sm:gap-10 text-right justify-end text-xs sm:text-sm">
+        <div>
+            <div class="font-bold uppercase">Owner</div>
+            <div class="truncate">{{ project.owner }}</div>
+        </div>
+
+        <div>
+            <div class="font-bold uppercase">Created</div>
+            <div class="">
+                {{ project.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, get_object_or_404, render
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -11,7 +10,6 @@ from ..models import Project, ProjectMembership
 User = get_user_model()
 
 
-@login_required
 @require_POST
 def add_member(request, project_id):
     project = get_object_or_404(Project, pk=project_id, owner=request.user)
@@ -41,7 +39,6 @@ def add_member(request, project_id):
     return redirect("project-detail", pk=project.id)
 
 
-@login_required
 @require_POST
 def remove_member(request, project_id, user_id):
     project = get_object_or_404(Project, pk=project_id)
@@ -72,7 +69,6 @@ def remove_member(request, project_id, user_id):
 User = get_user_model()
 
 
-@login_required
 def search_users(request, project_id):
     query = request.GET.get("q", "")
 

@@ -28,10 +28,10 @@
                     </div>
                     <div class="flex items-center gap-2">
                         {% if showDelete %}
-                        <a href="{% url 'project-delete' file.pk %}"
-                           class="btn btn-error btn-outline btn-square">
-                            <i data-lucide="trash-2" class="w-6 h-6"></i>
-                        </a>
+                            <a href="{% url 'project-delete' file.pk %}"
+                               class="btn btn-error btn-outline btn-square">
+                                <i data-lucide="trash-2" class="w-6 h-6"></i>
+                            </a>
                         {% endif %}
                         <!-- target button -->
                         {% if button %}

@@ -63,7 +63,6 @@ def download_project(request, pk):
     return response
 
 
-@login_required
 def delete_project(request, pk):
     """
     Delete a project and all associated files and versions.
@@ -77,7 +76,6 @@ def delete_project(request, pk):
     )
 
 
-@login_required
 def delete_project_soft(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == "POST":
@@ -85,7 +83,6 @@ def delete_project_soft(request, pk):
     return redirect("dashboard")
 
 
-@login_required
 def project_sync(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     return render(
@@ -93,7 +90,6 @@ def project_sync(request, pk):
     )
 
 
-@login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     role = project.get_user_role(request.user)
@@ -110,7 +106,7 @@ def project_detail(request, pk):
 
     return render(request, "components/project/_detail-layout.html", context)
 
-@login_required
+
 def project_analytics(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     role = project.get_user_role(request.user)

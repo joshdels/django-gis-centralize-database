@@ -1,14 +1,14 @@
-<div class="flex flex-col gap-3 space-y-3 mt-5">
+<div class="flex flex-col space-y-4 mt-3">
     <a href="#"
-       class="group flex items-center justify-center xl:justify-start gap-3 p-2 bg-white/10 hover:bg-white hover:text-primary text-white transition-all font-black uppercase text-xs lg:text-sm tracking-widest rounded-lg">
-        <i data-lucide="user" class="w-5 h-5 sm:w-6 lg:w-7 lg:h-7"></i>
+       class="group flex items-center justify-center xl:justify-start gap-2 p-2 bg-white/10 hover:bg-white hover:text-primary text-white transition-all font-black uppercase text-xs lg:text-sm tracking-widest rounded-lg">
+        <i data-lucide="user" class="w-6 h-6 lg:w-8 lg:h-8"></i>
         <span class="hidden lg:block">Profile</span>
     </a>
     <form method="post" action="{% url 'account_logout' %}" class="w-full">
         {% csrf_token %}
         <button type="submit"
                 class="group flex items-center justify-center xl:justify-start gap-3 w-full p-2 bg-white/10 hover:bg-white hover:text-red-700 text-error font-black uppercase text-xs lg:text-sm tracking-widest rounded-lg transition hover:cursor-pointer">
-            <i data-lucide="log-out" class="w-5 h-5 sm:w-6 lg:w-7 lg:h-7 text-error"></i>
+            <i data-lucide="log-out" class="w-6 h-6 lg:w-8 lg:h-8 text-error"></i>
             <span class="hidden lg:block">Logout</span>
         </button>
     </form>
