@@ -83,13 +83,6 @@ def delete_project_soft(request, pk):
     return redirect("dashboard")
 
 
-def project_sync(request, pk):
-    project = get_object_or_404(Project, pk=pk, owner=request.user)
-    return render(
-        request, "components/project/_detail-layout.html", {"project": project}
-    )
-
-
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     latest_file = project.files.filter(is_latest=True).order_by("-uploaded_at")
