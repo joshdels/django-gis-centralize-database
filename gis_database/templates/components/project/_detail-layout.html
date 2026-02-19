@@ -1,12 +1,45 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    {% include "components/navbar.html" %}
-    <div class="px-10 py-2 gap-5 grid grid-cols-1 lg:grid-cols-2">
-        <div class="col-span-1 lg:col-span-1">{% include "components/project/detail.html" %}</div>
-        <div class="col-span-1 lg:col-span-1 gap-5 flex flex-col">
-            <div class="flex-1">{% include "components/dashboard/file_versions.html" %}</div>
-            <div class="flex-1">{% include "components/project/members.html" %}</div>
+
+<div class="grid grid-cols-12 min-h-screen w-full">
+
+    <aside class="col-span-2 lg:col-span-3 xl:col-span-2 bg-primary">
+        {% include 'components/sidebar/_sidebar.html' %}
+    </aside>
+
+    <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 flex flex-col gap-4 min-h-screen">
+
+        <div class="gap-4 grid grid-cols-1 lg:grid-cols-2 w-full h-full">
+            
+            <div class="flex-1">
+                {% include "components/project/detail.html" %}
+            </div>
+
+            <div class="gap-5 flex  flex-col">
+                <div class="flex-1">
+                    {% include "components/dashboard/file_versions.html" %}
+                </div>
+                <div class="flex-1">
+                    {% include "components/project/members.html" %}
+                </div>
+            </div>
+
         </div>
-    </div>
+
+    </main>
+
+</div>
+
+
+
+
+
+
+
+    
 {% endblock %}
+
+
+
+

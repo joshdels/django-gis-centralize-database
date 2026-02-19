@@ -109,3 +109,20 @@ def project_detail(request, pk):
     }
 
     return render(request, "components/project/_detail-layout.html", context)
+
+@login_required
+def project_analytics(request, pk):
+    project = get_object_or_404(Project, pk=pk, owner=request.user)
+    role = project.get_user_role(request.user)
+    member = project.membership.select_related("user").all()
+
+    can_manage = project.can_manage(request.user)
+
+    context = {
+        "project": project,
+        "role": role,
+        "members": member,
+        "can_manage": can_manage,
+    }
+
+    return render(request, "components/analytics/_analysis-layout.html", context)

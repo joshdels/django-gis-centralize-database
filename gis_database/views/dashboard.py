@@ -9,13 +9,6 @@ from ..models import Project, File, FileActivity
 from accounts.models import Profile
 
 
-sidebar_menu = [
-    {"label": "Storage", "icon": "database", "url": "/dashboard/"},
-    {"label": "Analytics", "icon": "chart-pie", "url": reverse_lazy("analytics")},
-    {"label": "Guides", "icon": "notebook-text", "url": reverse_lazy("guides")},
-]
-
-
 def get_user_storage_context(request):
     uploads = Project.objects.filter(owner=request.user, is_deleted=False).order_by(
         "-created_at"
@@ -70,7 +63,6 @@ def dashboard(request):
             "file_activities": file_activities,
             "chart_labels": chart_labels,
             "chart_data": chart_data,
-            "sidebar_menu": sidebar_menu,
         }
     )
     return render(request, "pages/dashboard.html", context)
@@ -84,7 +76,6 @@ def analytics(request):
     context.update(
         {
             "file_activities": file_activities,
-            "sidebar_menu": sidebar_menu,
         }
     )
     return render(request, "pages/analytics.html", context)

@@ -1,4 +1,4 @@
-<div class="mx-auto px-10 py-2">
+<div class="mx-auto px-3 lg:px-10 py-2">
     <div class="navbar bg-base-200 px-0 flex flex-row items-end justify-between">
         <div class="flex flex-col items-start">
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-primary leading-none">
@@ -9,44 +9,9 @@
             </p>
         </div>
         <div class="flex items-center gap-4">
-            {% if user.is_authenticated %}
-                <div class="flex items-center gap-3">
-                    <span class="hidden md:block text-sm font-black tracking-tight opacity-70">{{ user.username }}</span>
-                    <div class="dropdown dropdown-end">
-                        <div tabindex="0"
-                             role="button"
-                             class="btn btn-ghost h-10 w-10 border border-base-300 bg-base-100">
-                            <div class="w-full h-full flex items-center justify-center">
-                                <span class="font-black">{{ user.username|first|upper }}</span>
-                            </div>
-                        </div>
-                        <ul tabindex="0"
-                            class="card mt-4 p-2 menu menu-sm dropdown-content bg-base-100 w-52 z-100 shadow-sm border border-base-300">
-                            <li class="menu-title text-sm uppercase font-black">Account</li>
-                            <div class="divider my-0"></div>
-                            <li>
-                                <a href="#" class="font-black uppercase w-full text-xs py-3">Profile</a>
-                            </li>
-                            <li>
-                                <form method="post" action="{% url 'account_logout' %}">
-                                    {% csrf_token %}
-                                    <button type="submit"
-                                            class="text-error font-black uppercase w-full text-xs py-3">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            {% else %}
-                <div class="flex items-center">
-                    <a href="{% url 'account_login' %}"
-                       class="btn btn-ghost btn-sm font-black uppercase">Log In</a>
-                    <div class="h-4 bg-base-300 mx-2"></div>
-                    <a href="{% url 'account_signup' %}"
-                       class="btn btn-primary btn-sm font-black uppercase">Sign Up</a>
-                </div>
-            {% endif %}
+            <button class="btn btn-primary sm:text-lg">Contact Us</button>
         </div>
+
     </div>
 </div>
 <div class="border-b border-base-300 mb-5"></div>

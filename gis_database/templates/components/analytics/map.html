@@ -1,9 +1,9 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-sm h-full w-full p-5">
+    <div class="card bg-base-100 shadow-sm min-h-full w-full p-5">
         <h3 class="font-black text-2xl tracking-tighter uppercase mb-1">Feature Map</h3>
-        <div class="h-full w-full rounded-lg" id="map"></div>
+        <div class="flex-1 w-full rounded-lg" id="map"></div>
     </div>
 {% endblock %}
 {% block extra_js %}
@@ -65,10 +65,10 @@
                     }).addTo(map);
 
                     map.fitBounds(geoLayer.getBounds(), {
-                        padding: [-3, -3]
+                        padding: [1, 1]
                     });
 
-                    map.setMaxBounds(geoLayer.getBounds());
+                    // map.setMaxBounds(geoLayer.getBounds());
 
                 })
                 .catch(error => console.error("GeoJSON load error", error))
