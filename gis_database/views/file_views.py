@@ -75,7 +75,7 @@ def update_file(request, pk):
                     action=action,
                 )
 
-            return redirect("project-sync", pk=project.id)
+            return redirect("project-details", pk=project.id)
 
     else:
         form = ProjectForm(owner=request.user)

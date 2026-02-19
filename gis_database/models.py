@@ -81,13 +81,15 @@ class ProjectMembership(models.Model):
     ROLE_CHOICES = [("vewer", "Viewer"), ("editor", "Editor"), ("admin", "Admin")]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="membership")
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="membership"
+    )
     role = models.CharField(max_length=30, choices=ROLE_CHOICES)
     invited_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="sent_project_invites"
+        related_name="sent_project_invites",
     )
 
     joined_at = models.DateTimeField(auto_now_add=True)
@@ -144,6 +146,12 @@ class File(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
+    def get_history(self):
+        """Returns all version of this file, newest first"""
+        return File.objects.filter(project=self.project, name=self.name).order_by(
+            "-version"
+        )
+
     def __str__(self):
         return f"{self.name} v{self.version}"
 
@@ -177,5 +185,3 @@ def cleanup_backblaze_on_delete(sender, instance, **kwargs):
                 print(f"B2: Successfully deleted cloud file: {file_key}")
         except Exception as e:
             print(f"B2: Failed to delete cloud file {file_key}. Error: {e}")
-
-

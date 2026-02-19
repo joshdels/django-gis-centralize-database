@@ -1,21 +1,28 @@
 <div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[400px] lg:max-h-[400px] flex flex-col overflow-hidden">
-    <h3 class="text-lg font-black mb-2 uppercase flex-none">Files and Version</h3>
-    <div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-2">
-        <div class="card bg-base-200 p-2 flex-none">
-            <div class="flex justify-between items-center mb-1">
-                <div class="flex text-center items-center gap-5">
-                    <span class="p-2 border text-primary rounded-lg">
-                        <i data-lucide="file-text"></i>
-                    </span>
-                    <div class="flex flex-col justify-start text-left">
-                        <h4 class="text-sm font-bold text-gray-700">Project Name</h4>
-                        <span class="text-xs">date 123</span>
+    <div class="flex justify-between">
+        <h3 class="text-lg font-black mb-2 uppercase flex-none">Files and Version</h3>
+        <span class="badge badge-neutral font-black border-none h-6 px-2 text-[10px] tracking-widest uppercase justify-end">
+            {{ latest_files|length }} Item/s
+        </span>
+    </div>
+    <div class="flex-1 overflow-y-auto flex flex-col gap-2">
+        {% for file in latest_files %}
+            <div class="card bg-base-200 px-1 py-1 flex-none">
+                <div class="flex justify-between items-center mb-1">
+                    <div class="flex text-center items-center gap-5">
+                        <span class="p-2 border text-primary rounded-lg">
+                            <i data-lucide="file-text"></i>
+                        </span>
+                        <div class="flex flex-col justify-start text-left">
+                            <h4 class="text-sm font-bold text-gray-700">{{ file.name }}</h4>
+                            <span class="text-xs">{{ file.uploaded_at }}</span>
+                        </div>
                     </div>
+                    <a href="" class="btn btn-error btn-outline btn-sm">
+                        <i data-lucide="trash-2"></i>
+                    </a>
                 </div>
-                <a href="" class="btn btn-error btn-outline btn-sm">
-                    <i data-lucide="trash-2"></i>
-                </a>
             </div>
-        </div>
+        {% endfor %}
     </div>
 </div>

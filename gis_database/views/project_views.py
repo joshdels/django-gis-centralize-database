@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
-from ..models import Project, ProjectMembership
+from ..models import Project, ProjectMembership, File
 from ..forms import CreateProjectForm
 
 
@@ -92,13 +92,17 @@ def project_sync(request, pk):
 
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    role = project.get_user_role(request.user)
-    member = project.membership.select_related("user").all()
+    latest_file = project.files.filter(is_latest=True).order_by("-uploaded_at")
+    all_files = project.files.all().order_by("-version")
 
+    member = project.membership.select_related("user").all()
+    role = project.get_user_role(request.user)
     can_manage = project.can_manage(request.user)
 
     context = {
         "project": project,
+        "latest_files": latest_file,
+        "all_files": all_files,
         "role": role,
         "members": member,
         "can_manage": can_manage,
