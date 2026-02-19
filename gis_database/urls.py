@@ -18,6 +18,8 @@ urlpatterns = [
     path("project/<int:project_id>/add-member/", views.add_member, name="add_member"),
     path('project/<int:project_id>/search-users/', views.search_users, name="search_users"),
     path("project/<int:project_id>/remove-member/<int:user_id>/", views.remove_member, name="remove-member"),
+
+    path("file/delete-all/<int:pk>/", views.delete_file, name="delete-file"),
     
     path("test", views.test, name="test"),
     path("test-file/", views.test_files, name="test-file"),

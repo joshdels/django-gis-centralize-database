@@ -7,7 +7,7 @@
     </div>
     <div class="flex-1 overflow-y-auto flex flex-col gap-2">
         {% for file in latest_files %}
-            <div class="card bg-base-200 px-1 py-1 flex-none">
+            <div class="card bg-base-200 px-2 py-1 flex-none">
                 <div class="flex justify-between items-center mb-1">
                     <div class="flex text-center items-center gap-5">
                         <span class="p-2 border text-primary rounded-lg">
@@ -18,9 +18,12 @@
                             <span class="text-xs">{{ file.uploaded_at }}</span>
                         </div>
                     </div>
-                    <a href="" class="btn btn-error btn-outline btn-sm">
-                        <i data-lucide="trash-2"></i>
-                    </a>
+                    <form action="{% url 'delete-file' file.id %}" method="POST" onsubmit="return confirm('WARNING: This will delete ALL versions of this file from the database and cloud. Proceed?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-error btn-outline btn-sm">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         {% empty %}

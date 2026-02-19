@@ -157,7 +157,7 @@ class File(models.Model):
 
 
 class FileActivity(models.Model):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
     )

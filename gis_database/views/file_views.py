@@ -95,16 +95,25 @@ def delete_file(request, pk):
     """
     Delete a single file of file (hard delete)
     """
-    project_file = get_object_or_404(File, pk=pk, project__owner=request.user)
+    reference_file = get_object_or_404(File, pk=pk, project__owner=request.user)
+
+    project = reference_file.project
+    file_name = reference_file.name
     if request.method == "POST":
+        all_versions = File.objects.filter(project=project, name=file_name)
+        version_count = all_versions.count()
+
         FileActivity.objects.create(
-            file=project_file, owner=request.user, action="deleted file"
+            owner=request.user,
+            action=f"Permanently deleted all {version_count} version of: {file_name}",
         )
 
-        project_file.delete()
-        return redirect("project-detail", pk=project_file.project.pk)
+        for f in all_versions:
+            f.delete()
 
-    return render(request, "components/file/file_delete.html", {"file": project_file})
+        return redirect("project-details", pk=project.pk)
+
+    return redirect("project-details", pk=project.pk)
 
 
 def unset_latest(user, project, file_name):
