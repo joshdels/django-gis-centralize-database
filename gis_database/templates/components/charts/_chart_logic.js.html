@@ -2,7 +2,6 @@
 const labels = JSON.parse(document.getElementById('chart-labels').textContent);
 const data = JSON.parse(document.getElementById('chart-data').textContent);
 
-// Define a fixed palette of colors
 const palette = [
     '#419400',  // green
     '#E1E6D9',  // light beige
@@ -29,7 +28,7 @@ new Chart(document.getElementById('pieChart'), {
         datasets: [{
             data: data,
             backgroundColor: backgroundColors,
-            borderWidth: 0,
+            borderWidth: 2,
             hoverOffset: 10
         }]
     },

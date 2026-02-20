@@ -1,10 +1,20 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-sm h-full w-full p-5">
-        <h3 class="font-black text-2xl tracking-tighter uppercase">Chart 1</h3>
-        <div class="relative w-full h-full flex items-center justify-center">
+    <div class="card bg-base-100 shadow-sm h-full w-full p-5 flex flex-col">
+        <h3 class="font-black text-2xl tracking-tighter uppercase flex-none">Chart</h3>
+        <div class="relative flex-1 w-full min-h-[300px] flex items-center justify-center">
             <canvas id="pieChart1"></canvas>
+            <div id="chart-placeholder"
+                 class="absolute inset-0 flex flex-col items-center justify-center bg-base-100 z-10">
+                <div class="flex flex-col items-center gap-3">
+                    <span class="badge badge-outline badge-lg font-bold uppercase tracking-widest text-gray-400 p-4 h-auto text-center">
+                        Please Select an Attribute
+                        <br>
+                        to View Analysis
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

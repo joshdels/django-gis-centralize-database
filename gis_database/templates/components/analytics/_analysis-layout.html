@@ -10,12 +10,13 @@
             <div class="gap-4 grid grid-cols-1 lg:grid-cols-2 w-full h-full">
                 <div class="flex-1">{% include "components/analytics/map.html" %}</div>
                 <div class="gap-5 flex  flex-col">
-                    <div class="flex-1">{% include "components/analytics/chart3.html" %}</div>
-                    <div class="flex-1">{% include "components/analytics/file_select.html" %}</div>
+                    <div class="flex-1">{% include "components/analytics/chart1.html" %}</div>
+                    <div class="flex-1">{% include "components/analytics/data_select.html" %}</div>
                 </div>
             </div>
         </main>
     </div>
     <script src="{% static 'chart.umd.min.js' %}"></script>
-    {% include 'components/analytics/_chart_logic.js.html' %}
+    <script src="{% static 'js/spatialSelector.js' %}"></script>
+    <script src="{% static 'js/pieChart1.js' %}"></script>
 {% endblock %}

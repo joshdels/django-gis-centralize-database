@@ -15,12 +15,14 @@ def compute_hash(uploaded_file):
     return hasher.hexdigest()
 
 
+import json
+
 def serialize_spatial_data(spatial_record):
     """
     Safely serializes a spatial record into a GeoJSON FeatureCollection.
     Handles NoneType records and missing/malformed properties.
     """
-    # 1. Guard against NoneType records (Fixes your current crash)
+    # 1. Guard against NoneType records
     if not spatial_record or not hasattr(spatial_record, "geometry"):
         return {"type": "FeatureCollection", "features": []}
 
@@ -28,33 +30,44 @@ def serialize_spatial_data(spatial_record):
         # Use the .geojson property from GeoDjango/PostGIS
         geojson_geom = json.loads(spatial_record.geometry.geojson)
     except (AttributeError, ValueError, TypeError):
-        # Fallback if geometry is empty or invalid
         return {"type": "FeatureCollection", "features": []}
 
-    # Ensure properties is at least an empty dict to avoid 'NoneType' errors later
+    # 2. Safely handle properties (could be a list or a dict)
     record_properties = spatial_record.properties or {}
     features = []
 
     # Case A: Single geometry (Point, LineString, Polygon, etc.)
     if geojson_geom.get("type") != "GeometryCollection":
-        features.append(
-            {
-                "type": "Feature",
-                "geometry": geojson_geom,
-                "properties": record_properties,
-            }
-        )
+        features.append({
+            "type": "Feature",
+            "geometry": geojson_geom,
+            "properties": record_properties,
+        })
 
     # Case B: GeometryCollection
     else:
         geometries = geojson_geom.get("geometries", [])
-        prop_list = record_properties.get("features", [])
+        
+        # FIX: Check if properties is a dict or a list
+        if isinstance(record_properties, dict):
+            # If it's a dict, try to find a "features" key inside
+            prop_list = record_properties.get("features", [])
+        else:
+            # If it's already a list, use it directly
+            prop_list = record_properties
 
         for i, geom in enumerate(geometries):
             props = {}
+            # Match the geometry to its corresponding property index
             if isinstance(prop_list, list) and i < len(prop_list):
                 props = prop_list[i]
+            elif isinstance(prop_list, dict):
+                props = prop_list # Fallback if there's only one dict for many geoms
 
-            features.append({"type": "Feature", "geometry": geom, "properties": props})
+            features.append({
+                "type": "Feature", 
+                "geometry": geom, 
+                "properties": props
+            })
 
     return {"type": "FeatureCollection", "features": features}

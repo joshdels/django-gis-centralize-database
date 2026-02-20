@@ -6,9 +6,9 @@
                 <div class="flex justify-between items-center mb-1">
                     <h4 class="text-xs font-bold text-gray-700">
                         {% if activity.file.project.name %}
-                            {{activity.file.project.name}}
+                            {{ activity.file.project.name }}
                         {% else %}
-                            {{activity.project_name_snapshot}}
+                            {{ activity.project_name_snapshot }}
                         {% endif %}
                     </h4>
                     <span class="text-gray-400">{{ activity.created_at|date:'M d, H:i' }}</span>

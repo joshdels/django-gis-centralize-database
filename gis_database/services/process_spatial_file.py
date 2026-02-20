@@ -44,6 +44,6 @@ def process_spatial_file(file_instance):
             project=file_instance.project,
             source_file=file_instance,
             geometry=collection,
-            properties={"features": all_properties},
+            properties=all_properties,
         )
         print(f"Successfully ingested collection for {file_instance.name}")
