@@ -10,8 +10,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models as geomodels
 
-from .utils import create_project_file
-
 
 def file_upload_path(instance, filename):
     base_name, ext = os.path.splitext(filename)

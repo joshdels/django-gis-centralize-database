@@ -9,59 +9,41 @@
     
 {% endblock %}
 {% block extra_js %}
-    <script>
-        // This is the dynamic data from your SpatialData model
-        const spatialData = {{ geojson_data|safe }} || null;
-        console.log(spatialData)
+<script>
+    const spatialData = {{ geojson_data|safe }} || { type: "FeatureCollection", features: [] };
 
-        document.addEventListener("DOMContentLoaded", function () {
-            var map = L.map("map", {
-                attributionControl: false,
-                minZoom: 2
-            }).setView([0, 0], 2);
+    document.addEventListener("DOMContentLoaded", function () {
+        const map = L.map("map").setView([0, 0], 2);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+        if (spatialData.features && spatialData.features.length > 0) {
+            const geoLayer = L.geoJSON(spatialData, {
+                style: { color: "#1f2937", weight: 1, fillColor: '#60a5fa', fillOpacity: 0.5 },
+                onEachFeature: function(feature, layer) {
+                    let popupHtml = '';
+                    const props = feature.properties || {};
 
-            // 2. Check if we actually have data from the selector
-            if (spatialData) {
-                var geoLayer = L.geoJSON(spatialData, {
-                    style: function(feature) {
-                        return {
-                            color: "#1f2937",
-                            weight: 1,
-                            fillColor: '#60a5fa',
-                            fillOpacity: 0.5
-                        };
-                    },
-                    onEachFeature: function(feature, layer) {
-                        let popupContent = "Spatial Feature";
-                        
-                        // If you stored all properties in your pipeline:
-                        if (feature.properties && feature.properties.features) {
-                             popupContent = `${feature.properties.features.NAME}`;
+                    if (Object.keys(props).length > 0) {
+                        for (let [key, val] of Object.entries(props)) {
+                            let label = key.replace(/_/g, ' ').toLowerCase();
+                            label = label.charAt(0).toUpperCase() + label.slice(1);
+                            
+                            popupHtml += `<strong>${label}:</strong> ${val}<br>`;
                         }
-
-                        layer.bindPopup(popupContent);
-
-                        layer.on({
-                            mouseover: function(e) {
-                                layer.setStyle({ weight: 3, fillOpacity: 0.8 });
-                            },
-                            mouseout: function(e) {
-                                geoLayer.resetStyle(layer);
-                            }
-                        });
+                    } else {
+                        popupHtml += "No attributes found.";
                     }
-                }).addTo(map);
+                    
+                    popupHtml += '</div>';
+                    layer.bindPopup(popupHtml);
 
-                // 3. Automatically zoom to your uploaded file
-                map.fitBounds(geoLayer.getBounds(), { padding: [5, 5] });
+                    layer.on('mouseover', () => layer.setStyle({ weight: 3, fillOpacity: 0.8 }));
+                    layer.on('mouseout', () => geoLayer.resetStyle(layer));
+                }
+            }).addTo(map);
 
-            } else {
-                console.log("No spatial data loaded for this selection.");
-            }
-
-            L.control.scale().addTo(map);
-        });
-    </script>
+            map.fitBounds(geoLayer.getBounds(), { padding: [20, 20] });
+        }
+    });
+</script>
 {% endblock %}

@@ -15,7 +15,6 @@ def compute_hash(uploaded_file):
     return hasher.hexdigest()
 
 
-# Accessory might removed this once the local qgis file creation is okay
 def create_empty_qgz(project_name):
     """Return a BytesIO object of a valid empty QGIS project as .qgz"""
     qgs_content = f"""<qgis projectname="{project_name}" version="3.40"><title>{project_name}</title></qgis>"""
@@ -57,16 +56,45 @@ def create_project_file(project, owner=None):
 
 
 def serialize_spatial_data(spatial_record):
-    if not spatial_record:
-        return None
-    return {
-        "type": "Feature",
-        "id": spatial_record.id,
-        "geometry": json.loads(spatial_record.geometry.geojson),
-        "properties": spatial_record.properties,
-        "metadata": {
-            "file_id": spatial_record.source_file.id,
-            "filename": spatial_record.source_file.name,
-            "created_at": spatial_record.created_at.isoformat(),
-        }
-    }
+    """
+    Safely serializes a spatial record into a GeoJSON FeatureCollection.
+    Handles NoneType records and missing/malformed properties.
+    """
+    # 1. Guard against NoneType records (Fixes your current crash)
+    if not spatial_record or not hasattr(spatial_record, "geometry"):
+        return {"type": "FeatureCollection", "features": []}
+
+    try:
+        # Use the .geojson property from GeoDjango/PostGIS
+        geojson_geom = json.loads(spatial_record.geometry.geojson)
+    except (AttributeError, ValueError, TypeError):
+        # Fallback if geometry is empty or invalid
+        return {"type": "FeatureCollection", "features": []}
+
+    # Ensure properties is at least an empty dict to avoid 'NoneType' errors later
+    record_properties = spatial_record.properties or {}
+    features = []
+
+    # Case A: Single geometry (Point, LineString, Polygon, etc.)
+    if geojson_geom.get("type") != "GeometryCollection":
+        features.append(
+            {
+                "type": "Feature",
+                "geometry": geojson_geom,
+                "properties": record_properties,
+            }
+        )
+
+    # Case B: GeometryCollection
+    else:
+        geometries = geojson_geom.get("geometries", [])
+        prop_list = record_properties.get("features", [])
+
+        for i, geom in enumerate(geometries):
+            props = {}
+            if isinstance(prop_list, list) and i < len(prop_list):
+                props = prop_list[i]
+
+            features.append({"type": "Feature", "geometry": geom, "properties": props})
+
+    return {"type": "FeatureCollection", "features": features}
