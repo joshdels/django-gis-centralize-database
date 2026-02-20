@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, File, FileActivity
+from .models import Project, File, FileActivity, GeoFeature
 
 
 # Inline for Files under a Project
@@ -7,7 +7,15 @@ class FileInline(admin.TabularInline):
     model = File
     extra = 0
     readonly_fields = ("version", "hash", "is_latest", "created_at")
-    fields = ("name", "file_folder", "file", "version", "hash", "is_latest", "created_at")
+    fields = (
+        "name",
+        "file_folder",
+        "file",
+        "version",
+        "hash",
+        "is_latest",
+        "created_at",
+    )
 
 
 @admin.register(Project)
@@ -30,3 +38,9 @@ class FileActivityAdmin(admin.ModelAdmin):
     list_display = ("file", "owner", "action", "created_at")
     search_fields = ("file__name", "owner__username", "action")
     list_filter = ("action", "created_at")
+
+
+@admin.register(GeoFeature)
+class GeoFeatureAdmin(admin.ModelAdmin):
+    list_display = ("id", "project", "source_file", "created_at")
+    list_filter = ("project", "source_file")

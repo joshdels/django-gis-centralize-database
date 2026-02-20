@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.gis.db import models as geomodels
 
 from .utils import create_project_file
 
@@ -78,7 +79,7 @@ class Project(models.Model):
 
 
 class ProjectMembership(models.Model):
-    ROLE_CHOICES = [("vewer", "Viewer"), ("editor", "Editor"), ("admin", "Admin")]
+    ROLE_CHOICES = [("viewer", "Viewer"), ("editor", "Editor"), ("admin", "Admin")]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
     project = models.ForeignKey(
@@ -173,6 +174,21 @@ class FileActivity(models.Model):
         ordering = ["-created_at"]
         indexes = [models.Index(fields=["action", "created_at"])]
 
+
+class GeoFeature(geomodels.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    source_file = models.ForeignKey(File, on_delete=models.CASCADE, null=True, blank=True)
+    
+    geometry = geomodels.GeometryField(srid=4326)
+    properties = models.JSONField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            geomodels.Index(fields=["geometry"]),
+        ]
+    
 
 @receiver(post_delete, sender=File)
 def cleanup_backblaze_on_delete(sender, instance, **kwargs):
