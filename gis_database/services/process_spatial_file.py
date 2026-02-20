@@ -1,10 +1,9 @@
 import os
-import geopandas as gpd
-from django.contrib.gis.geos import GEOSGeometry
-from ..models import GeoFeature
-import numpy as np
 import json
-
+import numpy as np
+import geopandas as gpd
+from django.contrib.gis.geos import GEOSGeometry, GeometryCollection
+from ..models import SpatialData
 
 def process_spatial_file(file_instance):
     valid_extensions = [".geojson", ".gpkg", ".kml"]
@@ -14,31 +13,37 @@ def process_spatial_file(file_instance):
         print(f"Skipping non-spatial file: {file_instance.name}")
         return
 
+    # Use 'with' to ensure the file is closed after reading
     with file_instance.file.open(mode="rb") as f:
         gdf = gpd.read_file(f)
 
+    # Convert NaNs to None to avoid JSON errors later
     gdf = gdf.replace({np.nan: None})
 
+    # Ensure CRS is WGS84
     current_epsg = gdf.crs.to_epsg() if gdf.crs else None
     if current_epsg != 4326:
         gdf = gdf.to_crs(epsg=4326)
 
-    features = []
+    geoms = []
+    all_properties = []
+
     for _, row in gdf.iterrows():
-        django_geom = GEOSGeometry(row.geometry.wkt, srid=4326)
+        # row.geometry.wkb is bytes; .hex() converts it to a clean string
+        if row.geometry:
+            django_geom = GEOSGeometry(row.geometry.wkb.hex(), srid=4326)
+            geoms.append(django_geom)
 
-        properties = row.drop("geometry").to_dict()
-        properties_json = json.loads(json.dumps(properties, default=str))
+            prop = row.drop("geometry").to_dict()
+            all_properties.append(json.loads(json.dumps(prop, default=str)))
 
-        features.append(
-            GeoFeature(
-                project=file_instance.project,
-                source_file=file_instance,
-                geometry=django_geom,
-                properties=properties_json,
-            )
+    if geoms:
+        collection = GeometryCollection(geoms, srid=4326)
+
+        SpatialData.objects.create(
+            project=file_instance.project,
+            source_file=file_instance,
+            geometry=collection,
+            properties={"features": all_properties},
         )
-
-    if features:
-        GeoFeature.objects.bulk_create(features)
-        print(f"Successfully ingested {len(features)} features.")
+        print(f"Successfully ingested collection for {file_instance.name}")

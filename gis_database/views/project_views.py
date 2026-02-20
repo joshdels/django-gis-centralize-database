@@ -1,14 +1,17 @@
 import os
 import zipfile
+import json
 from io import BytesIO
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.core.serializers import serialize
 
-from ..models import Project, ProjectMembership, FileActivity
+from ..models import Project, ProjectMembership, File, FileActivity, SpatialData
 from ..forms import CreateProjectForm
+from ..utils import serialize_spatial_data
 
 
 @transaction.atomic
@@ -130,11 +133,27 @@ def project_analytics(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     role = project.get_user_role(request.user)
     member = project.membership.select_related("user").all()
-
     can_manage = project.can_manage(request.user)
+
+    spatial_files = File.objects.filter(project=project, spatialdata__isnull=False)
+
+    selected_file_id = request.GET.get("file_id")
+    if selected_file_id:
+        selected_record = SpatialData.objects.filter(
+            project=project, source_file_id=selected_file_id
+        ).first()
+    else:
+        selected_record = (
+            SpatialData.objects.filter(project=project).order_by("-created_at").first()
+        )
+
+    geojson_output = serialize_spatial_data(selected_record)
 
     context = {
         "project": project,
+        "spatial_files": spatial_files,
+        "selected_file_id": int(selected_file_id) if selected_file_id else None,
+        "geojson_data": json.dumps(geojson_output),
         "role": role,
         "members": member,
         "can_manage": can_manage,

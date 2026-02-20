@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[400px] lg:max-h-[400px] flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h3 class="text-xl font-black uppercase flex-none">Show Data</h3>
+        
+        <span class="badge badge-neutral font-black border-none h-6 px-2 text-[10px] tracking-widest uppercase">
+            {{ spatial_files|length }} Layer/s
+        </span>
+    </div>
+
+    <!-- Body -->
+    <div class="flex-1 overflow-y-auto flex flex-col gap-3 mt-3">
+
+        <!-- Layer Switcher -->
+        <div class="card bg-base-200 px-3 py-3 flex-none">
+
+            <label class="block text-xs font-bold uppercase text-gray-500 mb-2 tracking-wider">
+                Switch Spatial Layer
+            </label>
+
+            <select onchange="location.href='?file_id=' + this.value"
+                    class="select select-bordered w-full bg-base-100">
+
+                {% for file in spatial_files %}
+                    <option value="{{ file.id }}"
+                        {% if file.id == selected_file_id %}selected{% endif %}>
+                        {{ file.name }} (v{{ file.version }})
+                    </option>
+                {% empty %}
+                    <option disabled selected>No spatial data available</option>
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

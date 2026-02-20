@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, File, FileActivity, GeoFeature
+from .models import Project, File, FileActivity, SpatialData
 
 
 # Inline for Files under a Project
@@ -40,7 +40,17 @@ class FileActivityAdmin(admin.ModelAdmin):
     list_filter = ("action", "created_at")
 
 
-@admin.register(GeoFeature)
-class GeoFeatureAdmin(admin.ModelAdmin):
+@admin.register(SpatialData)
+class SpatialDataAdmin(admin.ModelAdmin):
     list_display = ("id", "project", "source_file", "created_at")
     list_filter = ("project", "source_file")
+
+    gis_widget_kwargs = {
+        'attrs': {
+            'default_zoom': 4,
+            'default_lon': 121.0,
+            'default_lat': 12.0,
+            'map_width': 800,
+            'map_height': 500,
+        }
+    }

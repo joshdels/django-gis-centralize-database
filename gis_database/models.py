@@ -158,7 +158,9 @@ class File(models.Model):
 
 
 class FileActivity(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey(
+        Project, on_delete=models.SET_NULL, null=True, blank=True
+    )
     project_name_snapshot = models.CharField(max_length=255, null=True, blank=True)
 
     file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)
@@ -167,7 +169,7 @@ class FileActivity(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
     )
-    action = models.CharField(max_length=50)
+    action = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -175,12 +177,14 @@ class FileActivity(models.Model):
         indexes = [models.Index(fields=["action", "created_at"])]
 
 
-class GeoFeature(geomodels.Model):
+class SpatialData(geomodels.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    source_file = models.ForeignKey(File, on_delete=models.CASCADE, null=True, blank=True)
-    
-    geometry = geomodels.GeometryField(srid=4326)
-    properties = models.JSONField()
+    source_file = models.ForeignKey(
+        File, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    geometry = geomodels.GeometryCollectionField(srid=4326)
+    properties = models.JSONField(default=dict)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -188,7 +192,10 @@ class GeoFeature(geomodels.Model):
         indexes = [
             geomodels.Index(fields=["geometry"]),
         ]
-    
+
+    def __str__(self):
+        return f"Spatial Data for {self.source_file.name}"
+
 
 @receiver(post_delete, sender=File)
 def cleanup_backblaze_on_delete(sender, instance, **kwargs):

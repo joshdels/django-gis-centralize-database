@@ -1,5 +1,6 @@
 import hashlib
 import io
+import json
 import zipfile
 
 from django.core.files.base import ContentFile
@@ -53,3 +54,19 @@ def create_project_file(project, owner=None):
     file_obj.hash = compute_hash(file_obj.file)
     file_obj.save()
     return file_obj
+
+
+def serialize_spatial_data(spatial_record):
+    if not spatial_record:
+        return None
+    return {
+        "type": "Feature",
+        "id": spatial_record.id,
+        "geometry": json.loads(spatial_record.geometry.geojson),
+        "properties": spatial_record.properties,
+        "metadata": {
+            "file_id": spatial_record.source_file.id,
+            "filename": spatial_record.source_file.name,
+            "created_at": spatial_record.created_at.isoformat(),
+        }
+    }

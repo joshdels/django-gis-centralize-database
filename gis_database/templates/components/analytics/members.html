@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block content %}
+    <div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[400px] lg:max-h-[400px] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="font-black text-lg tracking-tight uppercase">Teams</h3>
+                <p class="text-xs opacity-60 mt-1">Manage project members and roles</p>
+            </div>
+            {% if can_manage %}
+                <div class="flex items-center gap-2">
+                    <button onclick="shareProject()"
+                            class="btn btn-outline flex items-center gap-2">
+                        <i data-lucide="share-2" class="w-5 h-5 lg:w-6 lg:h-6"></i>
+                        <span class="hidden sm:block ">Share</span>
+                        <button onclick="addMemberModal.showModal()"
+                                class="btn btn-primary flex items-center gap-2">
+                            <i data-lucide="user-plus" class="w-5 h-5 lg:w-6 lg:h-6"></i>
+                            <span class="hidden sm:block">Add Member</span>
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table table-xs w-full border border-base-300">
+                    <thead class="bg-base-200 text-[11px] uppercase tracking-wide">
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th class="table-cell">Role</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-[12px]">
+                        {% if members %}
+                            {% for member in members %}
+                                <tr class="hover:bg-base-200 transition-all">
+                                    <th class="text-center">{{ forloop.counter }}</th>
+                                    <td>
+                                        <div class="avatar">
+                                            <img class="h-10 w-10 rounded-full"
+                                                 src="{{ member.user.profile.avatar_url|default:'https://img.daisyui.com/images/profile/demo/1@94.webp' }}"
+                                                 alt="{{ member.user.username }}" />
+                                        </div>
+                                    </td>
+                                    <td class="font-semibold whitespace-nowrap">{{ member.user.get_full_name|default:member.user.username }}</td>
+                                    <td>
+                                        <span class="badge badge-outline badge-sm">{{ member.role|title }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if can_manage %}
+                                            <form method="POST"
+                                                  action="{% url 'remove-member' project.id member.user.id %}"
+                                                  class="inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-error btn-outline btn-square btn-sm">
+                                                    <i data-lucide="circle-minus" class="w-5 h-5 lg:w-6 lg:h-6"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center opacity-50 py-4">
+                                    No members yet.
+                                    {% if can_manage %}Add one using the button above.{% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% include "components/project/add-member-modal.html" %}
+    {% endblock %}
