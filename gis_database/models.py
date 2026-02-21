@@ -111,6 +111,8 @@ class File(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
     )
 
+    size = models.BigIntegerField(default=0)
+
     project = models.ForeignKey(Project, related_name="files", on_delete=models.CASCADE)
     hash = models.CharField(max_length=64, db_index=True)
     version = models.PositiveIntegerField()
@@ -142,6 +144,8 @@ class File(models.Model):
                 raise ValidationError("User storage quota exceeded")
 
     def save(self, *args, **kwargs):
+        if self.file:
+            self.size = self.file.size
         self.full_clean()
         super().save(*args, **kwargs)
 
