@@ -1,17 +1,18 @@
 <dialog id="addMemberModal" class="modal">
     <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">Add Member</h3>
-        <!-- Search Input -->
         <div class="relative">
             <input type="text"
-                   id="user-search"
+                   name="q"
                    placeholder="Search username or email..."
-                   class="input input-bordered w-full">
+                   class="input input-bordered w-full"
+                   hx-get="{% url 'search_users' project.id %}"
+                   hx-trigger="keyup changed delay:400ms"
+                   hx-target="#search-results"
+                   hx-swap="innerHTML">
             <div id="search-results"
-                 class="absolute bg-base-100 shadow-lg rounded-lg w-full mt-1 hidden max-h-60 overflow-y-auto z-50">
-            </div>
+                 class="absolute bg-base-100 shadow-lg rounded-lg w-full mt-1 overflow-y-auto z-50"></div>
         </div>
-        <!-- Hidden Form -->
         <form method="POST"
               action="{% url 'add_member' project.id %}"
               id="add-member-form">
@@ -25,3 +26,12 @@
         </div>
     </div>
 </dialog>
+
+
+
+<script>
+function selectUser(username) {
+    document.getElementById("selected-username").value = username;
+    document.getElementById("add-member-form").submit();
+}
+</script>

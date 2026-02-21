@@ -31,19 +31,17 @@ def add_member(request, project_id):
         "can_manage": True,
     }
 
-    # what is this??? 
     if request.headers.get("HX-Request"):
         return render(request, "components/project/members/html", context)
 
 
-    return redirect("project-detail", pk=project.id)
+    return redirect("project-details", pk=project.id)
 
 
 @require_POST
 def remove_member(request, project_id, user_id):
     project = get_object_or_404(Project, pk=project_id)
 
-    # Permission check (recommended: use your can_manage method)
     if not project.can_manage(request.user):
         messages.error(request, "You do not have permission to remove members.")
         return redirect("project-detail", pk=project.id)
@@ -63,7 +61,7 @@ def remove_member(request, project_id, user_id):
         membership.delete()
         messages.success(request, "Member removed successfully.")
 
-    return redirect("project-detail", pk=project.id)
+    return redirect("project-details", pk=project.id)
 
 
 User = get_user_model()
@@ -79,8 +77,8 @@ def search_users(request, project_id):
     ).values_list("user_id", flat=True)
 
     users = (
-        User.objects.fiter(Q(username__icontains=query) | Q(email__icontains=query))
-        .exclued(id__in=existing_member_ids)
+        User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query))
+        .exclude(id__in=existing_member_ids)
         .exclude(id=request.user.id)[:10]
     )
 

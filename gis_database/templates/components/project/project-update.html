@@ -69,7 +69,6 @@
 
             if (fileInput) {
                 fileInput.addEventListener("change", function() {
-            // Remove any error messages inside the file input container
                     const errorMessages = fileInput.parentElement.querySelectorAll('.text-error');
                     errorMessages.forEach(msg => msg.remove());
                 });

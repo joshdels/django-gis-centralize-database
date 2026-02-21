@@ -9,11 +9,11 @@ urlpatterns = [
     
     path("upload/", views.upload_project, name="upload-project"),
     path("create/", views.create_project, name="create-project"),
-    path("project/<int:pk>/details", views.project_detail, name="project-details"),
-    path("project/<int:pk>/analytics", views.project_analytics, name="project-analytics"),
-    path("project/<int:pk>/delete", views.delete_project, name="project-delete"),
-    path("project/<int:pk>/download", views.download_project, name="download-file"),
-    path("project/<int:pk>/update", views.update_file, name="update-file"),
+    path("project/<int:pk>/details/", views.project_detail, name="project-details"),
+    path("project/<int:pk>/analytics/", views.project_analytics, name="project-analytics"),
+    path("project/<int:pk>/delete/", views.delete_project, name="project-delete"),
+    path("project/<int:pk>/download/", views.download_project, name="download-file"),
+    path("project/<int:pk>/update/", views.update_file, name="update-file"),
     
     path("project/<int:project_id>/add-member/", views.add_member, name="add_member"),
     path('project/<int:project_id>/search-users/', views.search_users, name="search_users"),
@@ -21,7 +21,7 @@ urlpatterns = [
 
     path("file/delete-all/<int:pk>/", views.delete_file, name="delete-file"),
     
-    path("test", views.test, name="test"),
+    path("test/", views.test, name="test"),
     path("test-file/", views.test_files, name="test-file"),
-    path("guides/qgis", views.guides_qgis, name="qgis")
+    path("guides/qgis/", views.guides_qgis, name="qgis")
 ]

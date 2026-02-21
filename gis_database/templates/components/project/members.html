@@ -1,8 +1,8 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[400px] lg:max-h-[400px] flex flex-col overflow-hidden">
-        <div class="flex items-center justify-between mb-4">
+    <div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[390px] lg:max-h-[390px] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
             <div>
                 <h3 class="font-black text-lg tracking-tight uppercase">Teams</h3>
                 <p class="text-xs opacity-60 mt-1">Manage project members and roles</p>
@@ -10,13 +10,13 @@
             {% if can_manage %}
                 <div class="flex items-center gap-2">
                     <button onclick="shareProject()"
-                            class="btn btn-outline flex items-center gap-2">
+                            class="btn btn-sm p-4 btn-outline flex items-center gap-2">
                         <i data-lucide="share-2" class="w-5 h-5 lg:w-6 lg:h-6"></i>
                         <span class="hidden sm:block ">Share</span>
                         <button onclick="addMemberModal.showModal()"
-                                class="btn btn-primary flex items-center gap-2">
+                                class="btn btn-sm p-4 btn-primary flex items-center gap-2">
                             <i data-lucide="user-plus" class="w-5 h-5 lg:w-6 lg:h-6"></i>
-                            <span class="hidden sm:block">Add Member</span>
+                            <span class="hidden sm:block">Add</span>
                         </button>
                     </div>
                 {% endif %}

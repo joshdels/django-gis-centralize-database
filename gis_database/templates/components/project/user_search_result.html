@@ -1,0 +1,9 @@
+{% for user in users %}
+    <div class="p-2 hover:bg-base-200 cursor-pointer text-sm"
+         onclick="selectUser('{{ user.username }}')">
+        <div class="font-semibold">{{ user.username }}</div>
+        <div class="text-xs opacity-60">{{ user.email }}</div>
+    </div>
+{% empty %}
+    <div class="p-2 text-sm opacity-50">No users found.</div>
+{% endfor %}
