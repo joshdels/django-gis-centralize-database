@@ -113,7 +113,7 @@ def project_detail(request, pk):
     latest_file = project.files.filter(is_latest=True).order_by("-uploaded_at")
     all_files = project.files.all().order_by("-version")
 
-    member = project.membership.select_related("user").all()
+    member = project.membership.select_related("user").exclude(user=project.owner)
     role = project.get_user_role(request.user)
     can_manage = project.can_manage(request.user)
 
@@ -131,9 +131,6 @@ def project_detail(request, pk):
 
 def project_analytics(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
-    role = project.get_user_role(request.user)
-    member = project.membership.select_related("user").all()
-    can_manage = project.can_manage(request.user)
 
     spatial_files = File.objects.filter(project=project, spatialdata__isnull=False)
 
@@ -154,9 +151,6 @@ def project_analytics(request, pk):
         "spatial_files": spatial_files,
         "selected_file_id": int(selected_file_id) if selected_file_id else None,
         "geojson_data": json.dumps(geojson_output),
-        "role": role,
-        "members": member,
-        "can_manage": can_manage,
     }
 
     return render(request, "components/analytics/_analysis-layout.html", context)

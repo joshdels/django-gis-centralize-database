@@ -1,57 +1,54 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-    <div class="card bg-base-100 shadow-sm h-full w-full p-4">
-        <h3 class="font-black text-lg tracking-tight uppercase mb-3">Teams</h3>
+    <div class="card bg-base-100 shadow-sm p-5 w-full h-full max-h-[390px] lg:max-h-[390px] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="font-black text-lg uppercase">Members</h3>
+            <div class="badge badge-neutral font-black border-none h-8 px-4 text-[10px] tracking-widest uppercase">
+                {{ members|length }} member/s
+            </div>
+        </div>
         <div class="overflow-x-auto">
-            <table class="table table-xs w-full">
+            <table class="table table-xs w-full border border-base-300">
                 <thead class="bg-base-200 text-[11px] uppercase tracking-wide">
                     <tr>
-                        <th>#</th>
-                        <th>Avatar</th>
+                        <th class="text-center">#</th>
+                        <th>Profile</th>
                         <th>Name</th>
-                        <th class="hidden sm:table-cell">Role</th>
-                        <th class="hidden md:table-cell">Project</th>
-                        <th>Action</th>
+                        <th class="table-cell">Role</th>
+                        <th class="table-cell">Projects</th>
                     </tr>
                 </thead>
                 <tbody class="text-[12px]">
-                    <!-- Team 1 -->
-                    <tr class="hover:bg-base-200 transition">
-                        <th>1</th>
-                        <td>
-                            <div class="avatar">
-                                <img class="h-10 w-10 rounded-full"
-                                     src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
-                            </div>
-                        </td>
-                        <td class="font-semibold whitespace-nowrap">Jeanne</td>
-                        <td class="hidden sm:table-cell opacity-70">Developer</td>
-                        <td class="hidden md:table-cell opacity-70">Marinduque</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">
-                                <i data-lucide="user-search" class="w-6 h-6 lg:w-8 lg:h-8"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <!-- Team 2 -->
-                    <tr class="hover:bg-base-200 transition">
-                        <th>2</th>
-                        <td>
-                            <div class="avatar">
-                                <img class="h-10 w-10 rounded-full"
-                                     src="https://img.daisyui.com/images/profile/demo/2@94.webp" />
-                            </div>
-                        </td>
-                        <td class="font-semibold whitespace-nowrap">Joshua De Leon</td>
-                        <td class="hidden sm:table-cell opacity-70">GIS Developer</td>
-                        <td class="hidden md:table-cell opacity-70">Samal</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">
-                                <i data-lucide="user-search" class="w-6 h-6 lg:w-8 lg:h-8"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    {% if members %}
+                        {% for member in members %}
+                            <tr class="hover:bg-base-200 transition-all">
+                                <th class="text-center">{{ forloop.counter }}</th>
+                                <td>
+                                    <div class="avatar">
+                                        <img class="h-10 w-10 rounded-full"
+                                             src="{{ member.user.profile.avatar_url|default:'https://img.daisyui.com/images/profile/demo/1@94.webp' }}"
+                                             alt="{{ member.user.username }}" />
+                                    </div>
+                                </td>
+                                <td class="font-semibold whitespace-nowrap">{{ member.user.get_full_name|default:member.user.username }}</td>
+                                <td>
+                                    <span class="badge badge-outline badge-sm">{{ member.role|title }}</span>
+                                </td>
+                                <td>
+                                    {% for proj in member.all_projects %}
+                                        <span class="badge badge-sm mr-1">{{ proj.name }}</span>
+                                    {% empty %}
+                                        <span class="opacity-50">No projects</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center opacity-50 py-4">No members yet.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

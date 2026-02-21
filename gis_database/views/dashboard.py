@@ -1,4 +1,6 @@
-from django.shortcuts import render
+import json
+
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -7,6 +9,7 @@ from django.core.paginator import Paginator
 
 from ..models import Project, File, FileActivity
 from accounts.models import Profile
+from ..models import ProjectMembership
 
 
 def get_user_storage_context(request):
@@ -68,13 +71,37 @@ def dashboard(request):
 
 
 def analytics(request):
-    projects = Project.objects.filter(owner=request.user, is_deleted=False)
+    projects = Project.objects.filter(is_deleted=False).prefetch_related(
+        "membership__user"
+    )
 
     context = get_user_storage_context(request)
-    file_activities = FileActivity.objects.filter(owner=request.user)
+
+    members_dict = {}
+
+    for project in projects:
+        members = project.membership.select_related("user").exclude(user=project.owner)
+        for m in members:
+            if m.user.id not in members_dict:
+
+                m.all_projects = [
+                    up.project
+                    for up in ProjectMembership.objects.filter(
+                        user=m.user
+                    ).select_related("project")
+                    if not up.project.is_deleted
+                ]
+                m.current_projects = [project]
+                members_dict[m.user.id] = m
+            else:
+                members_dict[m.user.id].current_projects.append(project)
+
+        members_list = list(members_dict.values())
+
     context.update(
         {
-            "file_activities": file_activities,
+            "members": members_list,
         }
     )
+
     return render(request, "pages/analytics.html", context)

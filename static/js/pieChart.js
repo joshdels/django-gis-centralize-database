@@ -1,7 +1,7 @@
 let pieChart1Instance = null;
 
 function renderPieChart(selectedKey, data) {
-  const canvas = document.getElementById("pieChart1");
+  const canvas = document.getElementById("pieChart");
   const placeholder = document.getElementById("chart-placeholder");
 
   if (!canvas) return;
