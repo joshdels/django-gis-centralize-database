@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
 
+app_name = "gis_database"
+
 urlpatterns = [
-    path("", views.home, name="home"),
+    path('', views.home, name="home"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("guides/", views.guides, name="guides"),
     path("analytics/", views.analytics, name="analytics"),

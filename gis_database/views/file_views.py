@@ -35,7 +35,7 @@ def update_file(request, pk):
                     unset_latest(request.user, project, existing_file_with_hash.name)
                     existing_file_with_hash.is_latest = True
                     existing_file_with_hash.save(update_fields=["is_latest"])
-                    return redirect("project-detail", pk=project.id)
+                    return redirect("gis_database:project-detail", pk=project.id)
 
                 # Case 2: Same name, different hash -> version increment
                 latest_file_same_name = (
@@ -74,7 +74,7 @@ def update_file(request, pk):
                     action="new file version created",
                 )
 
-            return redirect("project-details", pk=project.id)
+            return redirect("gis_database:project-details", pk=project.id)
 
     else:
         form = ProjectForm(owner=request.user)
@@ -111,9 +111,9 @@ def delete_file(request, pk):
         for f in all_versions:
             f.delete()
 
-        return redirect("project-details", pk=project.pk)
+        return redirect("gis_database:project-details", pk=project.pk)
 
-    return redirect("project-details", pk=project.pk)
+    return redirect("gis_database:project-details", pk=project.pk)
 
 
 def unset_latest(user, project, file_name):
@@ -169,7 +169,7 @@ def upload_project(request):
                     action="new file uploaded",
                 )
 
-                return redirect("dashboard")
+                return redirect("gis_database:dashboard")
     else:
         form = ProjectForm(owner=request.user)
 

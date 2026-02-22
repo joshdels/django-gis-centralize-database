@@ -18,7 +18,7 @@
                     <p class="font-semibold text-error">Delete Project</p>
                     <p class="text-xs opacity-70">Permanently remove this project and all associated files.</p>
                 </div>
-                <a href="{% url 'project-delete' project.pk %}"
+                <a href="{% url 'gis_database:project-delete' project.pk %}"
                    class="btn btn-error btn-outline btn-square">
                     <i data-lucide="trash-2" class="w-6 h-6"></i>
                 </a>

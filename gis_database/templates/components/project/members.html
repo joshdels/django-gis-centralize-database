@@ -51,7 +51,7 @@
                                     <td class="text-center">
                                         {% if can_manage %}
                                             <form method="POST"
-                                                  action="{% url 'remove-member' project.id member.user.id %}"
+                                                  action="{% url 'gis_database:remove-member' project.id member.user.id %}"
                                                   class="inline">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-error btn-outline btn-square btn-sm">
