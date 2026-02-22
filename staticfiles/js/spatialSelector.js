@@ -28,8 +28,7 @@ function initializeSpatialSelector() {
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
-    keySelector.innerHTML =
-      "<option disabled selected>Pick an attribute</option>";
+    keySelector.innerHTML = "<option disabled>Pick an attribute</option>";
 
     keys.forEach((key) => {
       const opt = document.createElement("option");
@@ -38,14 +37,25 @@ function initializeSpatialSelector() {
       keySelector.appendChild(opt);
     });
 
+    const savedKey = localStorage.getItem("selectedAttribute");
+    if (savedKey && keys.includes(savedKey)) {
+      keySelector.value = savedKey;
+
+      keySelector.dispatchEvent(new Event("change"));
+    }
+
     keySelector.addEventListener("change", (e) => {
       const selectedKey = e.target.value;
+
+      localStorage.setItem("selectedAttribute", selectedKey);
+
       const event = new CustomEvent("attributeSelected", {
         detail: {
           selectedKey: selectedKey,
           data: propertyList,
         },
       });
+
       document.dispatchEvent(event);
     });
   } catch (e) {

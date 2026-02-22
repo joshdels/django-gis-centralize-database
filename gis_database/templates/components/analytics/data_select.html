@@ -11,14 +11,17 @@
         <div class="mt-5">
             <div class="card bg-base-200 px-3 py-3 flex-none">
                 <label class="block text-xs font-bold uppercase text-gray-500 mb-2 tracking-wider">Select Spatial Layer</label>
-                <select onchange="location.href='?file_id=' + this.value"
-                        class="select select-bordered w-full bg-base-100">
-                    {% for file in spatial_files %}
-                        <option value="{{ file.id }}"
-                                {% if file.id == selected_file_id %}selected{% endif %}>{{ file.name }}</option>
-                    {% empty %}
+                <select id="layer-selector" class="select select-bordered w-full bg-base-100">
+                    {% if spatial_files and spatial_files.count > 0 %}
+                        {% for file in spatial_files %}
+                            <option value="{{ file.id }}"
+                                    {% if file.id == selected_file_id %}selected{% endif %}>
+                                {{ file.name|default:"Unnamed Layer" }}
+                            </option>
+                        {% endfor %}
+                    {% else %}
                         <option disabled selected>No spatial data available</option>
-                    {% endfor %}
+                    {% endif %}
                 </select>
             </div>
             <div class="card bg-base-200 px-3 py-3 flex-none mt-3">
@@ -30,4 +33,5 @@
         </div>
         {{ geojson_data|json_script:"geojson-data" }}
     </div>
+    <script src="{% static 'js/analytics.js' %}"></script>
 {% endblock %}

@@ -16,8 +16,6 @@ function renderPieChart(selectedKey, data) {
     counts[val] = (counts[val] || 0) + 1;
   });
 
-  // const formattedTitle = selectedKey.replace(/_/g, " ").toUpperCase();
-
   if (pieChart1Instance) pieChart1Instance.destroy();
 
   pieChart1Instance = new Chart(canvas.getContext("2d"), {
@@ -28,16 +26,16 @@ function renderPieChart(selectedKey, data) {
         {
           data: Object.values(counts),
           backgroundColor: [
-            "#419400", // green
-            "#E1E6D9", // light beige
-            "#343300", // dark brown
-            "#FF6384", // pink
-            "#36A2EB", // blue
-            "#FFCE56", // yellow
-            "#FFA500", // orange
-            "#800080", // purple
-            "#008080", // teal
-            "#A52A2A", // brown
+            "#419400",
+            "#E1E6D9",
+            "#343300",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#FFA500",
+            "#800080",
+            "#008080",
+            "#A52A2A",
           ],
         },
       ],
@@ -53,31 +51,34 @@ function renderPieChart(selectedKey, data) {
           font: { size: 16, weight: "900" },
         },
         legend: { position: "bottom" },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const label = context.label || "";
-              const value = context.parsed;
-              const total = context.dataset.data.reduce((a, b) => a + b, 0);
-              const percentage = ((value / total) * 100).toFixed(1) + "%";
-              return `${value} (${percentage})`;
-            },
-          },
-        },
       },
     },
   });
 }
 
-document.addEventListener("attributeSelected", (e) => {
-  renderPieChart(e.detail.selectedKey, e.detail.data);
-});
+document.addEventListener("DOMContentLoaded", function () {
+  const raw = document.getElementById("geojson-data");
+  const keySelector = document.getElementById("key-selector");
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.spatialDataStore && window.spatialDataStore.selectedKey) {
-    renderPieChart(
-      window.spatialDataStore.selectedKey,
-      window.spatialDataStore.data,
-    );
+  if (!raw) return;
+
+  let geojson = JSON.parse(raw.textContent);
+  if (typeof geojson === "string") geojson = JSON.parse(geojson);
+
+  const features = geojson.features || [];
+  if (features.length === 0) return;
+  const propertyList = features.map((f) => f.properties);
+
+  if (keySelector) {
+    keySelector.addEventListener("change", function (e) {
+      const selectedKey = e.target.value;
+      localStorage.setItem("selectedAttribute", selectedKey);
+      renderPieChart(selectedKey, propertyList);
+    });
+  }
+
+  const savedKey = localStorage.getItem("selectedAttribute");
+  if (savedKey) {
+    renderPieChart(savedKey, propertyList);
   }
 });

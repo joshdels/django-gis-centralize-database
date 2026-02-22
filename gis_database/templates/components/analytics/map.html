@@ -5,6 +5,7 @@
         <h3 class="font-black text-2xl tracking-tighter uppercase mb-1">Map</h3>
         <div class="flex-1 w-full rounded-lg h-screen" id="map"></div>
     </div>
+    {{ geojson_data|json_script:"geojson-data" }}
 {% endblock %}
 {% block extra_js %}
     <script>

@@ -1,0 +1,46 @@
+// const spatialData = {{ geojson_data|safe }} || { type: "FeatureCollection", features: [] };
+
+document.addEventListener("DOMContentLoaded", function () {
+  const spatialData = document.getElementById("geojson-data");
+
+  const map = L.map("map", {
+    attributionControl: false,
+  }).setView([0, 0], 2);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+  if (spatialData.features && spatialData.features.length > 0) {
+    const geoLayer = L.geoJSON(spatialData, {
+      style: {
+        color: "#1f2937",
+        weight: 1,
+        fillColor: "#60a5fa",
+        fillOpacity: 0.5,
+      },
+      onEachFeature: function (feature, layer) {
+        let popupHtml = "";
+        const props = feature.properties || {};
+
+        if (Object.keys(props).length > 0) {
+          for (let [key, val] of Object.entries(props)) {
+            let label = key.replace(/_/g, " ").toLowerCase();
+            label = label.charAt(0).toUpperCase() + label.slice(1);
+
+            popupHtml += `<strong>${label}:</strong> ${val}<br>`;
+          }
+        } else {
+          popupHtml += "No attributes found.";
+        }
+
+        popupHtml += "</div>";
+        layer.bindPopup(popupHtml);
+
+        layer.on("mouseover", () =>
+          layer.setStyle({ weight: 3, fillOpacity: 0.8 }),
+        );
+        layer.on("mouseout", () => geoLayer.resetStyle(layer));
+      },
+    }).addTo(map);
+
+    map.fitBounds(geoLayer.getBounds(), { padding: [20, 20] });
+  }
+});

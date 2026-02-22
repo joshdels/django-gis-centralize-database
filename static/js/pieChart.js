@@ -1,83 +1,114 @@
-let pieChart1Instance = null;
+let chartInstance = null;
 
-function renderPieChart(selectedKey, data) {
-  const canvas = document.getElementById("pieChart");
-  const placeholder = document.getElementById("chart-placeholder");
+function renderChart(xKey, yKey, data, chartType = "doughnut") {
+    const canvas = document.getElementById("pieChart");
+    const placeholder = document.getElementById("chart-placeholder");
+    if (!canvas) return;
+    if (placeholder) placeholder.style.display = "none";
 
-  if (!canvas) return;
+    let labels = [];
+    let values = [];
 
-  if (placeholder) {
-    placeholder.style.display = "none";
-  }
+    if (chartType === "bar" && xKey && yKey) {
+        // Bar chart: X from data panel, Y numeric
+        data.forEach(item => {
+            const xVal = item[xKey] ?? "N/A";
+            const yVal = parseFloat(item[yKey]);
+            labels.push(xVal);
+            values.push(isNaN(yVal) ? 0 : yVal);
+        });
+    } else {
+        // Pie/Doughnut aggregate counts
+        const counts = {};
+        data.forEach(item => {
+            const val = item[xKey] ?? "N/A";
+            counts[val] = (counts[val] || 0) + 1;
+        });
+        labels = Object.keys(counts);
+        values = Object.values(counts);
+    }
 
-  const counts = {};
-  data.forEach((item) => {
-    const val = item[selectedKey] || "N/A";
-    counts[val] = (counts[val] || 0) + 1;
-  });
+    if (chartInstance) chartInstance.destroy();
 
-  // const formattedTitle = selectedKey.replace(/_/g, " ").toUpperCase();
-
-  if (pieChart1Instance) pieChart1Instance.destroy();
-
-  pieChart1Instance = new Chart(canvas.getContext("2d"), {
-    type: "doughnut",
-    data: {
-      labels: Object.keys(counts),
-      datasets: [
-        {
-          data: Object.values(counts),
-          backgroundColor: [
-            "#419400", // green
-            "#E1E6D9", // light beige
-            "#343300", // dark brown
-            "#FF6384", // pink
-            "#36A2EB", // blue
-            "#FFCE56", // yellow
-            "#FFA500", // orange
-            "#800080", // purple
-            "#008080", // teal
-            "#A52A2A", // brown
-          ],
+    chartInstance = new Chart(canvas.getContext("2d"), {
+        type: chartType === "bar" ? "bar" : "doughnut",
+        data: {
+            labels,
+            datasets: [{
+                label: chartType === "bar" ? yKey : xKey,
+                data: values,
+                backgroundColor: chartType === "bar" ? "#36A2EB" : [
+                    "#419400","#E1E6D9","#343300","#FF6384","#36A2EB","#FFCE56","#FFA500","#800080","#008080","#A52A2A"
+                ],
+            }],
         },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: "50%",
-      plugins: {
-        title: {
-          display: true,
-          text: selectedKey,
-          font: { size: 16, weight: "900" },
-        },
-        legend: { position: "bottom" },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const label = context.label || "";
-              const value = context.parsed;
-              const total = context.dataset.data.reduce((a, b) => a + b, 0);
-              const percentage = ((value / total) * 100).toFixed(1) + "%";
-              return `${value} (${percentage})`;
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: chartType === "doughnut" ? "50%" : undefined,
+            plugins: {
+                title: {
+                    display: true,
+                    text: chartType === "bar" ? `${yKey} vs ${xKey}` : xKey,
+                    font: { size: 16, weight: "900" },
+                },
+                legend: { position: chartType === "doughnut" ? "bottom" : "top" },
             },
-          },
+            scales: chartType === "bar" ? {
+                y: { beginAtZero: true, title: { display: true, text: yKey } },
+                x: { title: { display: true, text: xKey } }
+            } : {},
         },
-      },
-    },
-  });
+    });
 }
 
-document.addEventListener("attributeSelected", (e) => {
-  renderPieChart(e.detail.selectedKey, e.detail.data);
-});
+document.addEventListener("DOMContentLoaded", function() {
+    const raw = document.getElementById("geojson-data");
+    if (!raw) return;
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.spatialDataStore && window.spatialDataStore.selectedKey) {
-    renderPieChart(
-      window.spatialDataStore.selectedKey,
-      window.spatialDataStore.data,
-    );
-  }
+    let geojson = JSON.parse(raw.textContent);
+    if (typeof geojson === "string") geojson = JSON.parse(geojson);
+    const features = geojson.features || [];
+    if (!features.length) return;
+    const propertyList = features.map(f => f.properties);
+
+    const keySelector = document.getElementById("key-selector"); // X-axis from data panel
+    const chartTypeSelector = document.getElementById("chart-type-selector");
+    const ySelector = document.getElementById("y-axis-selector"); // numeric
+
+    // Populate Y-axis options dynamically
+    Object.keys(features[0].properties).forEach(k => {
+        const opt = document.createElement("option");
+        opt.value = k;
+        opt.textContent = k;
+        ySelector.appendChild(opt);
+    });
+
+    // Restore localStorage
+    keySelector.value = localStorage.getItem("selectedKey") || keySelector.value;
+    chartTypeSelector.value = localStorage.getItem("selectedChartType") || "doughnut";
+    ySelector.value = localStorage.getItem("selectedY") || ySelector.value;
+
+    function updateChart() {
+        const xKey = keySelector.value; // X-axis from data panel
+        const yKey = ySelector.value;
+        const chartType = chartTypeSelector.value;
+
+        localStorage.setItem("selectedKey", xKey);
+        localStorage.setItem("selectedChartType", chartType);
+        localStorage.setItem("selectedY", yKey);
+
+        // Show Y-axis only for bar chart
+        ySelector.style.display = chartType === "bar" ? "inline-block" : "none";
+
+        if (!xKey) return;
+        if (chartType === "bar" && !yKey) return;
+        renderChart(xKey, yKey, propertyList, chartType);
+    }
+
+    keySelector.addEventListener("change", updateChart);
+    chartTypeSelector.addEventListener("change", updateChart);
+    ySelector.addEventListener("change", updateChart);
+
+    updateChart(); // initial render
 });
