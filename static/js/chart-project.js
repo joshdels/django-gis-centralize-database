@@ -38,7 +38,8 @@ function renderChart(xKey, yKey, data, chartType = "doughnut") {
                 label: chartType === "bar" ? yKey : xKey,
                 data: values,
                 backgroundColor: chartType === "bar" ? "#36A2EB" : [
-                    "#419400","#E1E6D9","#343300","#FF6384","#36A2EB","#FFCE56","#FFA500","#800080","#008080","#A52A2A"
+                    "#419400","#E1E6D9","#343300","#FF6384","#36A2EB",
+                    "#FFCE56","#FFA500","#800080","#008080","#A52A2A"
                 ],
             }],
         },
@@ -72,12 +73,16 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!features.length) return;
     const propertyList = features.map(f => f.properties);
 
-    const keySelector = document.getElementById("key-selector"); // X-axis from data panel
+    const keySelector = document.getElementById("key-selector"); // X-axis
     const chartTypeSelector = document.getElementById("chart-type-selector");
-    const ySelector = document.getElementById("y-axis-selector"); // numeric
+    const ySelector = document.getElementById("y-axis-selector"); // numeric only
 
-    // Populate Y-axis options dynamically
-    Object.keys(features[0].properties).forEach(k => {
+    // Populate Y-axis options dynamically (numeric only, sorted alphabetically)
+    const numericKeys = Object.keys(features[0].properties)
+        .filter(k => !isNaN(parseFloat(features[0].properties[k])))
+        .sort();
+
+    numericKeys.forEach(k => {
         const opt = document.createElement("option");
         opt.value = k;
         opt.textContent = k;
@@ -90,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ySelector.value = localStorage.getItem("selectedY") || ySelector.value;
 
     function updateChart() {
-        const xKey = keySelector.value; // X-axis from data panel
+        const xKey = keySelector.value;
         const yKey = ySelector.value;
         const chartType = chartTypeSelector.value;
 

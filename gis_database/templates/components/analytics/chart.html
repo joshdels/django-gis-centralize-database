@@ -1,37 +1,32 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block content %}
-<div class="card bg-base-100 shadow-sm h-full w-full p-5 flex flex-col">
-    <h3 class="font-black text-2xl tracking-tighter uppercase flex-none">Chart</h3>
-
-    <!-- Selectors -->
-    <div class="flex gap-4 items-center mb-4 flex-none">
-        <select id="y-axis-selector" class="border p-2 rounded" style="display:none;">
-            <option value="" disabled selected>Select Y-axis (numeric)</option>
-        </select>
-
-        <select id="chart-type-selector" class="border p-2 rounded">
-            <option value="doughnut">Pie/Doughnut</option>
-            <option value="bar">Bar Chart</option>
-        </select>
-    </div>
-
-    <!-- Chart container -->
-    <div class="relative flex-1 w-full min-h-[300px] flex items-center justify-center">
-        <canvas id="pieChart"></canvas>
-
-        <div id="chart-placeholder"
-             class="absolute inset-0 flex flex-col items-center justify-center bg-base-100 z-10">
-            <div class="flex flex-col items-center gap-3">
-                <span class="badge badge-outline badge-lg font-bold uppercase tracking-widest text-gray-400 p-4 h-auto text-center">
-                    Please select an attribute (X-axis) from the Data Panel
-                    <br>
-                    and a Y-axis numeric attribute for Bar Chart
-                </span>
+    <div class="card bg-base-100 shadow-sm h-full w-full p-5 flex flex-col">
+        <h3 class="font-black text-2xl tracking-tighter uppercase flex-none">Chart</h3>
+        <!-- Selectors -->
+        <div class="flex gap-4 items-center mb-4 flex-none">
+            <select id="chart-type-selector" class="border p-2 rounded">
+                <option value="doughnut">Pie/Doughnut</option>
+                <option value="bar">Bar Chart</option>
+            </select>
+            <select id="y-axis-selector" class="border p-2 rounded" style="display:none;">
+                <option value="" disabled selected>Select Y-axis (numeric)</option>
+            </select>
+        </div>
+        <!-- Chart container -->
+        <div class="relative flex-1 w-full min-h-[300px] flex items-center justify-center">
+            <canvas id="pieChart"></canvas>
+            <div id="chart-placeholder"
+                 class="absolute inset-0 flex flex-col items-center justify-center bg-base-100 z-10">
+                <div class="flex flex-col items-center gap-3">
+                    <span class="badge badge-outline badge-lg font-bold uppercase tracking-widest text-gray-400 p-4 h-auto text-center">
+                        Please select an attribute (X-axis) from the Data Panel
+                        <br>
+                        and a Y-axis numeric attribute for Bar Chart
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-{{ geojson_data|json_script:"geojson-data" }}
+    {{ geojson_data|json_script:"geojson-data" }}
 {% endblock %}
