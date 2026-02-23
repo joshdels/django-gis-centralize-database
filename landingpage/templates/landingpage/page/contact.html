@@ -1,16 +1,52 @@
 {% extends 'landingpage/_base.html' %}
-
 {% block content %}
-  <h1>Contact Us</h1>
-  <form action="">
-    <label>Email</label>
-    <input type="text" name="" id="">
-    <label>Name</label>
-    <input type="text">
-    <label for="">Topic</label>
-    <input type="text">
-    <label for="">Message</label>
-    <input type="text">
-    <button type="submit">Submit</button>
-  </form>
+    <div class="bg-base-100 my-10 p-5">
+        <div class="text-center mb-5">
+            <h1 class="text-4xl font-black text-primary">Contact Us</h1>
+            <p class="text-base-content/70 mt-5">
+                We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+        </div>
+        <main class="flex items-center justify-center p-6">
+            <div class="card w-full max-w-2xl bg-base-100 shadow-sm p-8">
+                <form class="space-y-5">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Email</span>
+                        </label>
+                        <input type="email"
+                               placeholder="you@example.com"
+                               class="input input-bordered w-full focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Name</span>
+                        </label>
+                        <input type="text"
+                               placeholder="Your full name"
+                               class="input input-bordered w-full focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Topic</span>
+                        </label>
+                        <input type="text"
+                               placeholder="Subject of your message"
+                               class="input input-bordered w-full focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Message</span>
+                        </label>
+                        <textarea rows="4"
+                                  placeholder="Write your message here..."
+                                  class="textarea textarea-bordered w-full focus:textarea-primary"></textarea>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="btn btn-primary w-full text-white">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
 {% endblock content %}

@@ -1,13 +1,12 @@
-{% extends 'landingpage/_base.html'  %}
-
+{% extends 'landingpage/_base.html' %}
 {% block content %}
-
-<div class="container--navbar">
-  <h1>TopMap Solutions</h1>
-  <div class="navbar--endparts">
-    <span>Solutions</span>
-    <span>Contact Us</span>
-  </div>
-</div>
-
+    <div class="fixed w-full flex items-center justify-between bg-base-100 p-5 shadow-sm z-50">
+        <a href="{% url 'landingpage:home' %}"
+           class="text-4xl text-primary font-black">TopMap Solutions</a>
+        <div class="flex items-center gap-6">
+            <!-- <a href="">Solutions</a> -->
+            <a href="{% url 'landingpage:contact' %}"
+               class="btn btn-primary text-white">Contact us</a>
+        </div>
+    </div>
 {% endblock content %}

@@ -4,15 +4,35 @@
     <head>
         <meta charset="UTF-8" />
         <title>
-            {% block title %}TopMap Solutions - GIS Projects, Teams & Spatial Analytics{% endblock %}
+            {% block title %}TopMap Solutions - Urban GIS, Field Teams, Offline GIS & Dashboards{% endblock %}
         </title>
-        <link rel="icon" href="{% static 'assets/logo.svg' %}" type="image/x-icon">
         <!-- Primary SEO meta -->
         <meta name="description"
-              content="{% block meta_description %}GIS Projects, Teams & Spatial Analytics.{% endblock %}" />
-        <link rel="stylesheet" href="{% static 'css/native/_styles.css' %}">
+              content="{% block meta_description %}TopMap Solutions provides urban GIS solutions, field team management, offline GIS tools, and interactive dashboards for spatial analytics.{% endblock %}" />
+        <!-- Additional SEO meta -->
+        <meta name="keywords"
+              content="Urban GIS, Field Teams GIS, Offline GIS, GIS Dashboards, Spatial Analytics, GIS Projects, GIS Mapping, GIS Data" />
+        <meta name="author" content="TopMap Solutions" />
+        <meta name="robots" content="index, follow" />
+        <!-- Open Graph / Social Sharing -->
+        <meta property="og:title"
+              content="TopMap Solutions - Urban GIS, Field Teams, Offline GIS & Dashboards" />
+        <meta property="og:description"
+              content="TopMap Solutions provides urban GIS solutions, field team management, offline GIS tools, and interactive dashboards for spatial analytics." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="{% static 'assets/logo.svg' %}" />
+        <meta property="og:url" content="https://www.topmapsolutions.com/" />
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title"
+              content="TopMap Solutions - Urban GIS, Field Teams, Offline GIS & Dashboards" />
+        <meta name="twitter:description"
+              content="TopMap Solutions provides urban GIS solutions, field team management, offline GIS tools, and interactive dashboards for spatial analytics." />
+        <meta name="twitter:image" content="{% static 'assets/logo.svg' %}" />
+        <link rel="icon" href="{% static 'assets/logo.svg' %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     </head>
-    <body class="container">
+    <body class="bg-base-200 min-h-screen">
         {% block content %}{% endblock %}
         <script src="{% static 'lucide.min.js' %}"></script>
         <script>lucide.createIcons();</script>
