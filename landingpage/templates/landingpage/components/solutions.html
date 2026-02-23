@@ -1,27 +1,31 @@
 {% extends 'landingpage/_base.html' %}
 {% block content %}
-    <div class="min-h-screen flex items-center justify-center bg-base-200 p-10">
-        <div class="text-center w-full max-w-5xl">
-            <h1 class="text-4xl font-black text-primary mb-8">Our Solutions</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Card 1 -->
-                <div class="card bg-base-100 shadow-md p-6 flex flex-col items-center gap-3 hover:shadow-xl transition-shadow">
-                    <i class="lucide-users text-primary text-4xl"></i>
-                    <h2 class="font-bold text-lg">Teams Sync</h2>
-                    <p class="text-base-content text-center">
-                        Collaborate efficiently with offline field support, dashboards, analytics, and storage.
+    <section class="flex items-center min-h-screen bg-base-200 p-5 scroll-mt-25"
+             id="solutions">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-primary mb-16">Our Solutions</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="card bg-base-100 shadow-sm p-10 flex flex-col items-center text-center gap-6 transition duration-300">
+                    <i data-lucide="users" class="w-16 h-16 text-primary"></i>
+                    <h2 class="text-2xl md:text-3xl font-bold">Teams Sync</h2>
+                    <p class="text-base md:text-lg text-base-content/80 max-w-md">
+                        Collaborate efficiently with offline field support,
+                        real-time dashboards, advanced analytics, and secure
+                        cloud storage integration.
                     </p>
                     <a href="{% url 'gis_database:home' %}"
-                       class="btn btn-primary text-white">Explore</a>
+                       class="btn btn-primary btn-lg px-10">Explore Platform</a>
                 </div>
-                <!-- Card 2 -->
-                <div class="card bg-base-100 shadow-md p-6 flex flex-col items-center gap-3 hover:shadow-xl transition-shadow">
-                    <i class="lucide-map-pin text-primary text-4xl"></i>
-                    <h2 class="font-bold text-lg">Urban Mapping</h2>
-                    <p class="text-base-content text-center">Georeferencing urban data to create actionable GIS insights.</p>
-                    <a href="" class="btn btn-secondary">On Progress</a>
+                <div class="card bg-base-100 shadow-sm p-10 flex flex-col items-center text-center gap-6 transition duration-300">
+                    <i data-lucide="map-pin" class="w-16 h-16 text-primary"></i>
+                    <h2 class="text-2xl md:text-3xl font-bold">Urban Mapping</h2>
+                    <p class="text-base md:text-lg text-base-content/80 max-w-md">
+                        Georeference and analyze urban spatial data to create
+                        actionable GIS insights for planners, LGUs, and infrastructure teams.
+                    </p>
+                    <button class="btn btn-outline btn-lg px-10">Coming Soon</button>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 {% endblock content %}
