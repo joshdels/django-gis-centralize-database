@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerMessage
+from .models import CustomerMessage, CustomerReachout
 
 
 class CustomerMessageInline(admin.TabularInline):
@@ -42,3 +42,4 @@ class CustomerMessageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CustomerMessage, CustomerMessageAdmin)
+admin.site.register(CustomerReachout)

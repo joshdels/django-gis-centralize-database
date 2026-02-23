@@ -76,3 +76,24 @@ class CustomerMessage(models.Model):
 
     def __str__(self):
         return f"{self.category} | {self.subject or self.message[:30]}"
+
+
+class CustomerReachout(models.Model):
+    fullname = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(max_length=100, blank=True)
+
+    PROJECT_CHOICES = [
+        ("urban_gis", "Urban GIS Dashboard"),
+        ("field_team", "Field Team Offline System"),
+        ("spatial_analysis", "Spatial Analytics"),
+        ("other", "Other"),
+    ]
+
+    project_topic = models.CharField(max_length=50, choices=PROJECT_CHOICES, blank=True)
+    message = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_contacted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.fullname} - {self.project_topic or 'General Inquiry'}"

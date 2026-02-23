@@ -37,13 +37,17 @@
                     </div>
                 </div>
                 <div class="card bg-base-100 shadow-sm p-10">
-                    <form class="space-y-6">
+                    <form method="post"
+                          action="{% url 'landingpage:contact' %}"
+                          class="space-y-6">
+                        {% csrf_token %}
                         <div>
                             <label class="label flex items-center gap-2">
                                 <i data-lucide="user" class="w-4 h-4 text-primary"></i>
                                 <span class="label-text font-semibold">Full Name</span>
                             </label>
                             <input type="text"
+                                   name="fullname"
                                    placeholder="Your full name"
                                    class="input input-bordered w-full input-lg focus:input-primary" />
                         </div>
@@ -53,6 +57,7 @@
                                 <span class="label-text font-semibold">Email Address</span>
                             </label>
                             <input type="email"
+                                   name="email"
                                    placeholder="you@example.com"
                                    class="input input-bordered w-full input-lg focus:input-primary" />
                         </div>
@@ -61,9 +66,14 @@
                                 <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
                                 <span class="label-text font-semibold">Project Topic</span>
                             </label>
-                            <input type="text"
-                                   placeholder="What is this about?"
-                                   class="input input-bordered w-full input-lg focus:input-primary" />
+                            <select name="project_topic"
+                                    class="select select-bordered w-full input-lg input-primary focus:input-primary rounded-lg opacity-70">
+                                <option value="">Select a project topic</option>
+                                <option value="urban_gis">Urban GIS Dashboard</option>
+                                <option value="field_team">Field Team Offline System</option>
+                                <option value="spatial_analysis">Spatial Analytics</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                         <div>
                             <label class="label flex items-center gap-2">
@@ -71,6 +81,8 @@
                                 <span class="label-text font-semibold">Message</span>
                             </label>
                             <textarea rows="5"
+                                      name="message"
+                                      rows="5"
                                       placeholder="Tell us about your GIS project..."
                                       class="textarea textarea-bordered w-full textarea-lg focus:textarea-primary"></textarea>
                         </div>
@@ -86,4 +98,11 @@
             </div>
         </div>
     </section>
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert("{{ message|escapejs }}");
+            {% endfor %}
+        </script>
+    {% endif %}
 {% endblock content %}
