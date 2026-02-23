@@ -1,10 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-            {% block title %}TopMap Solutions - Urban GIS, Field Teams, Offline GIS & Dashboards{% endblock %}
+            {% block title %}TopMap Solutions{% endblock %}
         </title>
         <!-- Primary SEO meta -->
         <meta name="description"
@@ -22,13 +23,6 @@
         <meta property="og:type" content="website" />
         <meta property="og:image" content="{% static 'assets/logo.svg' %}" />
         <meta property="og:url" content="https://www.topmapsolutions.com/" />
-        <!-- Twitter Card -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title"
-              content="TopMap Solutions - Urban GIS, Field Teams, Offline GIS & Dashboards" />
-        <meta name="twitter:description"
-              content="TopMap Solutions provides urban GIS solutions, field team management, offline GIS tools, and interactive dashboards for spatial analytics." />
-        <meta name="twitter:image" content="{% static 'assets/logo.svg' %}" />
         <link rel="icon" href="{% static 'assets/logo.svg' %}" type="image/x-icon">
         <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     </head>

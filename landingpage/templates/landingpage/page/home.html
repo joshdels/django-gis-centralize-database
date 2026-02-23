@@ -1,9 +1,7 @@
 {% extends 'landingpage/_base.html' %}
 {% block content %}
     {% include 'landingpage/components/navbar.html' %}
-    <div class="">
-        {% include 'landingpage/components/mission.html' %}
-        {% include 'landingpage/components/solutions.html' %}
-        {% include 'landingpage/page/contact.html' %}
-    </div>
+    {% include 'landingpage/components/hero.html' %}
+    {% include 'landingpage/components/solutions.html' %}
+    {% include 'landingpage/page/contact.html' %}
 {% endblock %}
