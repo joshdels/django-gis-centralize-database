@@ -15,7 +15,8 @@
         </div>
         {# --- BACK BUTTON --- #}
         <div class="text-center">
-            <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
+            <a href="{% url 'gis_database:dashboard' %}"
+               class="btn btn-ghost btn-sm opacity-50">← Back to Dashboard</a>
         </div>
         {# --- DELETE CONFIRMATION MODAL --- #}
         <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
@@ -26,7 +27,7 @@
                     This will permanently remove the file from the cloud.
                 </p>
                 <form method="post"
-                      action="{% url 'project-delete' project.pk %}"
+                      action="{% url 'gis_database:project-delete' project.pk %}"
                       class="flex gap-2 w-full justify-end">
                     {% csrf_token %}
                     <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Cancel</button>

@@ -36,7 +36,7 @@ def create_project(request):
             owner=request.user,
         )
 
-        return redirect("dashboard")
+        return redirect("gis_database:dashboard")
 
     return render(request, "components/project/create-layout.html", {"form": form})
 
@@ -88,7 +88,7 @@ def delete_project(request, pk):
 
         project.delete()
 
-        return redirect("dashboard")
+        return redirect("gis_database:dashboard")
     return render(
         request, "components/project/project_delete.html", {"project": project}
     )
@@ -105,7 +105,7 @@ def delete_project_soft(request, pk):
             action="project deleted",
             owner=request.user,
         )
-    return redirect("dashboard")
+    return redirect("gis_database:dashboard")
 
 
 def project_detail(request, pk):

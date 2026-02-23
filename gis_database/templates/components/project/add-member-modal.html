@@ -6,7 +6,7 @@
                    name="q"
                    placeholder="Search username or email..."
                    class="input input-bordered w-full"
-                   hx-get="{% url 'search_users' project.id %}"
+                   hx-get="{% url 'gis_database:search_users' project.id %}"
                    hx-trigger="keyup changed delay:400ms"
                    hx-target="#search-results"
                    hx-swap="innerHTML">
@@ -14,7 +14,7 @@
                  class="absolute bg-base-100 shadow-lg rounded-lg w-full mt-1 overflow-y-auto z-50"></div>
         </div>
         <form method="POST"
-              action="{% url 'add_member' project.id %}"
+              action="{% url 'gis_database:add_member' project.id %}"
               id="add-member-form">
             {% csrf_token %}
             <input type="hidden" name="username" id="selected-username">

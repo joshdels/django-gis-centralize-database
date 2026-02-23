@@ -18,7 +18,7 @@
                             <span class="text-xs">{{ file.uploaded_at }}</span>
                         </div>
                     </div>
-                    <form action="{% url 'delete-file' file.id %}"
+                    <form action="{% url 'gis_database:delete-file' file.id %}"
                           method="POST"
                           onsubmit="return confirm('WARNING: This will delete ALL versions of this file from the database and cloud. Proceed?');">
                         {% csrf_token %}

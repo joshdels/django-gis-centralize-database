@@ -101,6 +101,7 @@ if IS_PROD:
 
 LOCAL_APPS = [
     "gis_database",
+    "landingpage",
     "accounts",
     "api",
     "customer_service",
@@ -167,8 +168,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # AllAuth settings
-LOGIN_REDIRECT_URL = "/dashboard"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/gis-database/dashboard/"
+LOGOUT_REDIRECT_URL = "/gis-database/"
 
 # Authentication Method
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
@@ -185,7 +186,7 @@ ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_PREVENT_ENUMERATION = False
 
 # Redirects
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/dashboard"
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/gis-database/"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"
 
 # ----------------------------

@@ -29,10 +29,11 @@ urlpatterns = [
     # ADMIN
     path("not-admin/", admin.site.urls),
     # APPS
-    path("", include("gis_database.urls")),
+    path("gis-database/", include("gis_database.urls")),
+    path("gis-database/accounts/", include("allauth.urls")),
+    path("gis-database/accounts/", include("accounts.urls")),
     path("customer-service/", include("customer_service.urls")),
-    path("accounts/", include("allauth.urls")),
-    path("accounts/", include("accounts.urls")),
+    path('', include("landingpage.urls")),
     # API
     path("api/v1/", include("api.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

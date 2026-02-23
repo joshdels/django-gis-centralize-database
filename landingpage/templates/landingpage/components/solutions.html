@@ -1,0 +1,27 @@
+{% extends 'landingpage/_base.html' %}
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center bg-base-200 p-10">
+        <div class="text-center w-full max-w-5xl">
+            <h1 class="text-4xl font-black text-primary mb-8">Our Solutions</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div class="card bg-base-100 shadow-md p-6 flex flex-col items-center gap-3 hover:shadow-xl transition-shadow">
+                    <i class="lucide-users text-primary text-4xl"></i>
+                    <h2 class="font-bold text-lg">Teams Sync</h2>
+                    <p class="text-base-content text-center">
+                        Collaborate efficiently with offline field support, dashboards, analytics, and storage.
+                    </p>
+                    <a href="{% url 'gis_database:home' %}"
+                       class="btn btn-primary text-white">Explore</a>
+                </div>
+                <!-- Card 2 -->
+                <div class="card bg-base-100 shadow-md p-6 flex flex-col items-center gap-3 hover:shadow-xl transition-shadow">
+                    <i class="lucide-map-pin text-primary text-4xl"></i>
+                    <h2 class="font-bold text-lg">Urban Mapping</h2>
+                    <p class="text-base-content text-center">Georeferencing urban data to create actionable GIS insights.</p>
+                    <a href="" class="btn btn-secondary">On Progress</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
