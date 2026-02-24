@@ -9,7 +9,6 @@ def sidebar_context(request):
 
     if request.user.is_authenticated:
         profile = Profile.objects.filter(user=request.user).first()
-    profile = get_object_or_404(Profile, user=request.user)
 
     return {
         "sidebar_menu": [
