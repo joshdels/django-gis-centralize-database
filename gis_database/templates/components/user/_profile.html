@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="grid grid-cols-12 min-h-screen w-full">
+        <aside class="col-span-2 lg:col-span-3 xl:col-span-2 bg-primary shadow-md">
+            {% include 'components/sidebar/_sidebar.html' %}
+        </aside>
+        <main class="col-span-10 lg:col-span-9 xl:col-span-10 p-5 flex flex-col gap-4">
+            {% include 'components/dashboard/header.html' with title="Profile" subtitle="Manage your own information" %}
+            {% include 'components/user/user_profile.html' %}
+        </main>
+    </div>
+{% endblock %}

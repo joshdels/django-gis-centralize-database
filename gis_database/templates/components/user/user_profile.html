@@ -1,0 +1,80 @@
+{% extends '_base.html' %}
+{% block content %}
+    <section class="card bg-base-100 h-full w-full p-5 py-5 md:py-10 lg:py-20">
+        <div class="flex justify-end mb-6">
+            <button onclick="toggleEdit()"
+                    class="btn btn-md btn-outline btn-primary gap-2">
+                <i data-lucide="pencil" class="w-4 h-4"></i>
+                <span class="hidden sm:block">Edit Profile</span>
+            </button>
+        </div>
+        <div id="viewMode" class="grid grid-cols-1 lg:grid-cols-5 gap-6 text-lg">
+            <div class="col-span-1 lg:col-span-2 pb:5 sm:pb-20">
+                <div class="flex flex-col items-center gap-5">
+                    <div class="w-40 h-40 sm:w-80 sm:h-80 rounded-full ring ring-primary ring-offset-base-100 ring-offset-4 overflow-hidden">
+                        <img class="object-cover w-full h-full"
+                             src=" {% if profile.image %} {{ profile.image.url }} {% else %} https://ui-avatars.com/api/?name={{ user.username }} {% endif %} ">
+                    </div>
+                    <p class="text-4xl font-bold">{{ user.username|default:"my username" }}</p>
+                </div>
+            </div>
+            <div class="flex flex-col col-span-1 lg:col-span-3 gap-5 lg:gap-10 text-center sm:text-left">
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span>First Name</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ profile.first_name|default:"First name" }}</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span>Last Name</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ profile.last_name|default:"Last name" }}</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="building-2" class="w-5 h-5"></i>
+                        <span>Institution</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ profile.institution|default:"My Institution" }}</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="briefcase" class="w-4 h-4"></i>
+                        <span>Role / Position</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ profile.role|default:"My Role" }}</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                        <span>Email</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ user.email|default:"Email" }}</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start uppercase tracking-wide font-bold text-sm sm:text-base gap-2 opacity-60">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        <span>Location</span>
+                    </div>
+                    <p class="text-md sm:text-xl tracking-widest font-black">{{ profile.location|default:"My Location" }}</p>
+                </div>
+            </div>
+        </div>
+        <div id="editMode" class="hidden">{% include 'components/user/editmode.html' %}</div>
+    </section>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Critical: You must call this for icons to render!
+        lucide.createIcons();
+
+        function toggleEdit() {
+            const view = document.getElementById('viewMode');
+            const edit = document.getElementById('editMode');
+            view.classList.toggle('hidden');
+            edit.classList.toggle('hidden');
+        }
+    </script>
+{% endblock content %}

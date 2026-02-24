@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from ..models import Project, ProjectMembership
+from accounts.models import Profile
 
 User = get_user_model()
 
@@ -33,7 +34,6 @@ def add_member(request, project_id):
 
     if request.headers.get("HX-Request"):
         return render(request, "components/project/members/html", context)
-
 
     return redirect("project-details", pk=project.id)
 
@@ -64,9 +64,6 @@ def remove_member(request, project_id, user_id):
     return redirect("project-details", pk=project.id)
 
 
-User = get_user_model()
-
-
 def search_users(request, project_id):
     query = request.GET.get("q", "")
 
@@ -85,3 +82,8 @@ def search_users(request, project_id):
     context = {"users": users, "project_id": project_id}
 
     return render(request, "components/project/user_search_result.html", context)
+
+
+def user_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    return render(request, "components/user/_profile.html", {"profile": profile})

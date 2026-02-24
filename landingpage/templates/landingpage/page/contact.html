@@ -99,10 +99,6 @@
         </div>
     </section>
     {% if messages %}
-        <script>
-            {% for message in messages %}
-                alert("{{ message|escapejs }}");
-            {% endfor %}
-        </script>
+        <script>{% for message in messages %}alert("{{ message|escapejs }}");{% endfor %}</script>
     {% endif %}
 {% endblock content %}

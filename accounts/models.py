@@ -31,6 +31,7 @@ class Profile(models.Model):
     institution = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
+    role = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
 
     storage_limit_mb = models.PositiveIntegerField(

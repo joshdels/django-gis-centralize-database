@@ -21,6 +21,8 @@ urlpatterns = [
     path('project/<int:project_id>/search-users/', views.search_users, name="search_users"),
     path("project/<int:project_id>/remove-member/<int:user_id>/", views.remove_member, name="remove-member"),
 
+    path("user-profile/", views.user_profile, name="user-profile"),
+
     path("file/delete-all/<int:pk>/", views.delete_file, name="delete-file"),
     
     path("test/", views.test, name="test"),

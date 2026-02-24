@@ -1,0 +1,64 @@
+<!-- Later nani hehhee -->
+<form id="editMode" method="POST" class="hidden space-y-4">
+    {% csrf_token %}
+    <div class="grid md:grid-cols-2 gap-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">First Name</span>
+            </label>
+            <input type="text"
+                   name="first_name"
+                   value="{{ user.first_name }}"
+                   class="input input-bordered w-full" />
+        </div>
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Last Name</span>
+            </label>
+            <input type="text"
+                   name="last_name"
+                   value="{{ user.last_name }}"
+                   class="input input-bordered w-full" />
+        </div>
+        <div class="form-control md:col-span-2">
+            <label class="label">
+                <span class="label-text">Institution</span>
+            </label>
+            <input type="text"
+                   name="institution"
+                   value="{{ user.profile.institution }}"
+                   class="input input-bordered w-full" />
+        </div>
+        <div class="form-control md:col-span-2">
+            <label class="label">
+                <span class="label-text">Role / Position</span>
+            </label>
+            <input type="text"
+                   name="role"
+                   value="{{ user.profile.role }}"
+                   class="input input-bordered w-full" />
+        </div>
+        <div class="form-control md:col-span-2">
+            <label class="label">
+                <span class="label-text">Email</span>
+            </label>
+            <input type="text"
+                   name="role"
+                   value="{{ user.profile.role }}"
+                   class="input input-bordered w-full" />
+        </div>
+        <div class="form-control md:col-span-2">
+            <label class="label">
+                <span class="label-text">Password</span>
+            </label>
+            <input type="text"
+                   name="role"
+                   value="{{ user.profile.role }}"
+                   class="input input-bordered w-full" />
+        </div>
+    </div>
+    <div class="flex gap-3 mt-4">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" onclick="toggleEdit()" class="btn btn-ghost">Cancel</button>
+    </div>
+</form>
