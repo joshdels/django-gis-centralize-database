@@ -35,7 +35,7 @@ def add_member(request, project_id):
     if request.headers.get("HX-Request"):
         return render(request, "components/project/members/html", context)
 
-    return redirect("project-details", pk=project.id)
+    return redirect("gis_database:project-details", pk=project.id)
 
 
 @require_POST
@@ -49,7 +49,7 @@ def remove_member(request, project_id, user_id):
     # Prevent removing the owner
     if project.owner.id == user_id:
         messages.error(request, "You cannot remove the project owner.")
-        return redirect("project-detail", pk=project.id)
+        return redirect("gis_database:project-detail", pk=project.id)
 
     membership = ProjectMembership.objects.filter(
         project=project, user_id=user_id
@@ -61,7 +61,7 @@ def remove_member(request, project_id, user_id):
         membership.delete()
         messages.success(request, "Member removed successfully.")
 
-    return redirect("project-details", pk=project.id)
+    return redirect("gis_database:project-details", pk=project.id)
 
 
 def search_users(request, project_id):
