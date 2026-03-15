@@ -82,6 +82,7 @@ def analytics(request):
     context = get_user_storage_context(request)
 
     members_dict = {}
+    members_list = [] 
 
     for project in projects:
         members = project.membership.select_related("user").exclude(user=project.owner)

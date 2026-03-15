@@ -35,7 +35,7 @@ def update_file(request, pk):
                     unset_latest(request.user, project, existing_file_with_hash.name)
                     existing_file_with_hash.is_latest = True
                     existing_file_with_hash.save(update_fields=["is_latest"])
-                    return redirect("gis_database:project-detail", pk=project.id)
+                    return redirect("gis_database:project-details", pk=project.id)
 
                 # Case 2: Same name, different hash -> version increment
                 latest_file_same_name = (

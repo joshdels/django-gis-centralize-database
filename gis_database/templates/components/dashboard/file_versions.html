@@ -1,11 +1,11 @@
-<div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-[400px] lg:max-h-[400px] flex flex-col overflow-hidden">
+<div class="card bg-base-100 shadow-sm p-6 w-full h-full max-h-screen flex flex-col overflow-hidden">
     <div class="flex justify-between">
         <h3 class="text-lg font-black mb-2 uppercase flex-none">Files and Version</h3>
         <span class="badge badge-neutral font-black border-none h-6 px-2 text-[10px] tracking-widest uppercase justify-end">
             {{ latest_files|length }} Item/s
         </span>
     </div>
-    <div class="flex-1 overflow-y-auto flex flex-col gap-2">
+    <div class="flex-1 flex flex-col gap-2 overflow-y-auto min-h-0">
         {% for file in latest_files %}
             <div class="card bg-base-200 px-2 py-1 flex-none">
                 <div class="flex justify-between items-center mb-1">
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <form action="{% url 'gis_database:delete-file' file.id %}"
-                          method="POST"
+                          method="post"
                           onsubmit="return confirm('WARNING: This will delete ALL versions of this file from the database and cloud. Proceed?');">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-error btn-outline btn-sm">

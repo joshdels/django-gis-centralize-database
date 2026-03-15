@@ -103,7 +103,7 @@ class CreateProjectForm(forms.ModelForm):
     description = forms.CharField(
         max_length=500,
         required=False,
-        label="Project",
+        label="Project Description",
         widget=forms.Textarea(
             attrs={
                 "rows": 5,
@@ -112,6 +112,20 @@ class CreateProjectForm(forms.ModelForm):
         ),
         help_text="Optional description for the new project.",
     )
+
+    class Meta:
+        model = Project
+        fields = ["name", "description"]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if Project.objects.filter(owner=self.user, name=name).exists():
+            raise forms.ValidationError("You already have a project with this name.")
+        return name
 
     class Meta:
         model = Project

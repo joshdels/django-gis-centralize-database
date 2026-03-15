@@ -6,8 +6,8 @@ from io import BytesIO
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.core.serializers import serialize
+from django.db import transaction, IntegrityError
+
 
 from ..models import Project, ProjectMembership, File, FileActivity, SpatialData
 from ..forms import CreateProjectForm
@@ -16,27 +16,29 @@ from ..utils import serialize_spatial_data
 
 @transaction.atomic
 def create_project(request):
-    form = CreateProjectForm(request.POST or None)
+    form = CreateProjectForm(request.POST or None, user=request.user)
 
-    if form.is_valid():
-        project = form.save(commit=False)
-        project.owner = request.user
-        project.save()
+    if request.method == "POST":
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.owner = request.user
+            project.save()
 
-        ProjectMembership.objects.get_or_create(
-            project=project,
-            role="admin",
-            invited_by=request.user,
-        )
+            ProjectMembership.objects.get_or_create(
+                project=project,
+                user=request.user,
+                role="admin",
+                invited_by=request.user,
+            )
 
-        FileActivity.objects.create(
-            project=project,
-            project_name_snapshot=project.name,
-            action="new project created",
-            owner=request.user,
-        )
+            FileActivity.objects.create(
+                project=project,
+                project_name_snapshot=project.name,
+                action="new project created",
+                owner=request.user,
+            )
 
-        return redirect("gis_database:dashboard")
+            return redirect("gis_database:dashboard")
 
     return render(request, "components/project/create-layout.html", {"form": form})
 
